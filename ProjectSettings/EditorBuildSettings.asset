@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelect.unity
+    guid: a7c528512cd10b64990ba205cc33eee0
+  - enabled: 1
+    path: Assets/Scenes/Achievements.unity
+    guid: 844c0e025d14a234ea777d81717743f5
+  - enabled: 1
+    path: Assets/Scenes/Map.unity
+    guid: 6671b1721fbed8347a52ee30b6fabb44
+  - enabled: 1
+    path: Assets/Scenes/CombatSands.unity
+    guid: c50ad322e9844bb4ebd083291fbd9142
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 130bb0305baf7df4e8bc476cb50fd49e
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: d439c68a9d3f0f64abd0b5de31ff4fef
+  - enabled: 1
+    path: Assets/Scenes/Pause.unity
+    guid: 2a55422a4e9312e43826982c1ea0941b
+  - enabled: 1
+    path: Assets/Scenes/Win.unity
+    guid: 2ba501f2d21e1bd4191fdc90aec90f36
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: b15ffaf5f2e0c6845a48d4d15a8aca81
+  - enabled: 1
+    path: Assets/Scenes/4X4 Battle.unity
+    guid: 27d2446605fda624b932d4087dbf979e
+  - enabled: 1
+    path: Assets/Scenes/2E Battle.unity
+    guid: 274bae4698fbf7746a6e41e1bb25167e
+  - enabled: 1
+    path: Assets/Scenes/Money.unity
+    guid: 6be2286d730353945a8e43e858091c8c
+  - enabled: 1
+    path: Assets/Scenes/CharacterSet.unity
+    guid: 02910a560395ac5499f70b639ad57fa8
+  - enabled: 1
+    path: Assets/Scenes/Event.unity
+    guid: b74e28b5720a2994b9ec1dbcbd63c556
+  - enabled: 1
+    path: Assets/Scenes/Resource.unity
+    guid: 49184862f63e2624b806a1c3b72dfb69
+  - enabled: 1
+    path: Assets/Scenes/2E Battle- 2.unity
+    guid: ad345fd03274aae45b94a60daf06766d
+  - enabled: 1
+    path: Assets/Scenes/Map- Hexagon.unity
+    guid: 071cecc202dd0d549a64970517cdca9f
+  - enabled: 1
+    path: Assets/Scenes/Shop.unity
+    guid: ba3cc80f47ef76747a69e960419eab12
+  - enabled: 1
+    path: Assets/Scenes/Gambler- Trade.unity
+    guid: 9ee288d4aede6dc4187f0fc82b384bcd
+  - enabled: 1
+    path: Assets/Scenes/EssenceSource.unity
+    guid: 5568c3fcbf73c204a81ef53d7966a208
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 979048fa338bd844eaeb255f07676bc1,
+      type: 2}

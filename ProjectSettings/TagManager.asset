@@ -1,0 +1,205 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Description
+  - Character
+  - MoveAction
+  - SkillChoice
+  - ActionChoice
+  - Back
+  - cloud
+  - barret
+  - P-Block-1
+  - P-Block-2
+  - P-Block-3
+  - P-Block-4
+  - P-Block-5
+  - P-Block-6
+  - P-Block-7
+  - P-Block-8
+  - P-Block-9
+  - E-Block-1
+  - E-Block-2
+  - E-Block-3
+  - E-Block-4
+  - E-Block-5
+  - E-Block-6
+  - E-Block-7
+  - E-Block-8
+  - E-Block-9
+  - HealthP1
+  - Reaper
+  - P1Hp
+  - P1HpBack
+  - P1Sp
+  - P1SpBack
+  - P1Guard
+  - yuffie
+  - vincent
+  - Music
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - StatusXLayer1
+  - StatusXLayer2
+  - StatusXLayer3
+  - StatusXLayer4
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Background
+    uniqueID: 3165298799
+    locked: 0
+  - name: grid
+    uniqueID: 301930331
+    locked: 0
+  - name: Characters
+    uniqueID: 3048702345
+    locked: 0
+  - name: Char5
+    uniqueID: 3770823145
+    locked: 0
+  - name: Back5
+    uniqueID: 1370009225
+    locked: 0
+  - name: Bar5
+    uniqueID: 3838309841
+    locked: 0
+  - name: Guard5
+    uniqueID: 1852554733
+    locked: 0
+  - name: Char4
+    uniqueID: 2702412175
+    locked: 0
+  - name: Back4
+    uniqueID: 2148674903
+    locked: 0
+  - name: Bar4
+    uniqueID: 579241329
+    locked: 0
+  - name: Guard4
+    uniqueID: 2995865307
+    locked: 0
+  - name: Status4
+    uniqueID: 1536407941
+    locked: 0
+  - name: StatusXLayer4
+    uniqueID: 447022785
+    locked: 0
+  - name: Char3
+    uniqueID: 3187824653
+    locked: 0
+  - name: Back3
+    uniqueID: 2665397209
+    locked: 0
+  - name: Bar3
+    uniqueID: 3820293083
+    locked: 0
+  - name: Guard3
+    uniqueID: 3362845515
+    locked: 0
+  - name: Status3
+    uniqueID: 3622239063
+    locked: 0
+  - name: StatusXLayer3
+    uniqueID: 352325487
+    locked: 0
+  - name: Char2
+    uniqueID: 2805716043
+    locked: 0
+  - name: Back2
+    uniqueID: 2506410197
+    locked: 0
+  - name: Bar2
+    uniqueID: 1216697509
+    locked: 0
+  - name: Guard2
+    uniqueID: 3156248201
+    locked: 0
+  - name: Status2
+    uniqueID: 840697887
+    locked: 0
+  - name: StatusXLayer2
+    uniqueID: 621195775
+    locked: 0
+  - name: Char1
+    uniqueID: 2559310899
+    locked: 0
+  - name: Back1
+    uniqueID: 1061075191
+    locked: 0
+  - name: Bar1
+    uniqueID: 4048325739
+    locked: 0
+  - name: Guard1
+    uniqueID: 2269836755
+    locked: 0
+  - name: Status1
+    uniqueID: 291809353
+    locked: 0
+  - name: StatusXLayer1
+    uniqueID: 2261385725
+    locked: 0
+  - name: Buttons
+    uniqueID: 2281617621
+    locked: 0
+  - name: Buttons 2
+    uniqueID: 87431279
+    locked: 0
+  - name: Buttons 3
+    uniqueID: 1950792465
+    locked: 0
+  - name: Rewards Screen
+    uniqueID: 2069058089
+    locked: 0
+  - name: Rewards1
+    uniqueID: 795403253
+    locked: 0
+  - name: Rewards2
+    uniqueID: 3445517131
+    locked: 0
+  - name: LevelUpScreen
+    uniqueID: 246155549
+    locked: 0
+  - name: LevelUp1
+    uniqueID: 2316275955
+    locked: 0
+  - name: LevelUp2
+    uniqueID: 625909903
+    locked: 0
+  - name: CurrentHover
+    uniqueID: 1226561975
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: InputDissable
+    uniqueID: 2954683171
+    locked: 0
