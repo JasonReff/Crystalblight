@@ -120,7 +120,37 @@ public class FriendlyTargetSkills : MonoBehaviour
             }
         }
     }
-    //Temporary skill
+
+    void SkillReset()
+    {
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+        PlayerPrefs.SetInt("PNumber", 0);
+    }
+
+    void Heal(int player, int healthGain)
+    {
+        int pHP = PlayerPrefs.GetInt("P" + player + "-CHP");
+        int pMaxHP = PlayerPrefs.GetInt("P" + player + "-HP");
+        pHP += healthGain;
+        if (pHP > pMaxHP) { pHP = pMaxHP; }
+        PlayerPrefs.SetInt("P" + player + "-CHP", pHP);
+        float HPPercent = (float)pHP / (float)pMaxHP;
+        GameObject PHPBar = GameObject.Find("P" + player + "-HP");
+        PHPBar.transform.localScale = new Vector3(HPPercent, 1, 1);
+    }
+
+    void HealSP(int player, int SPGain)
+    {
+        int pSP = PlayerPrefs.GetInt("P" + player + "-CSP");
+        int pMaxSP = PlayerPrefs.GetInt("P" + player + "-SP");
+        pSP += SPGain;
+        if (pSP > pMaxSP) { pSP = pMaxSP; }
+        PlayerPrefs.SetInt("P" + player + "-CSP", pSP);
+        float SPPercent = (float)pSP / (float)pMaxSP;
+        GameObject PSPBar = GameObject.Find("P" + player + "-SP");
+        PSPBar.transform.localScale = new Vector3(SPPercent, 1, 1);
+    }
 
     public int Target()
     {
@@ -174,6 +204,35 @@ public class FriendlyTargetSkills : MonoBehaviour
         float PercentSP = ((float)P1CSP / (float)P1SP);
         GameObject SPBar = GameObject.Find("P" + p + "-Sp");
         SPBar.gameObject.transform.localScale = new Vector3(PercentSP, 1, 1);
+    }
+
+    //items
+    void HealthFlask()
+    {
+        int p = Target();
+        if (p != 0)
+        {
+            int p2 = PlayerPrefs.GetInt("PNumber");
+            Heal(p2, 20);
+            SingleTargetSkills.ItemUse("HealthFlask");
+            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+            EndPlayerTurn();
+        }
+        SkillReset();
+    }
+
+    void SpiritFlask()
+    {
+        int p = Target();
+        if (p != 0)
+        {
+            int p2 = PlayerPrefs.GetInt("PNumber");
+            HealSP(p2, 10);
+            SingleTargetSkills.ItemUse("SpiritFlask");
+            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+            EndPlayerTurn();
+        }
+        SkillReset();
     }
 
     //used for default

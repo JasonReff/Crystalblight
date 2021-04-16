@@ -236,6 +236,35 @@ public class SingleTargetSkills : MonoBehaviour
         SPBar.gameObject.transform.localScale = new Vector3(PercentSP, 1, 1);
     }
 
+    public static void ItemUse(string itemName)
+    {
+        PlayerPrefs.SetInt(itemName + "Count", PlayerPrefs.GetInt(itemName + "Count") - 1);
+        if (PlayerPrefs.GetInt(itemName + "Count") < 1)
+        {
+            int activeItemNumber = PlayerPrefs.GetInt("ActiveItem");
+            PlayerPrefs.SetInt("ActiveItem", activeItemNumber++);
+        }
+    }
+
+    //items
+    void Matchstick()
+    {
+        int p = Target();
+        if (p != 0)
+        {
+            int e = PlayerPrefs.GetInt("ENumber");
+            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
+            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
+            Damage(p, e, E1CHP, E1CG, 5, "Fire");
+            StatusEffect.InflictStatusEnemy("burning", e, 5);
+            ItemUse("Matchstick");
+            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+            EndPlayerTurn();
+        }
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+    }
+
     void Fira()
     {
         int p = Target();

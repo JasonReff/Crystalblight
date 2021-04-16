@@ -4777,6 +4777,7 @@ GameObject:
   - component: {fileID: 422140274}
   - component: {fileID: 422140273}
   - component: {fileID: 422140272}
+  - component: {fileID: 422140277}
   - component: {fileID: 422140276}
   m_Layer: 0
   m_Name: skillcard-M
@@ -4903,6 +4904,21 @@ MonoBehaviour:
   time: 0
   popUp: {fileID: 1968806192}
   popUptext: {fileID: 499590604}
+--- !u!114 &422140277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422140271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d3bb17298beaa24d9c654b3ac2e5bb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textbox: {fileID: 1764584152}
+  InputDiss: {fileID: 1233848543}
+  unclick: {fileID: 1932459872}
 --- !u!1 &425895835
 GameObject:
   m_ObjectHideFlags: 0

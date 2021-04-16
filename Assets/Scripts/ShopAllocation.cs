@@ -6,8 +6,8 @@ public class ShopAllocation : MonoBehaviour
 {
     void Start()
     {
-        ItemNumberSet("Item", "Health Flask", 1, 15, "Restore 20 Health to a character.", 1, "SingleTarget");
-        ItemNumberSet("Item", "Spirit Flask", 2, 15, "Restore 10 SP to a character.", 1, "SingleTarget");
+        ItemNumberSet("Item", "Health Flask", 1, 15, "Restore 20 Health to a character.", 1, "FriendlyTarget");
+        ItemNumberSet("Item", "Spirit Flask", 2, 15, "Restore 10 SP to a character.", 1, "FriendlyTarget");
         ItemNumberSet("Item", "Matchstick", 3, 25, "Deal 5 fire damage to an enemy. Inflict Burning: 5.", 0, "SingleTarget");
         ItemNumberSet("Item", "Contaminant", 4, 25, "Deal 12 acid damage to an enemy. Inflict Corrosion: 4.", 0, "SingleTarget");
         ItemNumberSet("Item", "Blood Bomb", 5, 25, "Deal 15 blood damage to an enemy. Inflict Berserk: 3.", 0, "SingleTarget");
@@ -88,6 +88,6 @@ public class ShopAllocation : MonoBehaviour
         PlayerPrefs.SetInt(itemName + "Price", itemPrice);
         PlayerPrefs.SetString(itemName + "Description", description);
         PlayerPrefs.SetInt(itemName + "MapUse", useOnMap);
-        PlayerPrefs.SetString(itemName + "Targeting", targeting);
+        PlayerPrefs.SetString(itemName + "-Targeting", targeting);
     }
 }

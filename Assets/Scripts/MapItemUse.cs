@@ -9,11 +9,11 @@ public class MapItemUse : MonoBehaviour
         string itemName = PlayerPrefs.GetString("InventoryClickedItem");
         if (PlayerPrefs.GetInt(itemName + "MapUse") == 1)
         {
-            if (PlayerPrefs.GetString(itemName + "Targeting") == "All")
+            if (PlayerPrefs.GetString(itemName + "-Targeting") == "All")
             {
 
             }
-            else if (PlayerPrefs.GetString(itemName + "Targeting") == "SingleTarget")
+            else if (PlayerPrefs.GetString(itemName + "-Targeting") == "FriendlyTarget")
             {
                 for (int x = 1; x <= 4; x++)
                 {
