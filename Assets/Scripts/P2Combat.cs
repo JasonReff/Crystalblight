@@ -41,12 +41,16 @@ public class P2Combat : MonoBehaviour
                     GameObject.Find("1-Text").GetComponent<Text>().text = PlayerPrefs.GetString("P2-Skill-1");
                     temp = new Vector3(0 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
                     GameObject.Find("skillcard-2").transform.position = temp;
+                    GameObject.Find("2-Text").GetComponent<Text>().text = PlayerPrefs.GetString("P2-Skill-2");
                     temp = new Vector3(100 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
                     GameObject.Find("skillcard-3").transform.position = temp;
+                    GameObject.Find("3-Text").GetComponent<Text>().text = PlayerPrefs.GetString("P2-Skill-3");
                     temp = new Vector3(200 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
                     GameObject.Find("skillcard-4").transform.position = temp;
+                    GameObject.Find("4-Text").GetComponent<Text>().text = PlayerPrefs.GetString("P2-Skill-4");
                     temp = new Vector3(300 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
                     GameObject.Find("skillcard-M").transform.position = temp;
+                    GameObject.Find("M-Text").GetComponent<Text>().text = PlayerPrefs.GetString("InventoryItem" + PlayerPrefs.GetInt("ActiveItem"));
                     //this handles movement on 4x4
                     int Loc = PlayerPrefs.GetInt("P2-Loc");
                     if (PlayerPrefs.GetInt("P2-CanMove") == 1)
