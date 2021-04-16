@@ -243,6 +243,8 @@ public class SingleTargetSkills : MonoBehaviour
         {
             int activeItemNumber = PlayerPrefs.GetInt("ActiveItem");
             PlayerPrefs.SetInt("ActiveItem", activeItemNumber++);
+            //need a way to cycle to the next item with count 1 or higher
+            //need a check for if there are no items in inventory
         }
     }
 
