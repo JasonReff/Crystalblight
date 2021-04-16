@@ -909,7 +909,7 @@ public class UntargetedSkills : MonoBehaviour
         PlayerPrefs.SetInt("Processing", 0);
     }
 
-    public void EndPlayerTurn()
+    void EndPlayerTurn()
     {
         int Turns = PlayerPrefs.GetInt("Turns");
         Turns++;
