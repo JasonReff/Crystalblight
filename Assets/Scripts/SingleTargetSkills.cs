@@ -697,6 +697,26 @@ public class SingleTargetSkills : MonoBehaviour
         PlayerPrefs.SetInt("ENumber", 0);
     }
 
+    void Incinerate()
+    {
+        int p = Target();
+        if (p != 0)
+        {
+            int e = PlayerPrefs.GetInt("ENumber");
+            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
+            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
+            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
+            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
+            int damage = 25 + PlayerPrefs.GetInt("P" + p + "-INT");
+            SPSpend(p, P1CSP, P1SP, 18);
+            Damage(p, e, E1CHP, E1CG, damage, "Fire");
+            StatusEffect.InflictStatusEnemy("burning", e, 10);
+            EndSkill(p);
+        }
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+    }
+
     //used for default
     void None()
     {
@@ -706,6 +726,14 @@ public class SingleTargetSkills : MonoBehaviour
     public void ETakeTurn()
     {
         SendMessage("TakeTurn");
+    }
+
+    void EndSkill(int p)
+    {
+        GameObject hero = GameObject.Find("P" + p);
+        hero.GetComponent<SpriteRenderer>().color = Color.grey;
+        PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+        EndPlayerTurn();
     }
 
     //used for animations
