@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class UntargetedSkills : MonoBehaviour
 {
-    // Start is called before the first frame update
     public void OnMouseDown()
     {
         string activeSkill = PlayerPrefs.GetString("ActiveSkill");
@@ -20,280 +19,119 @@ public class UntargetedSkills : MonoBehaviour
     void Bolster()
     {
         int p = Target();
-        if (p != 0)
-        {
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
-            int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int guardGain = 3 + 3 * PlayerPrefs.GetInt("P" + p + "-END");
-            if (guardGain > (p1MaxGuard - p1CG)) { guardGain = p1MaxGuard - p1CG; }
-            p1CG += guardGain;
-            if (p1CG >= p1MaxGuard)
-            {
-                p1CG = p1MaxGuard;
-            }
-            PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
-            GameObject GBar = GameObject.Find("P" + p + "-Guard");
-            float PercentG = ((float)p1CG / (float)p1MaxGuard);
-            GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            SPSpend(p, P1CSP, P1SP, 3);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        GuardGain(p, 3 + 3 * PlayerPrefs.GetInt("P" + p + "-END"));
+        SPSpend(p, 3);
+        EndSkill(p);
+        SkillReset();
     }
 
     void AetherCloak()
     {
         int p = Target();
-        if (p != 0)
-        {
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
-            int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int guardGain = 5 + 2 * PlayerPrefs.GetInt("P" + p + "-END");
-            if (guardGain > (p1MaxGuard - p1CG)) { guardGain = p1MaxGuard - p1CG; }
-            p1CG += guardGain;
-            if (p1CG >= p1MaxGuard)
-            {
-                p1CG = p1MaxGuard;
-            }
-            PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
-            GameObject GBar = GameObject.Find("P" + p + "-Guard");
-            float PercentG = ((float)p1CG / (float)p1MaxGuard);
-            GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            SPSpend(p, P1CSP, P1SP, 7);
-            StatusEffect.InflictStatusCharacter("ethereal", p, 2);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        GuardGain(p, 5 + 2 * PlayerPrefs.GetInt("P" + p + "-END"));
+        SPSpend(p, 7);
+        StatusEffect.InflictStatusCharacter("ethereal", p, 2);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Taunt()
     {
         int p = Target();
-        if (p != 0)
-        {
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
-            int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int guardGain = 4 + 3 * PlayerPrefs.GetInt("P" + p + "-END");
-            if (guardGain > (p1MaxGuard - p1CG)) { guardGain = p1MaxGuard - p1CG; }
-            p1CG += guardGain;
-            if (p1CG >= p1MaxGuard)
-            {
-                p1CG = p1MaxGuard;
-            }
-            PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
-            SingleTargetSkills.SpecialCharge(p, guardGain, "Iron Will");
-            PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
-            GameObject GBar = GameObject.Find("P" + p + "-Guard");
-            float PercentG = ((float)p1CG / (float)p1MaxGuard);
-            GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            SPSpend(p, P1CSP, P1SP, 5);
-            StatusEffect.InflictStatusCharacter("decoy", p, 1);
-            SingleTargetSkills.SpecialCharge(p, 1, "Ancient Defender");
-            StatusEffect.InflictStatusCharacter("steadfast", p, 1);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        GuardGain(p, 4 + 3 * PlayerPrefs.GetInt("P" + p + "-END"));
+        SPSpend(p, 5);
+        StatusEffect.InflictStatusCharacter("decoy", p, 1);
+        SingleTargetSkills.SpecialCharge(p, 1, "Ancient Defender");
+        StatusEffect.InflictStatusCharacter("steadfast", p, 1);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Subjugate()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int guard = PlayerPrefs.GetInt("P" + p + "-CG");
-            int maxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int guardGain = 5 * PlayerPrefs.GetInt("P" + p + "-END");
-            if (guardGain > (maxGuard - guard)) { guardGain = maxGuard - guard; }
-            guard += guardGain;
-            if (guard >= maxGuard)
-            {
-                guard = maxGuard;
-            }
-            SingleTargetSkills.SpecialCharge(p, guardGain, "Iron Will");
-            PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
-            GameObject guardBar = GameObject.Find("P" + p + "-Guard");
-            float percent = (float)guard / (float)maxGuard;
-            guardBar.transform.localScale = new Vector3(percent, 1, 1);
-            DamageAll(p, 20 + PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
-            SPSpend(p, P1CSP, P1SP, 26);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        GuardGain(p, 5 * PlayerPrefs.GetInt("P" + p + "-END"));
+        DamageAll(p, 20 + PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
+        SPSpend(p, 26);
+        EndSkill(p);
+        SkillReset();
     }
 
     void AetherDome()
     {
-        int playerCharacter = Target();
-        if (playerCharacter != 0)
+        int p = Target();
+        for (int p2 = 1; p2 <= 4; p2++)
         {
-            PlayerPrefs.SetInt("Processing", 1);
-            GameObject hero = GameObject.Find("P" + playerCharacter);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            for (int p = 1; p <= 4; p++)
+            if (PlayerPrefs.GetInt("P" + p2 + "-CHP") > 0)
             {
-                if (PlayerPrefs.GetInt("P" + p + "-CHP") > 0)
-                {
-                    int guard = PlayerPrefs.GetInt("P" + p + "-CG");
-                    int maxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-                    int guardGain = 5 + 3 * PlayerPrefs.GetInt("P" + playerCharacter + "-END");
-                    if (guardGain > (maxGuard - guard)) { guardGain = maxGuard - guard; }
-                    guard += guardGain;
-                    if (guard > maxGuard)
-                    {
-                        guard = maxGuard;
-                    }
-                    SingleTargetSkills.SpecialCharge(p, guardGain, "Iron Will");
-                    PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
-                    GameObject guardBar = GameObject.Find("P" + p + "-Guard");
-                    float percent = (float)guard / (float)maxGuard;
-                    guardBar.transform.localScale = new Vector3(percent, 1, 1);
-                }
+                GuardGain(p2, 5 + 3 * PlayerPrefs.GetInt("P" + p + "-END"));
             }
-            int P1CSP = PlayerPrefs.GetInt("P" + playerCharacter + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + playerCharacter + "-SP");
-            SPSpend(playerCharacter, P1CSP, P1SP, 18);
-            PlayerPrefs.SetInt("P" + playerCharacter + "-TurnTaken", 1);
-            EndPlayerTurn();
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 18);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Decoy()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 3);
-            StatusEffect.InflictStatusCharacter("decoy", p, 2);
-            SingleTargetSkills.SpecialCharge(p, 2, "Ancient Defender");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 3);
+        StatusEffect.InflictStatusCharacter("decoy", p, 2);
+        SingleTargetSkills.SpecialCharge(p, 2, "Ancient Defender");
+        EndSkill(p);
+        SkillReset();
     }
 
     void Lambaste()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 5);
-            StatusEffect.InflictStatusCharacter("decoy", p, 2);
-            SingleTargetSkills.SpecialCharge(p, 2, "Ancient Defender");
-            StatusEffect.InflictStatusCharacter("counter", p, 2);
-            SingleTargetSkills.SpecialCharge(p, 2, "Counterstrike");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 5);
+        StatusEffect.InflictStatusCharacter("decoy", p, 2);
+        SingleTargetSkills.SpecialCharge(p, 2, "Ancient Defender");
+        StatusEffect.InflictStatusCharacter("counter", p, 2);
+        SingleTargetSkills.SpecialCharge(p, 2, "Counterstrike");
+        EndSkill(p);
+        SkillReset();
     }
 
     void SpikeShield()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 6);
-            StatusEffect.InflictStatusCharacter("shield", p, 1);
-            StatusEffect.InflictStatusCharacter("counter", p, 1);
-            SingleTargetSkills.SpecialCharge(p, 1, "Counterstrike");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 6);
+        StatusEffect.InflictStatusCharacter("shield", p, 1);
+        StatusEffect.InflictStatusCharacter("counter", p, 1);
+        SingleTargetSkills.SpecialCharge(p, 1, "Counterstrike");
+        EndSkill(p);
+        SkillReset();
     }
 
     void StandYourGround()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 5;
-            SPSpend(p, P1CSP, P1SP, SPCost);
-            StatusEffect.InflictStatusCharacter("decoy", p, 3);
-            SingleTargetSkills.SpecialCharge(p, 3, "Ancient Defender");
-            StatusEffect.StatusLockCharacter("decoy", p);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 5);
+        StatusEffect.InflictStatusCharacter("decoy", p, 3);
+        SingleTargetSkills.SpecialCharge(p, 3, "Ancient Defender");
+        StatusEffect.StatusLockCharacter("decoy", p);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Riposte()
     {
         int p = Target();
-        if (p != 0)
+        SPSpend(p, 3);
+        StatusEffect.InflictStatusCharacter("counter", p, 1);
+        SingleTargetSkills.SpecialCharge(p, 1, "Counterstrike");
+        if (PlayerPrefs.GetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played") == 1)
         {
-            GameObject hero = GameObject.Find("P" + p);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 3);
-            StatusEffect.InflictStatusCharacter("counter", p, 1);
-            SingleTargetSkills.SpecialCharge(p, 1, "Counterstrike");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            if (PlayerPrefs.GetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played") == 1)
-            {
-                hero.GetComponent<SpriteRenderer>().color = Color.grey;
-                PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-                EndPlayerTurn();
-            }
-            else
-            {
-                PlayerPrefs.SetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played", 1);
-            }
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        else
+        {
+            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+            PlayerPrefs.SetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played", 1);
+        }
+        SkillReset();
     }
 
     void GetBehindMe()
@@ -301,10 +139,7 @@ public class UntargetedSkills : MonoBehaviour
         int p = Target();
         if (p != 0)
         {
-            GameObject hero = GameObject.Find("P" + p);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 25);
+            SPSpend(p, 25);
             StatusEffect.InflictStatusCharacter("decoy", p, PlayerPrefs.GetInt("P" + p + "-END"));
             SingleTargetSkills.SpecialCharge(p, PlayerPrefs.GetInt("P" + p + "-END"), "Ancient Defender");
             int loc = PlayerPrefs.GetInt("P" + p + "-Loc");
@@ -520,199 +355,123 @@ public class UntargetedSkills : MonoBehaviour
                     }
                 }
             }
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            EndPlayerTurn();
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void AetherField()
     {
         int p = Target();
-        if (p != 0)
+        SPSpend(p, 10);
+        for (int p2 = 1; p2 <= 4; p2++)
         {
-            GameObject hero = GameObject.Find("P" + p);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 10);
-            for (int p2 = 1; p2 <= 4; p2++)
+            if (PlayerPrefs.GetString("P" + p2 + "-Name") != "null")
             {
-                if (PlayerPrefs.GetString("P" + p2 + "-Name") != "null")
-                {
-                    StatusEffect.InflictStatusCharacter("counter", p2, 1);
-                    SingleTargetSkills.SpecialCharge(p, 1, "Counterstrike");
-                }
+                StatusEffect.InflictStatusCharacter("counter", p2, 1);
+                SingleTargetSkills.SpecialCharge(p, 1, "Counterstrike");
             }
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            EndPlayerTurn();
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Embolden()
     {
         int p = Target();
-        if (p != 0)
+        SPSpend(p, 18);
+        StatusEffect.InflictStatusCharacter("counter", p, PlayerPrefs.GetInt("P" + p + "-END"));
+        SingleTargetSkills.SpecialCharge(p, PlayerPrefs.GetInt("P" + p + "-END"), "Counterstrike");
+        for (int e = 1; e <= 8; e++)
         {
-            GameObject hero = GameObject.Find("P" + p);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 18);
-            StatusEffect.InflictStatusCharacter("counter", p, PlayerPrefs.GetInt("P" + p + "-END"));
-            SingleTargetSkills.SpecialCharge(p, PlayerPrefs.GetInt("P" + p + "-END"), "Counterstrike");
-            for (int e = 1; e <= 8; e++)
+            if (PlayerPrefs.GetString("E" + e + "-Name") != "null")
             {
-                if (PlayerPrefs.GetString("E" + e + "-Name") != "null")
-                {
-                    StatusEffect.InflictStatusEnemy("weakened", e, 2);
-                }
+                StatusEffect.InflictStatusEnemy("weakened", e, 2);
             }
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            EndPlayerTurn();
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        EndSkill(p);
+        SkillReset();
     }
 
     void ManaShell()
     {
         int p = Target();
-        if (p != 0)
-        {
-            GameObject hero = GameObject.Find("P" + p);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 16);
-            StatusEffect.InflictStatusCharacter("counter", p, 3);
-            SingleTargetSkills.SpecialCharge(p, 3, "Counterstrike");
-            int guard = PlayerPrefs.GetInt("P" + p + "-CG");
-            int maxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            int guardGain = 4 * PlayerPrefs.GetInt("P" + p + "-END");
-            if (guardGain > (maxGuard - guard)) { guardGain = maxGuard - guard; }
-            guard += guardGain;
-            if (guard > maxGuard)
-            {
-                guard = maxGuard;
-            }
-            SingleTargetSkills.SpecialCharge(p, guardGain, "Iron Will");
-            PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
-            GameObject guardBar = GameObject.Find("P" + p + "-Guard");
-            float percent = (float)guard / (float)maxGuard;
-            guardBar.transform.localScale = new Vector3(percent, 1, 1);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 16);
+        StatusEffect.InflictStatusCharacter("counter", p, 3);
+        SingleTargetSkills.SpecialCharge(p, 3, "Counterstrike");
+        GuardGain(p, 4 * PlayerPrefs.GetInt("P" + p + "-END"));
+        EndSkill(p);
+        SkillReset();
     }
 
     void WilloftheAncients()
     {
         int p = Target();
-        if (p != 0)
+        int decoy = 0;
+        int status = 0;
+        for (int i = 0; i <= 3; i++)
         {
-            int decoy = 0;
-            int status = 0;
-            for (int i = 0; i <= 3; i++)
+            if (PlayerPrefs.GetString("P" + p + "Status" + i) == "decoy")
             {
-                if (PlayerPrefs.GetString("P" + p + "Status" + i) == "decoy")
-                {
-                    decoy = PlayerPrefs.GetInt("P" + p + "Status" + i + "X");
-                    status = i;
-                }
+                decoy = PlayerPrefs.GetInt("P" + p + "Status" + i + "X");
+                status = i;
             }
-            PlayerPrefs.SetString("P" + p + "Status" + status, "null");
-            PlayerPrefs.SetInt("P" + p + "Status" + status + "X", 0);
-            int guard = PlayerPrefs.GetInt("P" + p + "-CG");
-            int maxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            int guardGain = 10 * decoy;
-            if (guardGain > maxGuard - guard) { guardGain = maxGuard - guard; }
-            guard += guardGain;
-            PlayerPrefs.SetInt("P" + p + "-CG", guard);
-            PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
-            GameObject guardBar = GameObject.Find("P" + p + "-Guard");
-            float percent = (float)guard / (float)maxGuard;
-            guardBar.transform.localScale = new Vector3(percent, 1, 1);
-            SingleTargetSkills.UltFinish(p);
         }
+        PlayerPrefs.SetString("P" + p + "Status" + status, "null");
+        PlayerPrefs.SetInt("P" + p + "Status" + status + "X", 0);
+        GuardGain(p, 10 * decoy);
+        SingleTargetSkills.UltFinish(p);
+        EndSkill(p);
+        SkillReset();
     }
 
     void EmberRain()
     {
         int p = Target();
-        if (p != 0)
+        SPSpend(p, 4);
+        for (int e = 1; e <= 8; e++)
         {
-            GameObject hero = GameObject.Find("P" + p);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            SPSpend(p, P1CSP, P1SP, 4);
-            for (int e = 1; e <= 8; e++)
+            if (PlayerPrefs.GetString("E" + e + "-Name") != "null")
             {
-                if (PlayerPrefs.GetString("E" + e + "-Name") != "null")
-                {
-                    StatusEffect.InflictStatusEnemy("burning", e, 2);
-                }
+                StatusEffect.InflictStatusEnemy("burning", e, 2);
             }
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            EndPlayerTurn();
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        EndSkill(p);
+        SkillReset();
     }
 
     void HeatSeekers()
     {
         int p = Target();
-        if (p != 0)
+        for (int x = 1; x <=2; x++)
         {
-            for (int x = 1; x <=2; x++)
-            {
-                int e = RandomEnemy();
-                int e1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-                int e1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-                int damage = 7 + PlayerPrefs.GetInt("P" + p + "-INT");
-                Damage(p, e, e1CHP, e1CG, damage, "Fire");
-                PlayerPrefs.SetInt("Processing", 1);
-                Vector3 EBox5 = this.transform.position;
-                GameObject animg = GameObject.Find("Fire");
-                Animator anim = animg.GetComponent<Animator>();
-                animg.transform.position = EBox5;
-                anim.SetTrigger("Play");
-                Vector3 ScreenPos = new Vector3(0, -538, -100);
-                GameObject InputDiss = GameObject.Find("InputDiss");
-                InputDiss.transform.position = ScreenPos;
-                Invoke("EndAnimationFire", 0.8f);
-            }
-            SPSpend(p, PlayerPrefs.GetInt("P" + p + "-CSP"), PlayerPrefs.GetInt("P" + p + "-SP"), 6);
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            int e = RandomEnemy();
+            int damage = 7 + PlayerPrefs.GetInt("P" + p + "-INT");
+            Damage(p, e, damage, "Fire");
+            PlayerPrefs.SetInt("Processing", 1);
+            Vector3 EBox5 = this.transform.position;
+            GameObject animg = GameObject.Find("Fire");
+            Animator anim = animg.GetComponent<Animator>();
+            animg.transform.position = EBox5;
+            anim.SetTrigger("Play");
+            Vector3 ScreenPos = new Vector3(0, -538, -100);
+            GameObject InputDiss = GameObject.Find("InputDiss");
+            InputDiss.transform.position = ScreenPos;
+            Invoke("EndAnimationFire", 0.8f);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 6);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Inferno()
     {
         int p = Target();
-        if (p != 0)
-        {
-            int damage = 25 + 3 * PlayerPrefs.GetInt("P" + p + "-INT");
-            SPSpend(p, PlayerPrefs.GetInt("P" + p + "-CSP"), PlayerPrefs.GetInt("P" + p + "-SP"), 20);
-            DamageAll(p, damage, "Fire");
-            StatusEffect.InflictStatusCharacter("burning", p, 3);
-            EndSkill(p);
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SPSpend(p, 20);
+        DamageAll(p, 25 + 3 * PlayerPrefs.GetInt("P" + p + "-INT"), "Fire");
+        StatusEffect.InflictStatusCharacter("burning", p, 3);
+        EndSkill(p);
+        SkillReset();
     }
 
     void EndSkill(int p)
@@ -723,13 +482,38 @@ public class UntargetedSkills : MonoBehaviour
         EndPlayerTurn();
     }
 
+    void SkillReset()
+    {
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+        PlayerPrefs.SetInt("PNumber", 0);
+    }
+
+    void GuardGain(int p, int guardGain)
+    {
+        int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
+        int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
+        if (guardGain > (p1MaxGuard - p1CG)) { guardGain = p1MaxGuard - p1CG; }
+        p1CG += guardGain;
+        if (p1CG >= p1MaxGuard)
+        {
+            p1CG = p1MaxGuard;
+        }
+        PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
+        SingleTargetSkills.SpecialCharge(p, guardGain, "Iron Will");
+        PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
+        GameObject GBar = GameObject.Find("P" + p + "-Guard");
+        float PercentG = ((float)p1CG / (float)p1MaxGuard);
+        GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
+    }
+
     void DamageAll(int p, int attack, string damageType)
     {
         for (int e = 1; e <= 8; e++)
         {
             if (PlayerPrefs.GetInt("E" + e + "-CHP") > 0)
             {
-                Damage(p, e, PlayerPrefs.GetInt("E" + e + "-CHP"), PlayerPrefs.GetInt("E" + e + "-CG"), attack, damageType);
+                Damage(p, e, attack, damageType);
             }
         }
     }
@@ -752,9 +536,12 @@ public class UntargetedSkills : MonoBehaviour
         while (PlayerPrefs.GetInt("E" + e + "-CHP") <= 0);
         return e;
     }
-    void SPSpend(int p, int P1CSP, int P1SP, int SPCost)
+    void SPSpend(int p, int SPCost)
     {
+        int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
+        int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
         P1CSP = P1CSP - SPCost;
+        if (P1CSP < 0) { P1CSP = 0; }
         PlayerPrefs.SetInt("P" + p + "-CSP", P1CSP);
         float PercentSP = ((float)P1CSP / (float)P1SP);
         GameObject SPBar = GameObject.Find("P" + p + "-Sp");
@@ -787,8 +574,10 @@ public class UntargetedSkills : MonoBehaviour
         return p;
     }
 
-    void Damage(int p, int e, int E1CHP, int E1CG, int Att, string damageType)
+    void Damage(int p, int e, int Att, string damageType)
     {
+        int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
+        int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
         if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Bloodlust1")
         {
             Att += 3;
