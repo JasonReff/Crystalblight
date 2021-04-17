@@ -700,6 +700,29 @@ public class UntargetedSkills : MonoBehaviour
         PlayerPrefs.SetInt("ENumber", 0);
     }
 
+    void Inferno()
+    {
+        int p = Target();
+        if (p != 0)
+        {
+            int damage = 25 + 3 * PlayerPrefs.GetInt("P" + p + "-INT");
+            SPSpend(p, PlayerPrefs.GetInt("P" + p + "-CSP"), PlayerPrefs.GetInt("P" + p + "-SP"), 20);
+            DamageAll(p, damage, "Fire");
+            StatusEffect.InflictStatusCharacter("burning", p, 3);
+            EndSkill(p);
+        }
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+    }
+
+    void EndSkill(int p)
+    {
+        GameObject hero = GameObject.Find("P" + p);
+        hero.GetComponent<SpriteRenderer>().color = Color.grey;
+        PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+        EndPlayerTurn();
+    }
+
     void DamageAll(int p, int attack, string damageType)
     {
         for (int e = 1; e <= 8; e++)
@@ -886,7 +909,7 @@ public class UntargetedSkills : MonoBehaviour
         PlayerPrefs.SetInt("Processing", 0);
     }
 
-    public void EndPlayerTurn()
+    void EndPlayerTurn()
     {
         int Turns = PlayerPrefs.GetInt("Turns");
         Turns++;
