@@ -54,8 +54,6 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject InputDiss = GameObject.Find("InputDiss");
             InputDiss.transform.position = ScreenPos;
             Invoke("EndAnimation", 1.8f);
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
             int Att = PlayerPrefs.GetInt("P" + p + "-Attack");
             if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Flamebearer1")
             {
@@ -82,7 +80,7 @@ public class SingleTargetSkills : MonoBehaviour
                 SPBar.gameObject.transform.localScale = new Vector3(PercentSP, 1, 1);
             }
             string damageType = PlayerPrefs.GetString("P" + p + "AttackDamageType");
-            Damage(p, e, E1CHP, E1CG, Att, damageType);
+            Damage(p, e, Att, damageType);
             PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
             EndPlayerTurn();
         }
@@ -90,9 +88,11 @@ public class SingleTargetSkills : MonoBehaviour
         PlayerPrefs.SetInt("ENumber", 0);
     }
 
-    void Damage(int p, int e, int E1CHP, int E1CG, int Att, string damageType)
+    void Damage(int p, int e, int Att, string damageType)
     {
         //accuracyCheck
+        int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
+        int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
         int accuracyCheck = UnityEngine.Random.Range(1, 101);
         if (PlayerPrefs.GetInt("P" + p + "-Accuracy") - PlayerPrefs.GetInt("E" + e + "-Dodge") < accuracyCheck)
         {
@@ -227,8 +227,10 @@ public class SingleTargetSkills : MonoBehaviour
         while (PlayerPrefs.GetInt("E" + e + "-CHP") <= 0);
         return e;
     }
-    void SPSpend(int p, int P1CSP, int P1SP, int SPCost)
+    void SPSpend(int p, int SPCost)
     {
+        int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
+        int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
         P1CSP = P1CSP - SPCost;
         PlayerPrefs.SetInt("P" + p + "-CSP", P1CSP);
         float PercentSP = ((float)P1CSP / (float)P1SP);
@@ -248,23 +250,37 @@ public class SingleTargetSkills : MonoBehaviour
         }
     }
 
+    void SkillReset()
+    {
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+        PlayerPrefs.SetInt("PNumber", 0);
+    }
+
+    void Animation(string animation)
+    {
+        PlayerPrefs.SetInt("Processing", 1);
+        Vector3 EBox5 = this.transform.position;
+        GameObject animg = GameObject.Find(animation);
+        Animator anim = animg.GetComponent<Animator>();
+        animg.transform.position = EBox5;
+        anim.SetTrigger("Play");
+        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimation", 0.8f);
+    }
+
     //items
     void Matchstick()
     {
         int p = Target();
-        if (p != 0)
-        {
-            int e = PlayerPrefs.GetInt("ENumber");
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            Damage(p, e, E1CHP, E1CG, 5, "Fire");
-            StatusEffect.InflictStatusEnemy("burning", e, 5);
-            ItemUse("Matchstick");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        int e = PlayerPrefs.GetInt("ENumber");
+        Damage(p, e, 5, "Fire");
+        StatusEffect.InflictStatusEnemy("burning", e, 5);
+        ItemUse("Matchstick");
+        EndSkill(p);
+        SkillReset();
     }
 
     void Fira()
@@ -274,8 +290,6 @@ public class SingleTargetSkills : MonoBehaviour
         {
             PlayerPrefs.SetInt("Processing", 1);
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
             Animator anim = animg.GetComponent<Animator>();
@@ -285,22 +299,15 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject InputDiss = GameObject.Find("InputDiss");
             InputDiss.transform.position = ScreenPos;
             Invoke("EndAnimationFire", 0.8f);
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
             int Att = PlayerPrefs.GetInt("P" + p + "-INT") * 30;
             string damageType = "Fire";
-            int SPCost = 12;
-            SPSpend(p, P1CSP, P1SP, SPCost);
-            Damage(p, e, E1CHP, E1CG, Att, damageType);
+            SPSpend(p, 12);
+            Damage(p, e, Att, damageType);
             int collision = Push(e);
             Collision(e, collision, 10, "null", 0);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void QuickSlice()
@@ -310,7 +317,6 @@ public class SingleTargetSkills : MonoBehaviour
         {
             PlayerPrefs.SetInt("Processing", 1);
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
             Animator anim = animg.GetComponent<Animator>();
@@ -320,28 +326,20 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject InputDiss = GameObject.Find("InputDiss");
             InputDiss.transform.position = ScreenPos;
             Invoke("EndAnimationFire", 0.8f);
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
             int Att = PlayerPrefs.GetInt("P" + p + "-DEX") + 3;
             string damageType = "Physical";
-            int SPCost = 4;
-            SPSpend(p, P1CSP, P1SP, SPCost);
-            Damage(p, e, E1CHP, E1CG, Att, damageType);
+            SPSpend(p, 4);
+            Damage(p, e, Att, damageType);
             if (PlayerPrefs.GetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played") == 1)
             {
-                hero.GetComponent<SpriteRenderer>().color = Color.grey;
-                PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-                EndPlayerTurn();
+                EndSkill(p);
             }
             else
             {
                 PlayerPrefs.SetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played", 1);
             }
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void IronCleaver()
@@ -351,8 +349,6 @@ public class SingleTargetSkills : MonoBehaviour
         {
             PlayerPrefs.SetInt("Processing", 1);
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
             Animator anim = animg.GetComponent<Animator>();
@@ -362,19 +358,15 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject InputDiss = GameObject.Find("InputDiss");
             InputDiss.transform.position = ScreenPos;
             Invoke("EndAnimationFire", 0.8f);
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
             int Att = PlayerPrefs.GetInt("P" + p + "CombatGuardGained");
             string damageType = "Physical";
-            Damage(p, e, E1CHP, E1CG, Att, damageType);
+            Damage(p, e, Att, damageType);
             int collision = Push(e);
             Collision(e, collision, 10, "null", 0);
             UltFinish(p);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void Poison()
@@ -384,8 +376,6 @@ public class SingleTargetSkills : MonoBehaviour
         {
             PlayerPrefs.SetInt("Processing", 1);
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
             Animator anim = animg.GetComponent<Animator>();
@@ -395,20 +385,12 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject InputDiss = GameObject.Find("InputDiss");
             InputDiss.transform.position = ScreenPos;
             Invoke("EndAnimationFire", 0.8f);
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 5;
             string status = "poison";
-            int statusX = 5;
-            SPSpend(p, P1CSP, P1SP, SPCost);
-            StatusEffect.InflictStatusEnemy(status, e, statusX);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            SPSpend(p, 5);
+            StatusEffect.InflictStatusEnemy(status, e, 5);
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void EldritchArmor()
@@ -418,8 +400,6 @@ public class SingleTargetSkills : MonoBehaviour
         {
             PlayerPrefs.SetInt("Processing", 1);
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
             Animator anim = animg.GetComponent<Animator>();
@@ -442,17 +422,12 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject GBar = GameObject.Find("P" + p + "-Guard");
             float PercentG = ((float)p1CG / (float)p1MaxGuard);
             GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 5;
-            SPSpend(p, P1CSP, P1SP, SPCost);
+            SPSpend(p, 5);
             SpecialCharge(p, guard, "Iron Will");
             StatusEffect.InflictStatusEnemy("alarm", e, 2);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void EnergyAbsorption()
@@ -462,8 +437,6 @@ public class SingleTargetSkills : MonoBehaviour
         {
             PlayerPrefs.SetInt("Processing", 1);
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
             Animator anim = animg.GetComponent<Animator>();
@@ -501,16 +474,11 @@ public class SingleTargetSkills : MonoBehaviour
             float enemyPercent = (float)enemyGuard / (float)enemyMaxGuard;
             GameObject enemyGuardBar = GameObject.Find("E" + e + "-Guard");
             enemyGuardBar.transform.localScale = new Vector3(enemyPercent, 1, 1);
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 5;
-            SPSpend(p, P1CSP, P1SP, SPCost);
+            SPSpend(p, 5);
             SpecialCharge(p, guard, "Iron Will");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void BraveSword()
@@ -520,8 +488,6 @@ public class SingleTargetSkills : MonoBehaviour
         {
             PlayerPrefs.SetInt("Processing", 1);
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
             Animator anim = animg.GetComponent<Animator>();
@@ -531,20 +497,13 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject InputDiss = GameObject.Find("InputDiss");
             InputDiss.transform.position = ScreenPos;
             Invoke("EndAnimationFire", 0.8f);
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 4;
-            Damage(p, e, E1CHP, E1CG, 5 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
-            SPSpend(p, P1CSP, P1SP, SPCost);
+            Damage(p, e, 5 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
+            SPSpend(p, 4);
             StatusEffect.InflictStatusCharacter("decoy", p, 1);
             SpecialCharge(p, 1, "Ancient Champion");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void Backswing()
@@ -553,22 +512,13 @@ public class SingleTargetSkills : MonoBehaviour
         if (p != 0)
         {
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 8;
-            Damage(p, e, E1CHP, E1CG, 10 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
-            SPSpend(p, P1CSP, P1SP, SPCost);
+            Damage(p, e, 10 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
+            SPSpend(p, 8);
             StatusEffect.InflictStatusCharacter("counter", p, 1);
             SpecialCharge(p, 1, "Counterstrike");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void TitansClash()
@@ -577,10 +527,6 @@ public class SingleTargetSkills : MonoBehaviour
         if (p != 0)
         {
             int e = PlayerPrefs.GetInt("ENumber");
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
             int decoy = 0;
             for (int x = 0; x <= 3; x++)
             {
@@ -589,16 +535,11 @@ public class SingleTargetSkills : MonoBehaviour
                     decoy = PlayerPrefs.GetInt("P" + p + "-Status" + x + "X");
                 }
             }
-            int damage = 14 * decoy;
-            Damage(p, e, E1CHP, E1CG, damage, "Physical");
-            SPSpend(p, P1CSP, P1SP, 22);
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
+            Damage(p, e, 14 * decoy, "Physical");
+            SPSpend(p, 22);
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
 
@@ -608,13 +549,6 @@ public class SingleTargetSkills : MonoBehaviour
         if (p != 0)
         {
             int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 3;
             int damage = 8 + PlayerPrefs.GetInt("P" + p + "-INT");
             if (GameObject.Find("E-Block-25") != null)
             {
@@ -637,8 +571,8 @@ public class SingleTargetSkills : MonoBehaviour
                     damage += 5;
                 }
             }
-            Damage(p, e, E1CHP, E1CG, damage, "Fire");
-            SPSpend(p, P1CSP, P1SP, SPCost);
+            Damage(p, e, damage, "Fire");
+            SPSpend(p, 3);
             PlayerPrefs.SetInt("Processing", 1);
             Vector3 EBox5 = this.transform.position;
             GameObject animg = GameObject.Find("Fire");
@@ -649,10 +583,9 @@ public class SingleTargetSkills : MonoBehaviour
             GameObject InputDiss = GameObject.Find("InputDiss");
             InputDiss.transform.position = ScreenPos;
             Invoke("EndAnimationFire", 0.8f);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+            EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     void ThirdDegree()
@@ -663,14 +596,9 @@ public class SingleTargetSkills : MonoBehaviour
             int e = PlayerPrefs.GetInt("ENumber");
             GameObject hero = GameObject.Find("P" + p);
             hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 12;
             int damage = 16 + 2*PlayerPrefs.GetInt("P" + p + "-INT");
-            Damage(p, e, E1CHP, E1CG, damage, "Fire");
-            SPSpend(p, P1CSP, P1SP, SPCost);
+            Damage(p, e, damage, "Fire");
+            SPSpend(p, 12);
             StatusEffect.InflictStatusEnemy("scarred", e, 4);
             PlayerPrefs.SetInt("Processing", 1);
             Vector3 EBox5 = this.transform.position;
@@ -696,19 +624,14 @@ public class SingleTargetSkills : MonoBehaviour
             int e = PlayerPrefs.GetInt("ENumber");
             GameObject hero = GameObject.Find("P" + p);
             hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
-            int SPCost = 10;
             int damage = 11 + PlayerPrefs.GetInt("P" + p + "-INT");
-            Damage(p, e, E1CHP, E1CG, damage, "Fire");
-            SPSpend(p, P1CSP, P1SP, SPCost);
+            Damage(p, e, damage, "Fire");
+            SPSpend(p, 10);
             for (int i = 0; i <= 3; i++)
             {
                 if (PlayerPrefs.GetString("E" + e + "Status" + i) == "burning")
                 {
-                    Damage(p, e, E1CHP, E1CG, 10, "Explosive");
+                    Damage(p, e, 10, "Explosive");
                     StatusEffect.StatusLockEnemy("burning", e);
                 }
             }
@@ -734,18 +657,13 @@ public class SingleTargetSkills : MonoBehaviour
         if (p != 0)
         {
             int e = PlayerPrefs.GetInt("ENumber");
-            int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-            int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
-            int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
             int damage = 25 + PlayerPrefs.GetInt("P" + p + "-INT");
-            SPSpend(p, P1CSP, P1SP, 18);
-            Damage(p, e, E1CHP, E1CG, damage, "Fire");
+            SPSpend(p, 18);
+            Damage(p, e, damage, "Fire");
             StatusEffect.InflictStatusEnemy("burning", e, 10);
             EndSkill(p);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        SkillReset();
     }
 
     //used for default
@@ -817,15 +735,6 @@ public class SingleTargetSkills : MonoBehaviour
         InputDiss = GameObject.Find("PDiss");
         InputDiss.transform.position = temp;
         PlayerPrefs.SetInt("Processing", 0);
-        /*EndPlayerTurn();
-        else
-        {
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = temp;
-            InputDiss = GameObject.Find("PDiss");
-            InputDiss.transform.position = temp;
-            PlayerPrefs.SetInt("Processing", 0);
-        }*/
     }
 
     public void EndPlayerTurn()
