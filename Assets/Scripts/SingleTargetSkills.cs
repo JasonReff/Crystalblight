@@ -104,11 +104,6 @@ public class SingleTargetSkills : MonoBehaviour
         }
         else
         {
-
-            if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Bloodlust1")
-            {
-                Att += 3;
-            }
             if (PlayerPrefs.GetString("E" + e + "-Weakness1") == damageType || PlayerPrefs.GetString("E" + e + "-Weakness2") == damageType)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
@@ -122,6 +117,14 @@ public class SingleTargetSkills : MonoBehaviour
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
                 Crit(e);
+            }
+            if (damageType == "Fire")
+            {
+                for (int status = 0; status <= 3; status++)
+                {
+                    if (PlayerPrefs.GetString("P" + p + "Status" + status) == "firestorm") { Att = 2 * Att;}
+                }
+                SpecialCharge(p, Att, "Flamebearer");
             }
             if (PlayerPrefs.GetString("E" + e + "Status0") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status1") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status2") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status3") == "steadfast")
             {
