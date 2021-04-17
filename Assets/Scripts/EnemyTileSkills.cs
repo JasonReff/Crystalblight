@@ -242,8 +242,10 @@ public class EnemyTileSkills : MonoBehaviour
         return p;
     }
 
-    void Damage(int p, int e, int E1CHP, int E1CG, int Att, string damageType)
+    void Damage(int p, int e, int Att, string damageType)
     {
+        int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
+        int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
         if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Bloodlust1")
         {
             Att += 3;
@@ -307,6 +309,22 @@ public class EnemyTileSkills : MonoBehaviour
         }
     }
 
+    void EndSkill(int p)
+    {
+        GameObject hero = GameObject.Find("P" + p);
+        hero.GetComponent<SpriteRenderer>().color = Color.grey;
+        PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+        EndPlayerTurn();
+    }
+
+    void SkillReset()
+    {
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+        PlayerPrefs.SetInt("PNumber", 0);
+        for (int x = 1; x <= 25; x++) { PlayerPrefs.SetInt("Tile" + x + "Targeted", 0); }
+    }
+
     public void EndPlayerTurn()
     {
         int Turns = PlayerPrefs.GetInt("Turns");
@@ -339,34 +357,25 @@ public class EnemyTileSkills : MonoBehaviour
     void AncientChampion()
     {
         int p = Target();
-        if (p != 0)
+        EnemyColumn();
+        for (int x = 1; x <= 25; x++)
         {
-            PlayerPrefs.SetInt("Processing", 1);
-            EnemyColumn();
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            for (int x = 1; x <= 25; x++)
+            if (PlayerPrefs.GetInt("Tile" + x + "Targeted") == 1)
             {
-                if (PlayerPrefs.GetInt("Tile" + x + "Targeted") == 1)
+                for (int e = 1; e <= 8; e++)
                 {
-                    for (int e = 1; e <= 8; e++)
+                    if (PlayerPrefs.GetInt("E" + e + "-Loc") == x)
                     {
-                        if (PlayerPrefs.GetInt("E" + e + "-Loc") == x)
-                        {
-                            Damage(p, e, PlayerPrefs.GetInt("E" + e + "-CHP"), PlayerPrefs.GetInt("E" + e + "-CG"), 6 + 2 * PlayerPrefs.GetInt("P" + p + "-INT"), "Magic");
-                            StatusEffect.InflictStatusEnemy("jammed", e, 2);
-                        }
+                        Damage(p, e, 6 + 2 * PlayerPrefs.GetInt("P" + p + "-INT"), "Magic");
+                        StatusEffect.InflictStatusEnemy("jammed", e, 2);
                     }
                 }
             }
-            StatusEffect.InflictStatusCharacter("decoy", p, 2);
-            SingleTargetSkills.SpecialCharge(p, 2, "Ancient Defender");
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
-        for (int x = 1; x <= 25; x++) { PlayerPrefs.SetInt("Tile" + x + "Targeted", 0); }
+        StatusEffect.InflictStatusCharacter("decoy", p, 2);
+        SingleTargetSkills.SpecialCharge(p, 2, "Ancient Defender");
+        EndSkill(p);
+        SkillReset();
     }
 
 }
