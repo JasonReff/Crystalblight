@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Boo.Lang;
 
 public class SingleTargetSkills : MonoBehaviour
 {
@@ -88,7 +89,7 @@ public class SingleTargetSkills : MonoBehaviour
         PlayerPrefs.SetInt("ENumber", 0);
     }
 
-    void Damage(int p, int e, int Att, string damageType)
+    public static void Damage(int p, int e, int Att, string damageType)
     {
         //accuracyCheck
         int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
@@ -96,11 +97,9 @@ public class SingleTargetSkills : MonoBehaviour
         int accuracyCheck = UnityEngine.Random.Range(1, 101);
         if (PlayerPrefs.GetInt("P" + p + "-Accuracy") - PlayerPrefs.GetInt("E" + e + "-Dodge") < accuracyCheck)
         {
-            Miss(e);
-            /*PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            PlayerPrefs.SetString("ActiveSkill", "None");
-            PlayerPrefs.SetInt("ENumber", 0);
-            EndPlayerTurn();*/
+            SingleTargetSkills singleTargetSkills = new SingleTargetSkills();
+            singleTargetSkills.Miss(e);
+
         }
         else
         {
@@ -116,7 +115,8 @@ public class SingleTargetSkills : MonoBehaviour
             if (PlayerPrefs.GetInt("P" + p + "-CritRate") > critCheck)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
-                Crit(e);
+                SingleTargetSkills singleTargetSkills = new SingleTargetSkills();
+                singleTargetSkills.Crit(e);
             }
             if (damageType == "Fire")
             {
@@ -702,7 +702,7 @@ public class SingleTargetSkills : MonoBehaviour
         Invoke("MissMove", 1.0f);
     }
 
-    void MissMove()
+    static void MissMove()
     {
         GameObject.Find("Miss").transform.localPosition = new Vector3(-3000, 0, -1);
     }
@@ -713,6 +713,7 @@ public class SingleTargetSkills : MonoBehaviour
         GameObject.Find("Crit").transform.localPosition = loc;
         Invoke("CritMove", 1.0f);
     }
+
 
     void CritMove()
     {
