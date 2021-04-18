@@ -32,135 +32,20 @@ public class FriendlyTargetOtherSkills : MonoBehaviour
 
     void DualSiege()
     {
-        int p1 = Target();
-        if (p1 != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            int p2 = PlayerPrefs.GetInt("PNumber");
-            GameObject hero = GameObject.Find("P" + p1);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int P1CSP = PlayerPrefs.GetInt("P" + p1 + "-CSP");
-            int P1SP = PlayerPrefs.GetInt("P" + p1 + "-SP");
-            int P1Guard = PlayerPrefs.GetInt("P" + p1 + "-CG");
-            int P1MaxGuard = PlayerPrefs.GetInt("P" + p1 + "-Guard");
-            int P2Guard = PlayerPrefs.GetInt("P" + p2 + "-CG");
-            int P2MaxGuard = PlayerPrefs.GetInt("P" + p2 + "-Guard");
-            P1Guard += 2 * PlayerPrefs.GetInt("P" + p1 + "-END");
-            if (P1Guard > P1MaxGuard)
-            {
-                P1Guard = P1MaxGuard;
-            }
-            P2Guard += 2 * PlayerPrefs.GetInt("P" + p1 + "-END");
-            if (P2Guard > P2MaxGuard)
-            {
-                P2Guard = P2MaxGuard;
-            }
-            float P1Percent = (float)P1Guard / (float)P1MaxGuard;
-            GameObject P1GuardBar = GameObject.Find("P" + p1 + "-Guard");
-            P1GuardBar.transform.localScale = new Vector3(P1Percent, 1, 1);
-            float P2Percent = (float)P2Guard / (float)P2MaxGuard;
-            GameObject P2GuardBar = GameObject.Find("P" + p2 + "-Guard");
-            P2GuardBar.transform.localScale = new Vector3(P2Percent, 1, 1);
-            int SPCost = 8;
-            SPSpend(p1, P1CSP, P1SP, SPCost);
-            StatusEffect.InflictStatusCharacter("decoy", p1, 2);
-            StatusEffect.InflictStatusCharacter("decoy", p2, 2);
-            PlayerPrefs.SetInt("P" + p1 + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        int p = Target();
+        int p2 = PlayerPrefs.GetInt("PNumber");
+        GuardGain(p, 2 * PlayerPrefs.GetInt("P" + p + "-END"));
+        GuardGain(p2, 2 * PlayerPrefs.GetInt("P" + p + "-END"));
+        SPSpend(p, 8);
+        StatusEffect.InflictStatusCharacter("decoy", p, 2);
+        StatusEffect.InflictStatusCharacter("decoy", p2, 2);
+        EndSkill(p);
+        SkillReset();
     }
 
-    void Damage(int p, int e, int E1CHP, int E1CG, int Att, string damageType)
+    void Damage(int p, int e, int Att, string damageType)
     {
-        //accuracyCheck
-        int accuracyCheck = UnityEngine.Random.Range(1, 101);
-        if (PlayerPrefs.GetInt("P" + p + "-Accuracy") - PlayerPrefs.GetInt("E" + e + "-Dodge") < accuracyCheck)
-        {
-            Miss(e);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            PlayerPrefs.SetString("ActiveSkill", "None");
-            PlayerPrefs.SetInt("ENumber", 0);
-            EndPlayerTurn();
-        }
-        else
-        {
-
-            if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Bloodlust1")
-            {
-                Att += 3;
-            }
-            if (PlayerPrefs.GetString("E" + e + "-Weakness1") == damageType || PlayerPrefs.GetString("E" + e + "-Weakness2") == damageType)
-            {
-                Att = (int)Math.Round((float)Att * 1.5, 1);
-            }
-            if (PlayerPrefs.GetString("E" + e + "-Resistance1") == damageType || PlayerPrefs.GetString("E" + e + "-Resistance2") == damageType || PlayerPrefs.GetString("E" + e + "-Resistance3") == damageType)
-            {
-                Att = (int)Math.Round((float)Att * 0.75, 1);
-            }
-            int critCheck = UnityEngine.Random.Range(1, 101);
-            if (PlayerPrefs.GetInt("P" + p + "-CritRate") < critCheck)
-            {
-                Att = (int)Math.Round((float)Att * 1.5, 1);
-                Crit(e);
-            }
-            if (PlayerPrefs.GetString("E" + e + "Status0") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status1") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status2") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status3") == "steadfast")
-            {
-                E1CG -= Att;
-            }
-            else if (PlayerPrefs.GetString("E" + e + "Status0") == "vulnerable" || PlayerPrefs.GetString("E" + e + "Status1") == "vulnerable" || PlayerPrefs.GetString("E" + e + "Status2") == "vulnerable" || PlayerPrefs.GetString("E" + e + "Status3") == "vulnerable")
-            {
-                E1CHP -= Att;
-            }
-            else
-            {
-                E1CG = E1CG - ((Att / 2) + (Att % 2));
-                E1CHP = E1CHP - Att / 2;
-            }
-            if (E1CG < 0)
-            {
-                E1CHP = E1CHP + E1CG;
-                E1CG = 0;
-            }
-            GameObject GBar = GameObject.Find("E" + e + "-Guard");
-            PlayerPrefs.SetInt("E" + e + "-CG", E1CG);
-            int E1MaxG = PlayerPrefs.GetInt("E" + e + "-Guard");
-            float PercentG = ((float)E1CG / (float)E1MaxG);
-            GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            GameObject Bar = GameObject.Find("E" + e + "-Hp");
-            if (E1CHP > 0)
-            {
-                PlayerPrefs.SetInt("E" + e + "-CHP", E1CHP);
-                int E1Max = PlayerPrefs.GetInt("E" + e + "-HP");
-                float PercentHP = ((float)E1CHP / (float)E1Max);
-                Bar.gameObject.transform.localScale = new Vector3(PercentHP, 1, 1);
-            }
-            else
-            {
-                PlayerPrefs.SetInt("E" + e + "-CHP", 0);
-                int E1Max = PlayerPrefs.GetInt("E" + e + "-HP");
-                float PercentHP = 0;
-                Bar.gameObject.transform.localScale = new Vector3(PercentHP, 1, 1);
-                GameObject enemy = GameObject.Find("E" + e);
-                enemy.GetComponent<SpriteRenderer>().color = Color.black;
-                if (PlayerPrefs.GetInt("E1-CHP") <= 0 && PlayerPrefs.GetInt("E2-CHP") <= 0)
-                {
-                    //change to map
-                    RewardsScreen.RewardDisplay("standard");
-                    PlayerPrefs.SetInt("E1-Set", 0);
-                    //Application.LoadLevel("Win");
-                }
-                else if (PlayerPrefs.GetInt("E1-CHP") <= 0 && PlayerPrefs.GetString("E2-Name") == "null")
-                {
-                    //change to map
-                    RewardsScreen.RewardDisplay("standard");
-                    PlayerPrefs.SetInt("E1-Set", 0);
-                    //Application.LoadLevel("Win");
-                }
-
-            }
-        }
+        SingleTargetSkills.Damage(p, e, Att, damageType);
     }
     //Temporary skill
 
@@ -209,13 +94,47 @@ public class FriendlyTargetOtherSkills : MonoBehaviour
         while (PlayerPrefs.GetInt("E" + e + "-CHP") <= 0);
         return e;
     }
-    void SPSpend(int p, int P1CSP, int P1SP, int SPCost)
+    void GuardGain(int p, int guardGain)
     {
+        int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
+        int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
+        if (guardGain > (p1MaxGuard - p1CG)) { guardGain = p1MaxGuard - p1CG; }
+        p1CG += guardGain;
+        if (p1CG >= p1MaxGuard)
+        {
+            p1CG = p1MaxGuard;
+        }
+        PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
+        SingleTargetSkills.SpecialCharge(p, guardGain, "Iron Will");
+        PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
+        GameObject GBar = GameObject.Find("P" + p + "-Guard");
+        float PercentG = ((float)p1CG / (float)p1MaxGuard);
+        GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
+    }
+    void SPSpend(int p, int SPCost)
+    {
+        int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
+        int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
         P1CSP = P1CSP - SPCost;
         PlayerPrefs.SetInt("P" + p + "-CSP", P1CSP);
         float PercentSP = ((float)P1CSP / (float)P1SP);
         GameObject SPBar = GameObject.Find("P" + p + "-Sp");
         SPBar.gameObject.transform.localScale = new Vector3(PercentSP, 1, 1);
+    }
+
+    void EndSkill(int p)
+    {
+        GameObject hero = GameObject.Find("P" + p);
+        hero.GetComponent<SpriteRenderer>().color = Color.grey;
+        PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
+        EndPlayerTurn();
+    }
+
+    void SkillReset()
+    {
+        PlayerPrefs.SetString("ActiveSkill", "None");
+        PlayerPrefs.SetInt("ENumber", 0);
+        PlayerPrefs.SetInt("PNumber", 0);
     }
 
     //used for default
@@ -348,41 +267,6 @@ public class FriendlyTargetOtherSkills : MonoBehaviour
     void CritMove()
     {
         GameObject.Find("Crit").transform.localPosition = new Vector3(-3000, 0, -1);
-    }
-
-    void SpecialCheck(int amount, string special)
-    {
-        for (int i = 1; i <= 4; i++)
-        {
-            switch (special)
-            {
-                case "Bloodlust":
-                    {
-                        int specialMeter = PlayerPrefs.GetInt("P" + i + "-SpecialMeter");
-                        int newSpecial = specialMeter + amount;
-                        if (newSpecial >= PlayerPrefs.GetInt("P" + i + "-SpecialMax"))
-                        {
-                            newSpecial += PlayerPrefs.GetInt("P" + i + "-SpecialMax");
-                        }
-                        PlayerPrefs.SetInt("P" + i + "-SpecialMeter", specialMeter);
-                        GameObject.Find("P" + i + "-SpecialMeter").transform.localScale = new Vector3((float)newSpecial / (float)specialMeter, 1, 1);
-                        break;
-                    }
-                case "Poisoner":
-                    {
-                        break;
-                    }
-            }
-        }
-    }
-
-    public int PassiveSkillCheck(string status, int p, int statusX)
-    {
-        if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Poisoner1" && status == "poison")
-        {
-            statusX++;
-        }
-        return statusX;
     }
 
     int Push(int e)

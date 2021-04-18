@@ -88,7 +88,7 @@ public class SingleTargetSkills : MonoBehaviour
         PlayerPrefs.SetInt("ENumber", 0);
     }
 
-    void Damage(int p, int e, int Att, string damageType)
+    public static void Damage(int p, int e, int Att, string damageType)
     {
         //accuracyCheck
         int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
@@ -96,19 +96,12 @@ public class SingleTargetSkills : MonoBehaviour
         int accuracyCheck = UnityEngine.Random.Range(1, 101);
         if (PlayerPrefs.GetInt("P" + p + "-Accuracy") - PlayerPrefs.GetInt("E" + e + "-Dodge") < accuracyCheck)
         {
-            Miss(e);
-            /*PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            PlayerPrefs.SetString("ActiveSkill", "None");
-            PlayerPrefs.SetInt("ENumber", 0);
-            EndPlayerTurn();*/
+            SingleTargetSkills singleTargetSkills = new SingleTargetSkills();
+            singleTargetSkills.Miss(e);
+
         }
         else
         {
-
-            if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Bloodlust1")
-            {
-                Att += 3;
-            }
             if (PlayerPrefs.GetString("E" + e + "-Weakness1") == damageType || PlayerPrefs.GetString("E" + e + "-Weakness2") == damageType)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
@@ -121,7 +114,16 @@ public class SingleTargetSkills : MonoBehaviour
             if (PlayerPrefs.GetInt("P" + p + "-CritRate") > critCheck)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
-                Crit(e);
+                SingleTargetSkills singleTargetSkills = new SingleTargetSkills();
+                singleTargetSkills.Crit(e);
+            }
+            if (damageType == "Fire")
+            {
+                for (int status = 0; status <= 3; status++)
+                {
+                    if (PlayerPrefs.GetString("P" + p + "Status" + status) == "firestorm") { Att = 2 * Att;}
+                }
+                SpecialCharge(p, Att, "Flamebearer");
             }
             if (PlayerPrefs.GetString("E" + e + "Status0") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status1") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status2") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status3") == "steadfast")
             {
@@ -313,31 +315,27 @@ public class SingleTargetSkills : MonoBehaviour
     void QuickSlice()
     {
         int p = Target();
-        if (p != 0)
+        PlayerPrefs.SetInt("Processing", 1);
+        int e = PlayerPrefs.GetInt("ENumber");
+        Vector3 EBox5 = this.transform.position;
+        GameObject animg = GameObject.Find("Fire");
+        Animator anim = animg.GetComponent<Animator>();
+        animg.transform.position = EBox5;
+        anim.SetTrigger("Play");
+        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimationFire", 0.8f);
+        int Att = PlayerPrefs.GetInt("P" + p + "-DEX") + 3;
+        SPSpend(p, 4);
+        Damage(p, e, Att, "Physical");
+        if (PlayerPrefs.GetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played") == 1)
         {
-            PlayerPrefs.SetInt("Processing", 1);
-            int e = PlayerPrefs.GetInt("ENumber");
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            int Att = PlayerPrefs.GetInt("P" + p + "-DEX") + 3;
-            string damageType = "Physical";
-            SPSpend(p, 4);
-            Damage(p, e, Att, damageType);
-            if (PlayerPrefs.GetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played") == 1)
-            {
-                EndSkill(p);
-            }
-            else
-            {
-                PlayerPrefs.SetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played", 1);
-            }
+            EndSkill(p);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played", 1);
         }
         SkillReset();
     }
@@ -345,200 +343,119 @@ public class SingleTargetSkills : MonoBehaviour
     void IronCleaver()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            int e = PlayerPrefs.GetInt("ENumber");
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            int Att = PlayerPrefs.GetInt("P" + p + "CombatGuardGained");
-            string damageType = "Physical";
-            Damage(p, e, Att, damageType);
-            int collision = Push(e);
-            Collision(e, collision, 10, "null", 0);
-            UltFinish(p);
-            EndSkill(p);
-        }
+        int e = PlayerPrefs.GetInt("ENumber");
+        Damage(p, e, PlayerPrefs.GetInt("P" + p + "CombatGuardGained"), "Physical");
+        UltFinish(p);
+        EndSkill(p);
         SkillReset();
     }
 
     void Poison()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            int e = PlayerPrefs.GetInt("ENumber");
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            string status = "poison";
-            SPSpend(p, 5);
-            StatusEffect.InflictStatusEnemy(status, e, 5);
-            EndSkill(p);
-        }
+        PlayerPrefs.SetInt("Processing", 1);
+        int e = PlayerPrefs.GetInt("ENumber");
+        Vector3 EBox5 = this.transform.position;
+        GameObject animg = GameObject.Find("Fire");
+        Animator anim = animg.GetComponent<Animator>();
+        animg.transform.position = EBox5;
+        anim.SetTrigger("Play");
+        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimationFire", 0.8f);
+        string status = "poison";
+        SPSpend(p, 5);
+        StatusEffect.InflictStatusEnemy(status, e, 5);
+        EndSkill(p);
         SkillReset();
     }
 
     void EldritchArmor()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            int e = PlayerPrefs.GetInt("ENumber");
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
-            int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            int guard = 4 * PlayerPrefs.GetInt("P" + p + "-END");
-            p1CG += guard;
-            if (p1CG >= p1MaxGuard)
-            {
-                guard = p1MaxGuard - p1CG;
-                p1CG = p1MaxGuard;
-            }
-            PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
-            GameObject GBar = GameObject.Find("P" + p + "-Guard");
-            float PercentG = ((float)p1CG / (float)p1MaxGuard);
-            GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            SPSpend(p, 5);
-            SpecialCharge(p, guard, "Iron Will");
-            StatusEffect.InflictStatusEnemy("alarm", e, 2);
-            EndSkill(p);
-        }
+        int e = PlayerPrefs.GetInt("ENumber");
+        GuardGain(p, 4 * PlayerPrefs.GetInt("P" + p + "-END"));
+        SPSpend(p, 5);
+        StatusEffect.InflictStatusEnemy("alarm", e, 2);
+        EndSkill(p);
         SkillReset();
     }
 
     void EnergyAbsorption()
     {
         int p = Target();
-        if (p != 0)
+        int e = PlayerPrefs.GetInt("ENumber");
+        int enemyGuard = PlayerPrefs.GetInt("E" + e + "-CG");
+        int enemyMaxGuard = PlayerPrefs.GetInt("E" + e + "-Guard");
+        int absorption = 3 * PlayerPrefs.GetInt("P" + p + "-INT");
+        if (enemyGuard >= absorption)
         {
-            PlayerPrefs.SetInt("Processing", 1);
-            int e = PlayerPrefs.GetInt("ENumber");
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            int enemyGuard = PlayerPrefs.GetInt("E" + e + "-CG");
-            int enemyMaxGuard = PlayerPrefs.GetInt("E" + e + "-Guard");
-            int absorption = 3 * PlayerPrefs.GetInt("P" + p + "-INT");
-            if (enemyGuard >= absorption)
-            {
-                enemyGuard -= absorption;
-            }
-            else
-            {
-                absorption = enemyGuard;
-                enemyGuard = 0;
-            }
-            int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
-            int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
-            p1CG += absorption;
-            int guard = absorption;
-            if (p1CG >= p1MaxGuard)
-            {
-                guard = p1MaxGuard - p1CG;
-                p1CG = p1MaxGuard;
-            }
-            PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
-            GameObject GBar = GameObject.Find("P" + p + "-Guard");
-            float PercentG = ((float)p1CG / (float)p1MaxGuard);
-            GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            float enemyPercent = (float)enemyGuard / (float)enemyMaxGuard;
-            GameObject enemyGuardBar = GameObject.Find("E" + e + "-Guard");
-            enemyGuardBar.transform.localScale = new Vector3(enemyPercent, 1, 1);
-            SPSpend(p, 5);
-            SpecialCharge(p, guard, "Iron Will");
-            EndSkill(p);
+            enemyGuard -= absorption;
         }
+        else
+        {
+            absorption = enemyGuard;
+            enemyGuard = 0;
+        }
+        float enemyPercent = (float)enemyGuard / (float)enemyMaxGuard;
+        GameObject enemyGuardBar = GameObject.Find("E" + e + "-Guard");
+        enemyGuardBar.transform.localScale = new Vector3(enemyPercent, 1, 1);
+        GuardGain(p, absorption);
+        SPSpend(p, 5);
+        EndSkill(p);
         SkillReset();
     }
 
     void BraveSword()
     {
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            int e = PlayerPrefs.GetInt("ENumber");
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            Damage(p, e, 5 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
-            SPSpend(p, 4);
-            StatusEffect.InflictStatusCharacter("decoy", p, 1);
-            SpecialCharge(p, 1, "Ancient Champion");
-            EndSkill(p);
-        }
+        PlayerPrefs.SetInt("Processing", 1);
+        int e = PlayerPrefs.GetInt("ENumber");
+        Vector3 EBox5 = this.transform.position;
+        GameObject animg = GameObject.Find("Fire");
+        Animator anim = animg.GetComponent<Animator>();
+        animg.transform.position = EBox5;
+        anim.SetTrigger("Play");
+        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimationFire", 0.8f);
+        Damage(p, e, 5 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
+        SPSpend(p, 4);
+        StatusEffect.InflictStatusCharacter("decoy", p, 1);
+        SpecialCharge(p, 1, "Ancient Champion");
+        EndSkill(p);
         SkillReset();
     }
 
     void Backswing()
     {
         int p = Target();
-        if (p != 0)
-        {
-            int e = PlayerPrefs.GetInt("ENumber");
-            Damage(p, e, 10 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
-            SPSpend(p, 8);
-            StatusEffect.InflictStatusCharacter("counter", p, 1);
-            SpecialCharge(p, 1, "Counterstrike");
-            EndSkill(p);
-        }
+        int e = PlayerPrefs.GetInt("ENumber");
+        Damage(p, e, 10 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
+        SPSpend(p, 8);
+        StatusEffect.InflictStatusCharacter("counter", p, 1);
+        SpecialCharge(p, 1, "Counterstrike");
+        EndSkill(p);
         SkillReset();
     }
 
     void TitansClash()
     {
         int p = Target();
-        if (p != 0)
+        int e = PlayerPrefs.GetInt("ENumber");
+        int decoy = 0;
+        for (int x = 0; x <= 3; x++)
         {
-            int e = PlayerPrefs.GetInt("ENumber");
-            int decoy = 0;
-            for (int x = 0; x <= 3; x++)
+            if (PlayerPrefs.GetString("P" + p + "-Status" + x) == "decoy")
             {
-                if (PlayerPrefs.GetString("P" + p + "-Status" + x) == "decoy")
-                {
-                    decoy = PlayerPrefs.GetInt("P" + p + "-Status" + x + "X");
-                }
+                decoy = PlayerPrefs.GetInt("P" + p + "-Status" + x + "X");
             }
-            Damage(p, e, 14 * decoy, "Physical");
-            SPSpend(p, 22);
-            EndSkill(p);
         }
+        Damage(p, e, 14 * decoy, "Physical");
+        SPSpend(p, 22);
+        EndSkill(p);
         SkillReset();
     }
 
@@ -546,123 +463,103 @@ public class SingleTargetSkills : MonoBehaviour
     void HeatBlast()
     {
         int p = Target();
-        if (p != 0)
+        int e = PlayerPrefs.GetInt("ENumber");
+        int damage = 8 + PlayerPrefs.GetInt("P" + p + "-INT");
+        if (GameObject.Find("E-Block-25") != null)
         {
-            int e = PlayerPrefs.GetInt("ENumber");
-            int damage = 8 + PlayerPrefs.GetInt("P" + p + "-INT");
-            if (GameObject.Find("E-Block-25") != null)
+            if (PlayerPrefs.GetInt("E" + e + "-Loc") == 1 || PlayerPrefs.GetInt("E" + e + "-Loc") == 6 || PlayerPrefs.GetInt("E" + e + "-Loc") == 11 || PlayerPrefs.GetInt("E" + e + "-Loc") == 16 || PlayerPrefs.GetInt("E" + e + "-Loc") == 21)
             {
-                if (PlayerPrefs.GetInt("E" + e + "-Loc") == 1 || PlayerPrefs.GetInt("E" + e + "-Loc") == 6 || PlayerPrefs.GetInt("E" + e + "-Loc") == 11 || PlayerPrefs.GetInt("E" + e + "-Loc") == 16 || PlayerPrefs.GetInt("E" + e + "-Loc") == 21)
-                {
-                    damage += 5;
-                }
+                damage += 5;
             }
-            else if (GameObject.Find("E-Block-16") != null)
-            {
-                if (PlayerPrefs.GetInt("E" + e + "-Loc") == 1 || PlayerPrefs.GetInt("E" + e + "-Loc") == 5 || PlayerPrefs.GetInt("E" + e + "-Loc") == 9 || PlayerPrefs.GetInt("E" + e + "-Loc") == 13)
-                {
-                    damage += 5;
-                }
-            }
-            else
-            {
-                if (PlayerPrefs.GetInt("E" + e + "-Loc") == 1 || PlayerPrefs.GetInt("E" + e + "-Loc") == 4 || PlayerPrefs.GetInt("E" + e + "-Loc") == 7)
-                {
-                    damage += 5;
-                }
-            }
-            Damage(p, e, damage, "Fire");
-            SPSpend(p, 3);
-            PlayerPrefs.SetInt("Processing", 1);
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            EndSkill(p);
         }
+        else if (GameObject.Find("E-Block-16") != null)
+        {
+            if (PlayerPrefs.GetInt("E" + e + "-Loc") == 1 || PlayerPrefs.GetInt("E" + e + "-Loc") == 5 || PlayerPrefs.GetInt("E" + e + "-Loc") == 9 || PlayerPrefs.GetInt("E" + e + "-Loc") == 13)
+            {
+                damage += 5;
+            }
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("E" + e + "-Loc") == 1 || PlayerPrefs.GetInt("E" + e + "-Loc") == 4 || PlayerPrefs.GetInt("E" + e + "-Loc") == 7)
+            {
+                damage += 5;
+            }
+        }
+        Damage(p, e, damage, "Fire");
+        SPSpend(p, 3);
+        PlayerPrefs.SetInt("Processing", 1);
+        Vector3 EBox5 = this.transform.position;
+        GameObject animg = GameObject.Find("Fire");
+        Animator anim = animg.GetComponent<Animator>();
+        animg.transform.position = EBox5;
+        anim.SetTrigger("Play");
+        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimationFire", 0.8f);
+        EndSkill(p);
         SkillReset();
     }
 
     void ThirdDegree()
     {
         int p = Target();
-        if (p != 0)
-        {
-            int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int damage = 16 + 2*PlayerPrefs.GetInt("P" + p + "-INT");
-            Damage(p, e, damage, "Fire");
-            SPSpend(p, 12);
-            StatusEffect.InflictStatusEnemy("scarred", e, 4);
-            PlayerPrefs.SetInt("Processing", 1);
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        int e = PlayerPrefs.GetInt("ENumber");
+        Damage(p, e, 16 + 2 * PlayerPrefs.GetInt("P" + p + "-INT"), "Fire");
+        SPSpend(p, 12);
+        StatusEffect.InflictStatusEnemy("scarred", e, 4);
+        PlayerPrefs.SetInt("Processing", 1);
+        Vector3 EBox5 = this.transform.position;
+        GameObject animg = GameObject.Find("Fire");
+        Animator anim = animg.GetComponent<Animator>();
+        animg.transform.position = EBox5;
+        anim.SetTrigger("Play");
+        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimationFire", 0.8f);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Combustion()
     {
         int p = Target();
-        if (p != 0)
+        int e = PlayerPrefs.GetInt("ENumber");
+        Damage(p, e, 11 + PlayerPrefs.GetInt("P" + p + "-INT"), "Fire");
+        SPSpend(p, 10);
+        for (int i = 0; i <= 3; i++)
         {
-            int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            int damage = 11 + PlayerPrefs.GetInt("P" + p + "-INT");
-            Damage(p, e, damage, "Fire");
-            SPSpend(p, 10);
-            for (int i = 0; i <= 3; i++)
+            if (PlayerPrefs.GetString("E" + e + "Status" + i) == "burning")
             {
-                if (PlayerPrefs.GetString("E" + e + "Status" + i) == "burning")
-                {
-                    Damage(p, e, 10, "Explosive");
-                    StatusEffect.StatusLockEnemy("burning", e);
-                }
+                Damage(p, e, 10, "Explosive");
+                StatusEffect.StatusLockEnemy("burning", e);
             }
-            PlayerPrefs.SetInt("Processing", 1);
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("Fire");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimationFire", 0.8f);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
         }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        PlayerPrefs.SetInt("Processing", 1);
+        Vector3 EBox5 = this.transform.position;
+        GameObject animg = GameObject.Find("Fire");
+        Animator anim = animg.GetComponent<Animator>();
+        animg.transform.position = EBox5;
+        anim.SetTrigger("Play");
+        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimationFire", 0.8f);
+        EndSkill(p);
+        SkillReset();
     }
 
     void Incinerate()
     {
         int p = Target();
-        if (p != 0)
-        {
-            int e = PlayerPrefs.GetInt("ENumber");
-            int damage = 25 + PlayerPrefs.GetInt("P" + p + "-INT");
-            SPSpend(p, 18);
-            Damage(p, e, damage, "Fire");
-            StatusEffect.InflictStatusEnemy("burning", e, 10);
-            EndSkill(p);
-        }
+        int e = PlayerPrefs.GetInt("ENumber");
+        int damage = 25 + PlayerPrefs.GetInt("P" + p + "-INT");
+        SPSpend(p, 18);
+        Damage(p, e, damage, "Fire");
+        StatusEffect.InflictStatusEnemy("burning", e, 10);
+        EndSkill(p);
         SkillReset();
     }
 
@@ -683,6 +580,24 @@ public class SingleTargetSkills : MonoBehaviour
         hero.GetComponent<SpriteRenderer>().color = Color.grey;
         PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
         EndPlayerTurn();
+    }
+
+    void GuardGain(int p, int guardGain)
+    {
+        int p1CG = PlayerPrefs.GetInt("P" + p + "-CG");
+        int p1MaxGuard = PlayerPrefs.GetInt("P" + p + "-Guard");
+        if (guardGain > (p1MaxGuard - p1CG)) { guardGain = p1MaxGuard - p1CG; }
+        p1CG += guardGain;
+        if (p1CG >= p1MaxGuard)
+        {
+            p1CG = p1MaxGuard;
+        }
+        PlayerPrefs.SetInt("P" + p + "-CG", p1CG);
+        SingleTargetSkills.SpecialCharge(p, guardGain, "Iron Will");
+        PlayerPrefs.SetInt("P" + p + "CombatGuardGained", PlayerPrefs.GetInt("P" + p + "CombatGuardGained") + guardGain);
+        GameObject GBar = GameObject.Find("P" + p + "-Guard");
+        float PercentG = ((float)p1CG / (float)p1MaxGuard);
+        GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
     }
 
     //used for animations
@@ -773,6 +688,12 @@ public class SingleTargetSkills : MonoBehaviour
         }
     }
 
+    void GainDecoy(int p, int amount)
+    {
+        StatusEffect.InflictStatusCharacter("decoy", p, amount);
+        SpecialCharge(p, amount, "Ancient Champion");
+    }
+
     void Miss(int e)
     {
         Vector3 loc = GameObject.Find("E" + e.ToString()).transform.localPosition;
@@ -780,7 +701,7 @@ public class SingleTargetSkills : MonoBehaviour
         Invoke("MissMove", 1.0f);
     }
 
-    void MissMove()
+    static void MissMove()
     {
         GameObject.Find("Miss").transform.localPosition = new Vector3(-3000, 0, -1);
     }
@@ -791,6 +712,7 @@ public class SingleTargetSkills : MonoBehaviour
         GameObject.Find("Crit").transform.localPosition = loc;
         Invoke("CritMove", 1.0f);
     }
+
 
     void CritMove()
     {
@@ -836,6 +758,8 @@ public class SingleTargetSkills : MonoBehaviour
             specialBar.transform.localScale = new Vector3(specialPercent, 1, 1);
         }
     }
+
+
 
     int Push(int e)
     {
