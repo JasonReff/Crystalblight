@@ -574,7 +574,7 @@ public class SingleTargetSkills : MonoBehaviour
         SendMessage("TakeTurn");
     }
 
-    static void EndSkill(int p)
+    void EndSkill(int p)
     {
         GameObject hero = GameObject.Find("P" + p);
         hero.GetComponent<SpriteRenderer>().color = Color.grey;
@@ -586,7 +586,8 @@ public class SingleTargetSkills : MonoBehaviour
     {
         if (PlayerPrefs.GetInt(PlayerPrefs.GetString("ActiveSkill") + "-Played") == 1)
         {
-            EndSkill(p);
+            SingleTargetSkills singleTargetSkills = new SingleTargetSkills();
+            singleTargetSkills.EndSkill(p);
         }
         else
         {
