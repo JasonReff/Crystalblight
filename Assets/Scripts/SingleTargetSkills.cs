@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditorInternal;
 
 public class SingleTargetSkills : MonoBehaviour
 {
@@ -567,22 +568,23 @@ public class SingleTargetSkills : MonoBehaviour
     {
         int p = Target();
         int e = 0;
-        if (PlayerPrefs.GetString("P" + p + "StartUp") == "Cloudburst")
+        switch (PlayerPrefs.GetString("P" + p + "StartUp"))
         {
-            e = PlayerPrefs.GetInt("P" + p + "EnemyTarget");
-            if (PlayerPrefs.GetInt("E" + e + "-CHP") == 0) {e = RandomEnemy(); }
-            Damage(p, e, 25 + 2 * PlayerPrefs.GetInt("P" + p + "-INT"), "Electric");
-            StatusEffect.InflictStatusEnemy("weakened", e, 3);
-            EndSkill(p);
-        }
-        else if (PlayerPrefs.GetString("P" + p + "StartUp") == "null")
-        {
-            
-            e = PlayerPrefs.GetInt("ENumber");
-            SPSpend(p, 14);
-            PlayerPrefs.SetString("P" + p + "StartUp", "Cloudburst");
-            PlayerPrefs.SetInt("P" + p + "EnemyTarget", e);
-            EndSkill(p);
+            case "Cloudburst":
+                e = PlayerPrefs.GetInt("P" + p + "EnemyTarget");
+                if (PlayerPrefs.GetInt("E" + e + "-CHP") == 0) {e = RandomEnemy(); }
+                Damage(p, e, 25 + 2 * PlayerPrefs.GetInt("P" + p + "-INT"), "Electric");
+                StatusEffect.InflictStatusEnemy("weakened", e, 3);
+                EndSkill(p);
+                PlayerPrefs.SetString("P" + p + "StartUp", "null");
+                break;
+            case "null":
+                e = PlayerPrefs.GetInt("ENumber");
+                SPSpend(p, 14);
+                PlayerPrefs.SetString("P" + p + "StartUp", "Cloudburst");
+                PlayerPrefs.SetInt("P" + p + "EnemyTarget", e);
+                EndSkill(p);
+                break;
         }
         SkillReset();
     }
