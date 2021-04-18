@@ -35,6 +35,11 @@ public class FriendlyTargetSkills : MonoBehaviour
         SingleTargetSkills.Damage(p, e, Att, damageType);
     }
 
+    void FastSkill(int p)
+    {
+        SingleTargetSkills.FastSkill(p);
+    }
+
     void SkillReset()
     {
         PlayerPrefs.SetString("ActiveSkill", "None");

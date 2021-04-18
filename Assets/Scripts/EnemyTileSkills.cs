@@ -255,6 +255,11 @@ public class EnemyTileSkills : MonoBehaviour
         EndPlayerTurn();
     }
 
+    void FastSkill(int p)
+    {
+        SingleTargetSkills.FastSkill(p);
+    }
+
     void SkillReset()
     {
         PlayerPrefs.SetString("ActiveSkill", "None");

@@ -665,12 +665,8 @@ public class UntargetedSkills : MonoBehaviour
         }
     }
 
-    public int PassiveSkillCheck(string status, int p, int statusX)
+    void FastSkill(int p)
     {
-        if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Poisoner1" && status == "poison")
-        {
-            statusX++;
-        }
-        return statusX;
+        SingleTargetSkills.FastSkill(p);
     }
 }

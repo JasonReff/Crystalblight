@@ -129,7 +129,10 @@ public class FriendlyTargetOtherSkills : MonoBehaviour
         PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
         EndPlayerTurn();
     }
-
+    void FastSkill(int p)
+    {
+        SingleTargetSkills.FastSkill(p);
+    }
     void SkillReset()
     {
         PlayerPrefs.SetString("ActiveSkill", "None");
