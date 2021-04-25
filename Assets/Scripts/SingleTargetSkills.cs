@@ -43,7 +43,6 @@ public class SingleTargetSkills : MonoBehaviour
         Flamebearer(p, e);
         string damageType = PlayerPrefs.GetString("P" + p + "AttackDamageType");
         Damage(p, e, Att, damageType);
-        StartCoroutine(Animation("Slash"));
         EndSkill(p);
         SkillReset();
     }
