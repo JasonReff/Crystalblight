@@ -389,7 +389,7 @@ public class E1 : MonoBehaviour
     {
         string skill = String.Concat(PlayerPrefs.GetString("E1-CAtt").Where(c => !Char.IsWhiteSpace(c)));
         SendMessage(skill);
-        Invoke("EndAnimation3", 0.1f);
+        EndTurn();
     }
     public void Move()
     {

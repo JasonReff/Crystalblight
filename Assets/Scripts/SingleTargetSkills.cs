@@ -41,7 +41,7 @@ public class SingleTargetSkills : MonoBehaviour
         int e = PlayerPrefs.GetInt("ENumber");
         int Att = PlayerPrefs.GetInt("P" + p + "-Attack");
         Flamebearer(p, e);
-        string damageType = PlayerPrefs.GetString("P" + p + "AttackDamageType");
+        string damageType = "Physical";//PlayerPrefs.GetString("P" + p + "AttackDamageType");
         Damage(p, e, Att, damageType);
         EndSkill(p);
         SkillReset();
