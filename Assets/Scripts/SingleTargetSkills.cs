@@ -230,46 +230,11 @@ public class SingleTargetSkills : MonoBehaviour
         anim.SetBool("null", false);
         GameObject InputDiss = GameObject.Find("InputDiss");
         InputDiss.transform.position = new Vector3(0, 0, -100);
-        Console.Write("AnimationPlaying");
         yield return new WaitForSeconds(1.0f);
         anim.SetBool(animation, false);
         anim.SetBool("null", true);
-        Console.Write("AnimationStopped");
         LoadSprite.FindSprite(effect, "null");
         InputDiss.transform.position = new Vector3(0, -2000, -100);
-        PlayerPrefs.SetInt("Processing", 0);
-    }
-    public IEnumerator AnimationDelay()
-    {
-        for (float t = 1; t >= 0; t -= 0.1f)
-        {
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-    public void EndAnimation()
-    {
-        Vector3 ScreenPos = new Vector3(0, -192, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation2", 0.1f);
-    }
-
-    public void EndAnimation2()
-    {
-        Vector3 ScreenPos = new Vector3(0, 246, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation3", 0.1f);
-    }
-    public void EndAnimation3()
-    {
-        Vector3 temp = new Vector3(-5000, 0, 0);
-        GameObject animg = GameObject.Find("slasher");
-        animg.transform.position = temp;
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = temp;
-        InputDiss = GameObject.Find("PDiss");
-        InputDiss.transform.position = temp;
         PlayerPrefs.SetInt("Processing", 0);
     }
 
@@ -636,33 +601,6 @@ public class SingleTargetSkills : MonoBehaviour
         GameObject GBar = GameObject.Find("P" + p + "-Guard");
         float PercentG = ((float)p1CG / (float)p1MaxGuard);
         GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-    }
-
-    //used for animations
-    public void EndAnimationFire()
-    {
-        Vector3 ScreenPos = new Vector3(0, -192, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation2Fire", 0.1f);
-    }
-    public void EndAnimation2Fire()
-    {
-        Vector3 ScreenPos = new Vector3(0, 246, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation3Fire", 0.1f);
-    }
-    public void EndAnimation3Fire()
-    {
-        Vector3 temp = new Vector3(-5000, 0, 0);
-        GameObject animg = GameObject.Find("Fire");
-        animg.transform.position = temp;
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = temp;
-        InputDiss = GameObject.Find("PDiss");
-        InputDiss.transform.position = temp;
-        PlayerPrefs.SetInt("Processing", 0);
     }
 
     public void EndPlayerTurn()

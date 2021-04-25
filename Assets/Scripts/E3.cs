@@ -344,16 +344,12 @@ public class E3 : MonoBehaviour
         GameObject target = GameObject.Find(PlayerPrefs.GetString("P" + PlayerPrefs.GetInt("E3-AttP") + "-Name"));
         GameObject targetHP = GameObject.Find("P" + PlayerPrefs.GetInt("E3-AttP") + "-Hp");
         GameObject targetG = GameObject.Find("P" + PlayerPrefs.GetInt("E3-AttP") + "-Guard");
-        GameObject animg = GameObject.Find("slasher");
-        Animator anim = animg.GetComponent<Animator>();
-        animg.transform.position = targetHP.transform.position + new Vector3(100, +100, 0); ;
-        anim.SetTrigger("Play");
-        Invoke("EndAnimation", 1.6f);
         int p = PlayerPrefs.GetInt("E3-AttP");
         int PCHP = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E3-AttP") + "-CHP");
         int PCG = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E3-AttP") + "-CG");
         int Att = PlayerPrefs.GetInt("E3-Attack");
         string damageType = "Physical";
+        StartCoroutine(Animation(damageType));
         if (PlayerPrefs.GetString("P" + p + "-Weakness1") == damageType || PlayerPrefs.GetString("P" + p + "-Weakness2") == damageType)
         {
             Att = (int)Math.Round((float)Att * 1.5, 1);
@@ -402,6 +398,7 @@ public class E3 : MonoBehaviour
         PMax = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E3-AttP") + "-Guard");
         Percent = ((float)PCG / (float)PMax);
         targetG.gameObject.transform.localScale = new Vector3(Percent, 1, 1);
+        EndTurn();
     }
     public void Defend()
     {
@@ -418,7 +415,7 @@ public class E3 : MonoBehaviour
         GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
         PlayerPrefs.SetInt("E3-CG", eCurrentGuard);
         StatusEffect.InflictStatusEnemy("steadfast", 1, 1);
-        Invoke("EndAnimation3", 0.1f);
+        EndTurn();
     }
 
     public void Skill()
@@ -758,6 +755,25 @@ public class E3 : MonoBehaviour
         PlayerPrefs.SetInt("E3-Loc", dest);
         PlayerPrefs.SetInt("E-Block-" + dest + "-Moveable", 0);
     }
+    IEnumerator Animation(string animation)
+    {
+        PlayerPrefs.SetInt("Processing", 1);
+        GameObject effect = GameObject.Find("SkillEffect");
+        Animator anim = effect.GetComponent<Animator>();
+        GameObject target = GameObject.Find("P" + PlayerPrefs.GetInt("E3-AttP"));
+        effect.transform.position = target.transform.position;
+        anim.SetBool(animation, true);
+        anim.SetBool("null", false);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = new Vector3(0, 0, -100);
+        yield return new WaitForSeconds(1.0f);
+        anim.SetBool(animation, false);
+        anim.SetBool("null", true);
+        LoadSprite.FindSprite(effect, "null");
+        InputDiss.transform.position = new Vector3(0, -2000, -100);
+        PlayerPrefs.SetInt("Processing", 0);
+    }
+
     public void EndAnimation()
     {
         Vector3 ScreenPos = new Vector3(0, -192, -100);
