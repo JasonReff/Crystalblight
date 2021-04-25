@@ -20,6 +20,7 @@ public class SingleTargetSkills : MonoBehaviour
                 PlayerPrefs.SetInt("P" + p + "CombatGuardGained", 0);
             }
         }
+
     }
 
     public void OnMouseDown()
@@ -33,63 +34,21 @@ public class SingleTargetSkills : MonoBehaviour
         }
     }
 
-    //The following is a set of dummy skills for reuse of code
-
     //The following are real skills
     void Attack()
     {
-
         int p = Target();
-        if (p != 0)
-        {
-            PlayerPrefs.SetInt("Processing", 1);
-            int e = PlayerPrefs.GetInt("ENumber");
-            GameObject hero = GameObject.Find("P" + p);
-            hero.GetComponent<SpriteRenderer>().color = Color.grey;
-            Vector3 EBox5 = this.transform.position;
-            GameObject animg = GameObject.Find("slasher");
-            Animator anim = animg.GetComponent<Animator>();
-            animg.transform.position = EBox5;
-            anim.SetTrigger("Play");
-            Vector3 ScreenPos = new Vector3(0, -538, -100);
-            GameObject InputDiss = GameObject.Find("InputDiss");
-            InputDiss.transform.position = ScreenPos;
-            Invoke("EndAnimation", 1.8f);
-            int Att = PlayerPrefs.GetInt("P" + p + "-Attack");
-            if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Flamebearer1")
-            {
-                StatusEffect.InflictStatusEnemy("burning", e, 1);
-            }
-            else if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Flamebearer2")
-            {
-                StatusEffect.InflictStatusEnemy("burning", e, 2);
-                int sp = PlayerPrefs.GetInt("P" + p + "-CSP");
-                sp += 1;
-                if (sp >= PlayerPrefs.GetInt("P" + p + "-SP")) { sp = PlayerPrefs.GetInt("P" + p + "-SP"); }
-                float PercentSP = ((float)sp / (float)PlayerPrefs.GetInt("P" + p + "-SP"));
-                GameObject SPBar = GameObject.Find("P" + p + "-Sp");
-                SPBar.gameObject.transform.localScale = new Vector3(PercentSP, 1, 1);
-            }
-            else if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Flamebearer3")
-            {
-                StatusEffect.InflictStatusEnemy("burning", e, 3);
-                int sp = PlayerPrefs.GetInt("P" + p + "-CSP");
-                sp += 2;
-                if (sp >= PlayerPrefs.GetInt("P" + p + "-SP")) { sp = PlayerPrefs.GetInt("P" + p + "-SP"); }
-                float PercentSP = ((float)sp / (float)PlayerPrefs.GetInt("P" + p + "-SP"));
-                GameObject SPBar = GameObject.Find("P" + p + "-Sp");
-                SPBar.gameObject.transform.localScale = new Vector3(PercentSP, 1, 1);
-            }
-            string damageType = PlayerPrefs.GetString("P" + p + "AttackDamageType");
-            Damage(p, e, Att, damageType);
-            PlayerPrefs.SetInt("P" + p + "-TurnTaken", 1);
-            EndPlayerTurn();
-        }
-        PlayerPrefs.SetString("ActiveSkill", "None");
-        PlayerPrefs.SetInt("ENumber", 0);
+        int e = PlayerPrefs.GetInt("ENumber");
+        int Att = PlayerPrefs.GetInt("P" + p + "-Attack");
+        Flamebearer(p, e);
+        string damageType = PlayerPrefs.GetString("P" + p + "AttackDamageType");
+        Damage(p, e, Att, damageType);
+        StartCoroutine(Animation("Slash"));
+        EndSkill(p);
+        SkillReset();
     }
 
-    public static void Damage(int p, int e, int Att, string damageType)
+    public void Damage(int p, int e, int Att, string damageType)
     {
         //accuracyCheck
         int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
@@ -97,12 +56,11 @@ public class SingleTargetSkills : MonoBehaviour
         int accuracyCheck = UnityEngine.Random.Range(1, 101);
         if (PlayerPrefs.GetInt("P" + p + "-Accuracy") - PlayerPrefs.GetInt("E" + e + "-Dodge") < accuracyCheck)
         {
-            SingleTargetSkills singleTargetSkills = new SingleTargetSkills();
-            singleTargetSkills.Miss(e);
-
+            Miss(e);
         }
         else
         {
+            StartCoroutine(Animation(damageType));
             if (PlayerPrefs.GetString("E" + e + "-Weakness1") == damageType || PlayerPrefs.GetString("E" + e + "-Weakness2") == damageType)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
@@ -115,8 +73,7 @@ public class SingleTargetSkills : MonoBehaviour
             if (PlayerPrefs.GetInt("P" + p + "-CritRate") > critCheck)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
-                SingleTargetSkills singleTargetSkills = new SingleTargetSkills();
-                singleTargetSkills.Crit(e);
+                Crit(e);
             }
             if (damageType == "Fire")
             {
@@ -183,8 +140,11 @@ public class SingleTargetSkills : MonoBehaviour
             }
         }
     }
-    //Temporary skill
 
+    void HealSP(int player, int SPGain)
+    {
+        FriendlyTargetSkills.HealSP(player, SPGain);
+    }
     public int Target()
     {
         int p = 0;
@@ -260,18 +220,57 @@ public class SingleTargetSkills : MonoBehaviour
         PlayerPrefs.SetInt("PNumber", 0);
     }
 
-    void Animation(string animation)
+    IEnumerator Animation(string animation)
     {
         PlayerPrefs.SetInt("Processing", 1);
-        Vector3 EBox5 = this.transform.position;
-        GameObject animg = GameObject.Find(animation);
-        Animator anim = animg.GetComponent<Animator>();
-        animg.transform.position = EBox5;
-        anim.SetTrigger("Play");
-        Vector3 ScreenPos = new Vector3(0, -538, -100);
+        GameObject effect = GameObject.Find("SkillEffect");
+        Animator anim = effect.GetComponent<Animator>();
+        effect.transform.position = this.transform.position;
+        anim.SetBool(animation, true);
+        anim.SetBool("null", false);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = new Vector3(0, 0, -100);
+        Console.Write("AnimationPlaying");
+        yield return new WaitForSeconds(1.0f);
+        anim.SetBool(animation, false);
+        anim.SetBool("null", true);
+        Console.Write("AnimationStopped");
+        LoadSprite.FindSprite(effect, "null");
+        InputDiss.transform.position = new Vector3(0, -2000, -100);
+        PlayerPrefs.SetInt("Processing", 0);
+    }
+    public IEnumerator AnimationDelay()
+    {
+        for (float t = 1; t >= 0; t -= 0.1f)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+    public void EndAnimation()
+    {
+        Vector3 ScreenPos = new Vector3(0, -192, -100);
         GameObject InputDiss = GameObject.Find("InputDiss");
         InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation", 0.8f);
+        Invoke("EndAnimation2", 0.1f);
+    }
+
+    public void EndAnimation2()
+    {
+        Vector3 ScreenPos = new Vector3(0, 246, -100);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = ScreenPos;
+        Invoke("EndAnimation3", 0.1f);
+    }
+    public void EndAnimation3()
+    {
+        Vector3 temp = new Vector3(-5000, 0, 0);
+        GameObject animg = GameObject.Find("slasher");
+        animg.transform.position = temp;
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = temp;
+        InputDiss = GameObject.Find("PDiss");
+        InputDiss.transform.position = temp;
+        PlayerPrefs.SetInt("Processing", 0);
     }
 
     //items
@@ -640,31 +639,6 @@ public class SingleTargetSkills : MonoBehaviour
     }
 
     //used for animations
-    public void EndAnimation()
-    {
-        Vector3 ScreenPos = new Vector3(0, -192, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation2", 0.1f);
-    }
-    public void EndAnimation2()
-    {
-        Vector3 ScreenPos = new Vector3(0, 246, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation3", 0.1f);
-    }
-    public void EndAnimation3()
-    {
-        Vector3 temp = new Vector3(-5000, 0, 0);
-        GameObject animg = GameObject.Find("slasher");
-        animg.transform.position = temp;
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = temp;
-        InputDiss = GameObject.Find("PDiss");
-        InputDiss.transform.position = temp;
-        PlayerPrefs.SetInt("Processing", 0);
-    }
     public void EndAnimationFire()
     {
         Vector3 ScreenPos = new Vector3(0, -192, -100);
@@ -733,6 +707,24 @@ public class SingleTargetSkills : MonoBehaviour
         SpecialCharge(p, amount, "Ancient Champion");
     }
 
+    void Flamebearer(int p, int e)
+    {
+        if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Flamebearer1")
+        {
+            StatusEffect.InflictStatusEnemy("burning", e, 1);
+        }
+        else if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Flamebearer2")
+        {
+            StatusEffect.InflictStatusEnemy("burning", e, 2);
+            HealSP(p, 1);
+        }
+        else if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Flamebearer3")
+        {
+            StatusEffect.InflictStatusEnemy("burning", e, 3);
+            HealSP(p, 2);
+        }
+    }
+
     void Miss(int e)
     {
         Vector3 loc = GameObject.Find("E" + e.ToString()).transform.localPosition;
@@ -740,7 +732,7 @@ public class SingleTargetSkills : MonoBehaviour
         Invoke("MissMove", 1.0f);
     }
 
-    static void MissMove()
+    public void MissMove()
     {
         GameObject.Find("Miss").transform.localPosition = new Vector3(-3000, 0, -1);
     }
@@ -752,8 +744,7 @@ public class SingleTargetSkills : MonoBehaviour
         Invoke("CritMove", 1.0f);
     }
 
-
-    void CritMove()
+    public void CritMove()
     {
         GameObject.Find("Crit").transform.localPosition = new Vector3(-3000, 0, -1);
     }
