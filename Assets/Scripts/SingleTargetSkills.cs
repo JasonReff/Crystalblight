@@ -374,16 +374,7 @@ public class SingleTargetSkills : MonoBehaviour
     void BraveSword()
     {
         int p = Target();
-        PlayerPrefs.SetInt("Processing", 1);
         int e = PlayerPrefs.GetInt("ENumber");
-        Vector3 EBox5 = this.transform.position;
-        GameObject animg = GameObject.Find("Fire");
-        Animator anim = animg.GetComponent<Animator>();
-        animg.transform.position = EBox5;
-        anim.SetTrigger("Play");
-        Vector3 ScreenPos = new Vector3(0, -538, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
         Invoke("EndAnimationFire", 0.8f);
         Damage(p, e, 5 + 2 * PlayerPrefs.GetInt("P" + p + "-STR"), "Physical");
         SPSpend(p, 4);
@@ -452,16 +443,6 @@ public class SingleTargetSkills : MonoBehaviour
         }
         Damage(p, e, damage, "Fire");
         SPSpend(p, 3);
-        PlayerPrefs.SetInt("Processing", 1);
-        Vector3 EBox5 = this.transform.position;
-        GameObject animg = GameObject.Find("Fire");
-        Animator anim = animg.GetComponent<Animator>();
-        animg.transform.position = EBox5;
-        anim.SetTrigger("Play");
-        Vector3 ScreenPos = new Vector3(0, -538, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimationFire", 0.8f);
         EndSkill(p);
         SkillReset();
     }
@@ -473,16 +454,6 @@ public class SingleTargetSkills : MonoBehaviour
         Damage(p, e, 16 + 2 * PlayerPrefs.GetInt("P" + p + "-INT"), "Fire");
         SPSpend(p, 12);
         StatusEffect.InflictStatusEnemy("scarred", e, 4);
-        PlayerPrefs.SetInt("Processing", 1);
-        Vector3 EBox5 = this.transform.position;
-        GameObject animg = GameObject.Find("Fire");
-        Animator anim = animg.GetComponent<Animator>();
-        animg.transform.position = EBox5;
-        anim.SetTrigger("Play");
-        Vector3 ScreenPos = new Vector3(0, -538, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimationFire", 0.8f);
         EndSkill(p);
         SkillReset();
     }
@@ -501,16 +472,6 @@ public class SingleTargetSkills : MonoBehaviour
                 StatusEffect.StatusLockEnemy("burning", e);
             }
         }
-        PlayerPrefs.SetInt("Processing", 1);
-        Vector3 EBox5 = this.transform.position;
-        GameObject animg = GameObject.Find("Fire");
-        Animator anim = animg.GetComponent<Animator>();
-        animg.transform.position = EBox5;
-        anim.SetTrigger("Play");
-        Vector3 ScreenPos = new Vector3(0, -538, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimationFire", 0.8f);
         EndSkill(p);
         SkillReset();
     }
