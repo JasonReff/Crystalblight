@@ -242,39 +242,55 @@ public class E1 : MonoBehaviour
     public void ChooseAttack()
     {
         //just handles basic attack for now
-        int choice = UnityEngine.Random.Range(1, 4);
-        PlayerPrefs.SetInt("E1-Choice", choice);
-        if (choice == 1)
-        {
-            PlayerPrefs.SetString("E1-CAtt", "Basic Attack");
-            int time = (int)System.DateTime.Now.Ticks;
-            UnityEngine.Random.seed = time;
-            int p = 0;
-            while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+        if (PlayerPrefs.GetString("E1StartUp") == "null")
             {
-                p = UnityEngine.Random.Range(1, 3);
-                PlayerPrefs.SetInt("E1-AttP", p);
-                PlayerPrefs.SetInt("E1-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+            int choice = UnityEngine.Random.Range(1, 4);
+            PlayerPrefs.SetInt("E1-Choice", choice);
+            if (choice == 1)
+            {
+                PlayerPrefs.SetString("E1-CAtt", "Basic Attack");
+                int time = (int)System.DateTime.Now.Ticks;
+                UnityEngine.Random.seed = time;
+                int p = 0;
+                while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+                {
+                    p = UnityEngine.Random.Range(1, 3);
+                    PlayerPrefs.SetInt("E1-AttP", p);
+                    PlayerPrefs.SetInt("E1-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+                }
+            }
+            if (choice == 2)
+            {
+                PlayerPrefs.SetString("E1-CAtt", "Defend");
+                PlayerPrefs.SetInt("E1-AttP", 0);
+                PlayerPrefs.SetInt("E1-AttL", 0);
+            }
+            if (choice == 3)
+            {
+                int skillChoice;
+                do
+                {
+                    skillChoice = UnityEngine.Random.Range(1, 7);
+                }
+                while (PlayerPrefs.GetString("E1-Skill" + skillChoice) == "null");
+                PlayerPrefs.SetString("E1-CAtt", PlayerPrefs.GetString("E1-Skill" + skillChoice));
+                int time = (int)System.DateTime.Now.Ticks;
+                UnityEngine.Random.seed = time;
+                int p = 0;
+                while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+                {
+                    p = UnityEngine.Random.Range(1, 3);
+                    PlayerPrefs.SetInt("E1-AttP", p);
+                    PlayerPrefs.SetInt("E1-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+                }
             }
         }
-        if (choice == 2)
+        else
         {
-            PlayerPrefs.SetString("E1-CAtt", "Defend");
-            PlayerPrefs.SetInt("E1-AttP", 0);
-            PlayerPrefs.SetInt("E1-AttL", 0);
-        }
-        if (choice == 3)
-        {
-            int skillChoice;
-            do
-            {
-                skillChoice = UnityEngine.Random.Range(1, 7);
-            }
-            while (PlayerPrefs.GetString("E1-Skill" + skillChoice) == "null");
-            PlayerPrefs.SetString("E1-CAtt", PlayerPrefs.GetString("E1-Skill" + skillChoice));
+            PlayerPrefs.SetString("E1-CAtt", PlayerPrefs.GetString("E1StartUp"));
             int time = (int)System.DateTime.Now.Ticks;
             UnityEngine.Random.seed = time;
-            int p = 0;
+            int p = PlayerPrefs.GetInt("E1-AttP");
             while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
             {
                 p = UnityEngine.Random.Range(1, 3);
@@ -285,8 +301,10 @@ public class E1 : MonoBehaviour
     }
     public void TakeTurn()
     {
-        StatusEffect.StatusTickStart("E1");
-        StatusEffect.StatusTickStart("E2");
+        for (int e = 1; e <= 8; e++)
+        {
+            StatusEffect.StatusTickStart("E" + e);
+        }
         GameObject PlayerTurn = GameObject.Find("EnemyTurn");
         PlayerTurn.GetComponent<PlayerTurn>().Begin();
         //forgot C lmao

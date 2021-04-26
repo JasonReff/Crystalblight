@@ -297,40 +297,55 @@ public class E2 : MonoBehaviour
     }
     public void ChooseAttack()
     {
-        //just handles basic attack for now
-        int choice = UnityEngine.Random.Range(1, 4);
-        PlayerPrefs.SetInt("E2-Choice", choice);
-        if (choice == 1)
+        if (PlayerPrefs.GetString("E2StartUp") == "null")
         {
-            PlayerPrefs.SetString("E2-CAtt", "Basic Attack");
-            int time = (int)System.DateTime.Now.Ticks;
-            UnityEngine.Random.seed = time;
-            int p = 0;
-            while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+            int choice = UnityEngine.Random.Range(1, 4);
+            PlayerPrefs.SetInt("E2-Choice", choice);
+            if (choice == 1)
             {
-                p = UnityEngine.Random.Range(1, 3);
-                PlayerPrefs.SetInt("E2-AttP", p);
-                PlayerPrefs.SetInt("E2-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+                PlayerPrefs.SetString("E2-CAtt", "Basic Attack");
+                int time = (int)System.DateTime.Now.Ticks;
+                UnityEngine.Random.seed = time;
+                int p = 0;
+                while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+                {
+                    p = UnityEngine.Random.Range(1, 3);
+                    PlayerPrefs.SetInt("E2-AttP", p);
+                    PlayerPrefs.SetInt("E2-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+                }
+            }
+            if (choice == 2)
+            {
+                PlayerPrefs.SetString("E2-CAtt", "Defend");
+                PlayerPrefs.SetInt("E2-AttP", 0);
+                PlayerPrefs.SetInt("E2-AttL", 0);
+            }
+            if (choice == 3)
+            {
+                int skillChoice;
+                do
+                {
+                    skillChoice = UnityEngine.Random.Range(1, 7);
+                }
+                while (PlayerPrefs.GetString("E2-Skill" + skillChoice) == "null");
+                PlayerPrefs.SetString("E2-CAtt", PlayerPrefs.GetString("E2-Skill" + skillChoice));
+                int time = (int)System.DateTime.Now.Ticks;
+                UnityEngine.Random.seed = time;
+                int p = 0;
+                while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+                {
+                    p = UnityEngine.Random.Range(1, 3);
+                    PlayerPrefs.SetInt("E2-AttP", p);
+                    PlayerPrefs.SetInt("E2-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+                }
             }
         }
-        if (choice == 2)
+        else
         {
-            PlayerPrefs.SetString("E2-CAtt", "Defend");
-            PlayerPrefs.SetInt("E2-AttP", 0);
-            PlayerPrefs.SetInt("E2-AttL", 0);
-        }
-        if (choice == 3)
-        {
-            int skillChoice;
-            do
-            {
-                skillChoice = UnityEngine.Random.Range(1, 7);
-            }
-            while (PlayerPrefs.GetString("E2-Skill" + skillChoice) == "null");
-            PlayerPrefs.SetString("E2-CAtt", PlayerPrefs.GetString("E2-Skill" + skillChoice));
+            PlayerPrefs.SetString("E2-CAtt", PlayerPrefs.GetString("E2StartUp"));
             int time = (int)System.DateTime.Now.Ticks;
             UnityEngine.Random.seed = time;
-            int p = 0;
+            int p = PlayerPrefs.GetInt("E2-AttP");
             while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
             {
                 p = UnityEngine.Random.Range(1, 3);
