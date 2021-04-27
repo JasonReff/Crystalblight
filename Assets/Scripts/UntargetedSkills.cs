@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class UntargetedSkills : MonoBehaviour
 {
@@ -474,6 +475,16 @@ public class UntargetedSkills : MonoBehaviour
         SkillReset();
     }
 
+    void Icicle()
+    {
+        int p = Target();
+        SPSpend(p, 8);
+        int tile = EmptyAdjacentTile(p);
+        Summon("Icicle", tile);
+        EndSkill(p);
+        SkillReset();
+    }
+
     void EndSkill(int p)
     {
         GameObject hero = GameObject.Find("P" + p);
@@ -536,6 +547,178 @@ public class UntargetedSkills : MonoBehaviour
         while (PlayerPrefs.GetInt("E" + e + "-CHP") <= 0);
         return e;
     }
+
+    int EmptyAdjacentTile(int p)
+    {
+        int currentTile = PlayerPrefs.GetInt("P1-Loc");
+        int[] adjacentTiles = AdjacentTiles(currentTile);
+        ArrayRandomizer.Randomize(adjacentTiles);
+        int adjacent = 0;
+        for (int i = 1; i <= 4; i++)
+        {
+            int tile = adjacentTiles[i];
+            if (tile != 0 && PlayerPrefs.GetInt("Block-" + tile + "-Moveable") == 1)
+            {
+                adjacent = tile;
+                break;
+            }
+            if (i == 4)
+            {
+                int[] semiadjacentTiles = SemiAdjacentTiles(currentTile);
+                ArrayRandomizer.Randomize(semiadjacentTiles);
+                for (int j = 1; i <= 4; i++)
+                {
+                    int tile2 = semiadjacentTiles[j];
+                    if (tile2 != 0 && PlayerPrefs.GetInt("Block-" + tile2 + "-Moveable") == 1)
+                    {
+                        adjacent = tile2;
+                        break;
+                    }
+                    if (j == 4)
+                    {
+                        int[] nonadjacentTiles = NonAdjacentTiles(currentTile);
+                        ArrayRandomizer.Randomize(nonadjacentTiles);
+                        for (int k = 1; k <= nonadjacentTiles.Length; k++)
+                        {
+                            int tile3 = nonadjacentTiles[k];
+                            if (tile3 != 0 && PlayerPrefs.GetInt("Block-" + tile3 + "-Moveable") == 1)
+                            {
+                                adjacent = tile3;
+                                break;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+        return adjacent;
+    }
+
+    int RandomAdjacentTile(int p)
+    {
+        int currentTile = PlayerPrefs.GetInt("P1-Loc");
+        int[] adjacentTiles = AdjacentTiles(currentTile);
+        ArrayRandomizer.Randomize<int>(adjacentTiles);
+        int adjacent = 0;
+        for (int i = 1; i <= 4; i++)
+        {
+            int tile = adjacentTiles[i];
+            if (tile != 0)
+            {
+                adjacent = tile;
+                break;
+            }
+        }
+        return adjacent;
+    }
+
+    int[] AdjacentTiles(int currentTile)
+    {
+        int up = 0;
+        int left = 0;
+        int right = 0;
+        int down = 0;
+        if (GameObject.Find("P-Block-25") != null)
+        {
+            up = currentTile + 5;
+            if (up > 25) { up = 0; }
+            right = currentTile + 1;
+            if (right%5 == 1) { right = 0; }
+            left = currentTile - 1;
+            if (left%5 == 0) { left = 0; }
+            down = currentTile - 5;
+            if (down < 1) { down = 0; }
+        }
+        else if (GameObject.Find("P-Block-16") != null)
+        {
+            up = currentTile + 4;
+            if (up > 16) { up = 0; }
+            right = currentTile + 1;
+            if (right%4 == 1) { right = 0; }
+            left = currentTile - 1;
+            if (left%4 == 0) { left = 0; }
+            down = currentTile - 4;
+            if (down < 1) { down = 0; }
+        }
+        else
+        {
+            up = currentTile + 3;
+            if (up > 9) { up = 0; }
+            right = currentTile + 1;
+            if (right%3 == 1) { right = 0; }
+            left = currentTile - 1;
+            if (left%3 == 0) { left = 0; }
+            down = currentTile - 3;
+            if (down < 1) { down = 0; }
+        }
+        return new int[] { up, down, left, right};
+    }
+
+    int[] SemiAdjacentTiles(int currentTile)
+    {
+        int upLeft = 0;
+        int upRight = 0;
+        int downLeft = 0;
+        int downRight = 0;
+        if (GameObject.Find("P-Block-25") != null)
+        {
+            upLeft = currentTile + 4;
+            if (upLeft%5 == 0 || upLeft > 25) { upLeft = 0; }
+            upRight = currentTile + 6;
+            if (upRight%5 == 1 || upRight > 25) { upRight = 0; }
+            downLeft = currentTile - 6;
+            if (downLeft%5 == 0 || downLeft < 1) { downLeft = 0; }
+            downRight = currentTile - 4;
+            if (downRight%5 == 1 || downRight < 1) { downRight = 0; }
+        }
+        else if (GameObject.Find("P-Block-16") != null)
+        {
+            upLeft = currentTile + 3;
+            if (upLeft % 4 == 0 || upLeft > 25) { upLeft = 0; }
+            upRight = currentTile + 5;
+            if (upRight % 4 == 1 || upRight > 25) { upRight = 0; }
+            downLeft = currentTile - 5;
+            if (downLeft % 4 == 0 || downLeft < 1) { downLeft = 0; }
+            downRight = currentTile - 3;
+            if (downRight % 4 == 1 || downRight < 1) { downRight = 0; }
+        }
+        else
+        {
+            upLeft = currentTile + 2;
+            if (upLeft % 3 == 0 || upLeft > 25) { upLeft = 0; }
+            upRight = currentTile + 4;
+            if (upRight % 3 == 1 || upRight > 25) { upRight = 0; }
+            downLeft = currentTile - 4;
+            if (downLeft % 3 == 0 || downLeft < 1) { downLeft = 0; }
+            downRight = currentTile - 2;
+            if (downRight % 3 == 1 || downRight < 1) { downRight = 0; }
+        }
+        return new int[] { upRight, upLeft, downRight, downLeft };
+    }
+
+    int[] NonAdjacentTiles(int currentTile)
+    {
+        int[] adjacentTiles = AdjacentTiles(currentTile);
+        int[] semiadjacentTiles = SemiAdjacentTiles(currentTile);
+        adjacentTiles.Concat<int>(semiadjacentTiles);
+        int[] nonadjacentTiles = new int[] { };
+        if (GameObject.Find("P-Block-25") != null)
+        {
+            for (int x = 1; x <= 25; x++) { nonadjacentTiles.Concat(new int[x]); }
+        }
+        else if (GameObject.Find("P-Block-16") != null)
+        {
+            for (int x = 1; x <= 16; x++) { nonadjacentTiles.Concat(new int[x]); }
+        }
+        else
+        {
+            for (int x = 1; x <= 9; x++) { nonadjacentTiles.Concat(new int[x]); }
+        }
+        for (int i = 1; i <= 8; i++) { ArrayUtility.Remove(ref nonadjacentTiles, adjacentTiles[i]); }
+        return nonadjacentTiles;
+    }
+
     void SPSpend(int p, int SPCost)
     {
         int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
@@ -585,58 +768,6 @@ public class UntargetedSkills : MonoBehaviour
         GameObject.Find("E1").GetComponent<E1>().TakeTurn();
     }
 
-    //used for animations
-    public void EndAnimation()
-    {
-        Vector3 ScreenPos = new Vector3(0, -192, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation2", 0.1f);
-    }
-    public void EndAnimation2()
-    {
-        Vector3 ScreenPos = new Vector3(0, 246, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation3", 0.1f);
-    }
-    public void EndAnimation3()
-    {
-        Vector3 temp = new Vector3(-5000, 0, 0);
-        GameObject animg = GameObject.Find("slasher");
-        animg.transform.position = temp;
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = temp;
-        InputDiss = GameObject.Find("PDiss");
-        InputDiss.transform.position = temp;
-        PlayerPrefs.SetInt("Processing", 0);
-    }
-    public void EndAnimationFire()
-    {
-        Vector3 ScreenPos = new Vector3(0, -192, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation2Fire", 0.1f);
-    }
-    public void EndAnimation2Fire()
-    {
-        Vector3 ScreenPos = new Vector3(0, 246, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation3Fire", 0.1f);
-    }
-    public void EndAnimation3Fire()
-    {
-        Vector3 temp = new Vector3(-5000, 0, 0);
-        GameObject animg = GameObject.Find("Fire");
-        animg.transform.position = temp;
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = temp;
-        InputDiss = GameObject.Find("PDiss");
-        InputDiss.transform.position = temp;
-        PlayerPrefs.SetInt("Processing", 0);
-    }
-
     void EndPlayerTurn()
     {
         int Turns = PlayerPrefs.GetInt("Turns");
@@ -669,5 +800,16 @@ public class UntargetedSkills : MonoBehaviour
     void FastSkill(int p)
     {
         SingleTargetSkills.FastSkill(p);
+    }
+
+    void Summon(string summonName, int tile)
+    {
+        GameObject summon = Instantiate(GameObject.Find("P1"));
+        int pNumber = 0;
+        for (int p = 2; p <= 8; p++) { if (GameObject.Find("P" + p) == null) { pNumber = p; } }
+        summon.name = "P" + pNumber.ToString();
+        PlayerPrefs.SetString("P" + pNumber + "-Name", summonName);
+        LoadSprite.FindSprite(summon, summonName);
+        summon.transform.position = GameObject.Find("P-Block-" + tile).transform.position;
     }
 }
