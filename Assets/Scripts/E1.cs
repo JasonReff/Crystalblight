@@ -9,11 +9,35 @@ public class E1 : MonoBehaviour
 {
     public Text textbox;
 
-    // Start is called before the first frame update
+    public int eNumber;
+    public string name;
+    public int health;
+    public int maxHealth;
+    public int guard;
+    public int maxGuard;
+    public int attack;
+    public string weakness1;
+    public string weakness2;
+    public string resistance1;
+    public string resistance2;
+    public string resistance3;
+    public string skill1;
+    public string skill2;
+    public string skill3;
+    public string skill4;
+    public string skill5;
+    public string skill6;
+    public string status0;
+    public string status1;
+    public string status2;
+    public string status3;
+    public int status0X;
+    public int status1X;
+    public int status2X;
+    public int status3X;
     void Start()
     {
         string tile = PlayerPrefs.GetString("CurrentTile");
-        string e1Name = "";
         if (tile[0] == 'C')
         {
             int combatNumber = 0;
@@ -25,89 +49,93 @@ public class E1 : MonoBehaviour
                 {
                     combatNumber = Int32.Parse(tile[6].ToString() + tile[7].ToString());
                 }
-            e1Name = PlayerPrefs.GetString("Combat" + combatNumber + "E1-Name");
+            name = PlayerPrefs.GetString("Combat" + combatNumber + "E1-Name");
         }
         if (tile[0] == 'M')
         {
-            e1Name = PlayerPrefs.GetString("MinibossE1-Name");
+            name = PlayerPrefs.GetString("MinibossE1-Name");
         }
         if (tile[0] == 'B')
         {
-            e1Name = PlayerPrefs.GetString("BossE1-Name");
+            name = PlayerPrefs.GetString("BossE1-Name");
         }
-        //Getting the name currently doesn't work correctly
-        //string e1Name = "Lord Kalor";
-        PlayerPrefs.SetInt("E-Block-1-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-2-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-3-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-4-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-5-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-6-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-7-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-8-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-9-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-10-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-11-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-12-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-13-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-14-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-15-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-16-Moveable", 1);
         PlayerPrefs.SetInt("E1-Loc", 0);
         SetLoc();
-        if (PlayerPrefs.GetInt("E1-Set") != 1)
-        {
-            PlayerPrefs.SetString("E1-Name", e1Name);
-            PlayerPrefs.SetInt("E1-CHP", PlayerPrefs.GetInt(e1Name + "-CHP"));
-            PlayerPrefs.SetInt("E1-HP", PlayerPrefs.GetInt(e1Name + "-HP"));
-            PlayerPrefs.SetInt("E1-CG", PlayerPrefs.GetInt(e1Name + "-CG"));
-            PlayerPrefs.SetInt("E1-Guard", PlayerPrefs.GetInt(e1Name + "-Guard"));
-            PlayerPrefs.SetInt("E1-Set", 1);
-            PlayerPrefs.SetString("E1Status0", PlayerPrefs.GetString(e1Name + "Status0"));
-            PlayerPrefs.SetInt("E1Status0X", PlayerPrefs.GetInt(e1Name + "Status0X"));
-            PlayerPrefs.SetString("E1Status1", PlayerPrefs.GetString(e1Name + "Status1"));
-            PlayerPrefs.SetInt("E1Status1X", PlayerPrefs.GetInt(e1Name + "Status1X"));
-            PlayerPrefs.SetString("E1Status2", PlayerPrefs.GetString(e1Name + "Status2"));
-            PlayerPrefs.SetInt("E1Status2X", PlayerPrefs.GetInt(e1Name + "Status2X"));
-            PlayerPrefs.SetString("E1Status3", PlayerPrefs.GetString(e1Name + "Status3"));
-            PlayerPrefs.SetInt("E1Status3X", PlayerPrefs.GetInt(e1Name + "Status3X"));
-            PlayerPrefs.SetInt("E1-Attack", PlayerPrefs.GetInt(e1Name + "-Attack"));
-            PlayerPrefs.SetString("E1-Weakness1", PlayerPrefs.GetString(e1Name + "-Weakness1"));
-            PlayerPrefs.SetString("E1-Weakness2", PlayerPrefs.GetString(e1Name + "-Weakness2"));
-            PlayerPrefs.SetString("E1-Resistance1", PlayerPrefs.GetString(e1Name + "-Resistance1"));
-            PlayerPrefs.SetString("E1-Resistance2", PlayerPrefs.GetString(e1Name + "-Resistance2"));
-            PlayerPrefs.SetString("E1-Resistance3", PlayerPrefs.GetString(e1Name + "-Resistance3"));
-            PlayerPrefs.SetString("E1-Skill1", PlayerPrefs.GetString(e1Name + "-Skill1"));
-            PlayerPrefs.SetString("E1-Skill2", PlayerPrefs.GetString(e1Name + "-Skill2"));
-            PlayerPrefs.SetString("E1-Skill3", PlayerPrefs.GetString(e1Name + "-Skill3"));
-            PlayerPrefs.SetString("E1-Skill4", PlayerPrefs.GetString(e1Name + "-Skill4"));
-            PlayerPrefs.SetString("E1-Skill5", PlayerPrefs.GetString(e1Name + "-Skill5"));
-            PlayerPrefs.SetString("E1-Skill6", PlayerPrefs.GetString(e1Name + "-Skill6"));
-            GameObject targetHP = GameObject.Find("E1-Hp");
-            int PCHP = PlayerPrefs.GetInt("E1-CHP");
-            int PMax = PlayerPrefs.GetInt("E1-HP");
-            float Percent = ((float)PCHP / (float)PMax);
-            targetHP.gameObject.transform.localScale = new Vector3(Percent, 1, 1);
-            GameObject targetGuard = GameObject.Find("E1-Guard");
-            int PCGuard = PlayerPrefs.GetInt("E1-CG");
-            int PMaxGuard = PlayerPrefs.GetInt("E1-Guard");
-            float PercentGuard = ((float)PCGuard / (float)PMaxGuard);
-            targetGuard.gameObject.transform.localScale = new Vector3(PercentGuard, 1, 1);
-            GameObject sprite = GameObject.Find("E1");
-            if (e1Name.Substring(e1Name.Length - 8) == "(Stage1)" || e1Name.Substring(e1Name.Length - 8) == "(Stage2)" || e1Name.Substring(e1Name.Length - 8) == "(Stage3)")
-            {
-                e1Name = e1Name.Remove(e1Name.Length - 9, 9);
-            }
-            LoadSprite.FindSprite(sprite, e1Name);
-            BoxCollider2D _boxCollider = GetComponent<BoxCollider2D>();
-            Destroy(_boxCollider);
-            _boxCollider = gameObject.AddComponent<BoxCollider2D>() as BoxCollider2D;
-            // PlayerPrefs.SetInt("E1-Guard", 100);
-            PlayerPrefs.SetInt("E1-AttL", 0);
-        }
+        RetrieveStats();
+        PlayerPrefs.SetInt("E1-AttL", 0);
         ChooseAttack();
+        StartCoroutine(CheckIfAlive());
     }
-    //used for initial movement
+
+    IEnumerator CheckIfAlive()
+    {
+        for (; ; )
+        {
+            if (health <= 0)
+            {
+                StartCoroutine(FadeOut());
+                Destroy(this);
+            }
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+
+    IEnumerator FadeOut()
+    {
+        for (float f = 1; f > 0; f -= 0.2f)
+        {
+            Color color = this.GetComponent<SpriteRenderer>().color;
+            this.GetComponent<SpriteRenderer>().color = new Color (color.r, color.g, color.b, f);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    void RetrieveStats()
+    {
+        maxHealth = PlayerPrefs.GetInt(name + "-HP");
+        health = maxHealth;
+        maxGuard = PlayerPrefs.GetInt(name + "-Guard");
+        guard = maxGuard;
+        status0 = PlayerPrefs.GetString(name + "Status0");
+        status0X = PlayerPrefs.GetInt(name + "Status0X");
+        status1 = PlayerPrefs.GetString(name + "Status1");
+        status1X = PlayerPrefs.GetInt(name + "Status1X");
+        status2 = PlayerPrefs.GetString(name + "Status2");
+        status2X = PlayerPrefs.GetInt(name + "Status2X");
+        status3 = PlayerPrefs.GetString(name + "Status3");
+        status3X = PlayerPrefs.GetInt(name + "Status3X");
+        attack = PlayerPrefs.GetInt(name + "-Attack");
+        weakness1 = PlayerPrefs.GetString(name + "-Weakness1");
+        weakness2 = PlayerPrefs.GetString(name + "-Weakness2");
+        resistance1 = PlayerPrefs.GetString(name + "-Resistance1");
+        resistance2 = PlayerPrefs.GetString(name + "-Resistance2");
+        resistance3 = PlayerPrefs.GetString(name + "-Resistance3");
+        skill1 = PlayerPrefs.GetString(name + "-Skill1");
+        skill2 = PlayerPrefs.GetString(name + "-Skill2");
+        skill3 = PlayerPrefs.GetString(name + "-Skill3");
+        skill4 = PlayerPrefs.GetString(name + "-Skill4");
+        skill5 = PlayerPrefs.GetString(name + "-Skill5");
+        skill6 = PlayerPrefs.GetString(name + "-Skill6");
+        GameObject targetHP = GameObject.Find("E" + eNumber + "-Hp");
+        int PCHP = PlayerPrefs.GetInt("E1-CHP");
+        int PMax = PlayerPrefs.GetInt("E1-HP");
+        float Percent = ((float)PCHP / (float)PMax);
+        targetHP.gameObject.transform.localScale = new Vector3(Percent, 1, 1);
+        GameObject targetGuard = GameObject.Find("E1-Guard");
+        int PCGuard = PlayerPrefs.GetInt("E1-CG");
+        int PMaxGuard = PlayerPrefs.GetInt("E1-Guard");
+        float PercentGuard = ((float)PCGuard / (float)PMaxGuard);
+        targetGuard.gameObject.transform.localScale = new Vector3(PercentGuard, 1, 1);
+        GameObject sprite = GameObject.Find("E1");
+        if (name.Substring(name.Length - 8) == "(Stage1)" || name.Substring(name.Length - 8) == "(Stage2)" || name.Substring(name.Length - 8) == "(Stage3)")
+        {
+            name = name.Remove(name.Length - 9, 9);
+        }
+        LoadSprite.FindSprite(sprite, name);
+        BoxCollider2D _boxCollider = GetComponent<BoxCollider2D>();
+        Destroy(_boxCollider);
+        _boxCollider = gameObject.AddComponent<BoxCollider2D>() as BoxCollider2D;
+    }
     void SetLoc()
     {
         int time = (int)System.DateTime.Now.Ticks;
@@ -126,9 +154,8 @@ public class E1 : MonoBehaviour
             PlayerPrefs.SetInt("E-Block-" + Loc.ToString() + "-Moveable", 0);
         }
         PlayerPrefs.SetInt("E1-Loc", Loc);
-        GameObject Vill = GameObject.Find("E1");
-        string e1Name = PlayerPrefs.GetString("E1-Name");
-        LoadSprite.FindSprite(Vill, e1Name);
+        GameObject Vill = GameObject.Find("E" + eNumber);
+        LoadSprite.FindSprite(Vill, name);
         GameObject VillHp = GameObject.Find("E1-Hp");
         GameObject VillHpBack = GameObject.Find("E1-HpBack");
         GameObject VillGuard = GameObject.Find("E1-Guard");
@@ -158,12 +185,11 @@ public class E1 : MonoBehaviour
     }
     void OnMouseEnter()
     {
-        string e1Name = PlayerPrefs.GetString("E1-Name");
-        if (e1Name.Substring(e1Name.Length - 8) == "(Stage1)" || e1Name.Substring(e1Name.Length - 8) == "(Stage2)" || e1Name.Substring(e1Name.Length - 8) == "(Stage3)")
+        if (name.Substring(name.Length - 8) == "(Stage1)" || name.Substring(name.Length - 8) == "(Stage2)" || name.Substring(name.Length - 8) == "(Stage3)")
         {
-            e1Name = e1Name.Remove(e1Name.Length - 9, 9);
+            name = name.Remove(name.Length - 9, 9);
         }
-        textbox.text = e1Name + " Guard: " + PlayerPrefs.GetInt("E1-CG") + "/" + PlayerPrefs.GetInt("E1-Guard") + " HP: " + PlayerPrefs.GetInt("E1-CHP")
+        textbox.text = name + " Guard: " + PlayerPrefs.GetInt("E1-CG") + "/" + PlayerPrefs.GetInt("E1-Guard") + " HP: " + PlayerPrefs.GetInt("E1-CHP")
             + "/" + PlayerPrefs.GetInt("E1-HP") + "\n" + "Intent: " + PlayerPrefs.GetString("E1-CAtt") + " " + PlayerPrefs.GetInt("E1-Attack");
         int targ = PlayerPrefs.GetInt("E1-AttL");
         if (targ != 0)
