@@ -16,6 +16,30 @@ public class EnemyTileSkills : MonoBehaviour
         }
     }
 
+    void FrostWave()
+    {
+        int p = Target();
+        EnemyColumn();
+        for (int x = 1; x <= 25; x++)
+        {
+            if (PlayerPrefs.GetInt("Tile" + x + "Targeted") == 1)
+            {
+                for (int e = 1; e <= 8; e++)
+                {
+                    if (PlayerPrefs.GetInt("E" + e + "-Loc") == x)
+                    {
+                        Damage(p, e, 5 + 2 * PlayerPrefs.GetInt("P" + p + "-INT"), "Frost");
+                        StatusEffect.InflictStatusEnemy("frozen", e, 2);
+                    }
+                }
+            }
+        }
+        SPSpend(p, 6);
+        EndSkill(p);
+        SkillReset();
+    }
+
+
     public void EnemyRow()
     {
         int clickedTile = Int32.Parse(this.name[8].ToString());
@@ -267,6 +291,11 @@ public class EnemyTileSkills : MonoBehaviour
         PlayerPrefs.SetInt("ENumber", 0);
         PlayerPrefs.SetInt("PNumber", 0);
         for (int x = 1; x <= 25; x++) { PlayerPrefs.SetInt("Tile" + x + "Targeted", 0); }
+    }
+
+    void SPSpend(int p, int SPCost)
+    {
+        SingleTargetSkills.SPSpend(p, SPCost);
     }
 
     public void EndPlayerTurn()

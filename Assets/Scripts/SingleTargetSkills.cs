@@ -189,7 +189,7 @@ public class SingleTargetSkills : MonoBehaviour
         while (PlayerPrefs.GetInt("E" + e + "-CHP") <= 0);
         return e;
     }
-    void SPSpend(int p, int SPCost)
+    public static void SPSpend(int p, int SPCost)
     {
         int P1CSP = PlayerPrefs.GetInt("P" + p + "-CSP");
         int P1SP = PlayerPrefs.GetInt("P" + p + "-SP");
@@ -484,6 +484,30 @@ public class SingleTargetSkills : MonoBehaviour
         SPSpend(p, 18);
         Damage(p, e, damage, "Fire");
         StatusEffect.InflictStatusEnemy("burning", e, 10);
+        EndSkill(p);
+        SkillReset();
+    }
+
+    void WinterShard()
+    {
+        int p = Target();
+        int e = PlayerPrefs.GetInt("ENumber");
+        int damage = 6 + PlayerPrefs.GetInt("P" + p + "-INT");
+        SPSpend(p, 2);
+        Damage(p, e, damage, "Frost");
+        StatusEffect.InflictStatusEnemy("frozen", e, 1);
+        EndSkill(p);
+        SkillReset();
+    }
+
+    void CreepingCold()
+    {
+        int p = Target();
+        int e = PlayerPrefs.GetInt("ENumber");
+        int damage = 14 + PlayerPrefs.GetInt("P" + p + "-INT");
+        SPSpend(p, 7);
+        Damage(p, e, damage, "Frost");
+        StatusEffect.InflictStatusEnemy("shiver", e, 5);
         EndSkill(p);
         SkillReset();
     }
