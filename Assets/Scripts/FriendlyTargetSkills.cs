@@ -32,7 +32,13 @@ public class FriendlyTargetSkills : MonoBehaviour
 
     void Damage(int p, int e, int E1CHP, int E1CG, int Att, string damageType)
     {
-        SingleTargetSkills.Damage(p, e, Att, damageType);
+        SingleTargetSkills singleTargetSkills = GameObject.Find("E1").GetComponent<SingleTargetSkills>();
+        singleTargetSkills.Damage(p, e, Att, damageType);
+    }
+
+    void FastSkill(int p)
+    {
+        SingleTargetSkills.FastSkill(p);
     }
 
     void SkillReset()
@@ -54,7 +60,7 @@ public class FriendlyTargetSkills : MonoBehaviour
         PHPBar.transform.localScale = new Vector3(HPPercent, 1, 1);
     }
 
-    void HealSP(int player, int SPGain)
+    public static void HealSP(int player, int SPGain)
     {
         int pSP = PlayerPrefs.GetInt("P" + player + "-CSP");
         int pMaxSP = PlayerPrefs.GetInt("P" + player + "-SP");

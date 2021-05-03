@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using System.Collections;
 
 public class E1 : MonoBehaviour
 {
@@ -241,39 +242,55 @@ public class E1 : MonoBehaviour
     public void ChooseAttack()
     {
         //just handles basic attack for now
-        int choice = UnityEngine.Random.Range(1, 4);
-        PlayerPrefs.SetInt("E1-Choice", choice);
-        if (choice == 1)
-        {
-            PlayerPrefs.SetString("E1-CAtt", "Basic Attack");
-            int time = (int)System.DateTime.Now.Ticks;
-            UnityEngine.Random.seed = time;
-            int p = 0;
-            while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+        if (PlayerPrefs.GetString("E1StartUp") == "null")
             {
-                p = UnityEngine.Random.Range(1, 3);
-                PlayerPrefs.SetInt("E1-AttP", p);
-                PlayerPrefs.SetInt("E1-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+            int choice = UnityEngine.Random.Range(1, 4);
+            PlayerPrefs.SetInt("E1-Choice", choice);
+            if (choice == 1)
+            {
+                PlayerPrefs.SetString("E1-CAtt", "Basic Attack");
+                int time = (int)System.DateTime.Now.Ticks;
+                UnityEngine.Random.seed = time;
+                int p = 0;
+                while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+                {
+                    p = UnityEngine.Random.Range(1, 3);
+                    PlayerPrefs.SetInt("E1-AttP", p);
+                    PlayerPrefs.SetInt("E1-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+                }
+            }
+            if (choice == 2)
+            {
+                PlayerPrefs.SetString("E1-CAtt", "Defend");
+                PlayerPrefs.SetInt("E1-AttP", 0);
+                PlayerPrefs.SetInt("E1-AttL", 0);
+            }
+            if (choice == 3)
+            {
+                int skillChoice;
+                do
+                {
+                    skillChoice = UnityEngine.Random.Range(1, 7);
+                }
+                while (PlayerPrefs.GetString("E1-Skill" + skillChoice) == "null");
+                PlayerPrefs.SetString("E1-CAtt", PlayerPrefs.GetString("E1-Skill" + skillChoice));
+                int time = (int)System.DateTime.Now.Ticks;
+                UnityEngine.Random.seed = time;
+                int p = 0;
+                while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
+                {
+                    p = UnityEngine.Random.Range(1, 3);
+                    PlayerPrefs.SetInt("E1-AttP", p);
+                    PlayerPrefs.SetInt("E1-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
+                }
             }
         }
-        if (choice == 2)
+        else
         {
-            PlayerPrefs.SetString("E1-CAtt", "Defend");
-            PlayerPrefs.SetInt("E1-AttP", 0);
-            PlayerPrefs.SetInt("E1-AttL", 0);
-        }
-        if (choice == 3)
-        {
-            int skillChoice;
-            do
-            {
-                skillChoice = UnityEngine.Random.Range(1, 7);
-            }
-            while (PlayerPrefs.GetString("E1-Skill" + skillChoice) == "null");
-            PlayerPrefs.SetString("E1-CAtt", PlayerPrefs.GetString("E1-Skill" + skillChoice));
+            PlayerPrefs.SetString("E1-CAtt", PlayerPrefs.GetString("E1StartUp"));
             int time = (int)System.DateTime.Now.Ticks;
             UnityEngine.Random.seed = time;
-            int p = 0;
+            int p = PlayerPrefs.GetInt("E1-AttP");
             while (PlayerPrefs.GetInt("P" + p + "-CHP") == 0)
             {
                 p = UnityEngine.Random.Range(1, 3);
@@ -284,8 +301,10 @@ public class E1 : MonoBehaviour
     }
     public void TakeTurn()
     {
-        StatusEffect.StatusTickStart("E1");
-        StatusEffect.StatusTickStart("E2");
+        for (int e = 1; e <= 8; e++)
+        {
+            StatusEffect.StatusTickStart("E" + e);
+        }
         GameObject PlayerTurn = GameObject.Find("EnemyTurn");
         PlayerTurn.GetComponent<PlayerTurn>().Begin();
         //forgot C lmao
@@ -309,16 +328,12 @@ public class E1 : MonoBehaviour
         GameObject target = GameObject.Find(PlayerPrefs.GetString("P" + PlayerPrefs.GetInt("E1-AttP") + "-Name"));
         GameObject targetHP = GameObject.Find("P" + PlayerPrefs.GetInt("E1-AttP") + "-Hp");
         GameObject targetG = GameObject.Find("P" + PlayerPrefs.GetInt("E1-AttP") + "-Guard");
-        GameObject animg = GameObject.Find("slasher");
-        Animator anim = animg.GetComponent<Animator>();
-        animg.transform.position = targetHP.transform.position + new Vector3(100, +100, 0); ;
-        anim.SetTrigger("Play");
-        Invoke("EndAnimation", 1.6f);
         int p = PlayerPrefs.GetInt("E1-AttP");
         int PCHP = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CHP");
         int PCG = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CG");
         int Att = PlayerPrefs.GetInt("E1-Attack");
         string damageType = "Physical";
+        StartCoroutine(Animation(damageType));
         if (PlayerPrefs.GetString("P" + p + "-Weakness1") == damageType || PlayerPrefs.GetString("P" + p + "-Weakness2") == damageType)
         {
             Att = (int)Math.Round((float)Att * 1.5, 1);
@@ -367,6 +382,7 @@ public class E1 : MonoBehaviour
         PMax = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-Guard");
         Percent = ((float)PCG / (float)PMax);
         targetG.gameObject.transform.localScale = new Vector3(Percent, 1, 1);
+        EndTurn();
     }
 
     public void Defend()
@@ -384,14 +400,14 @@ public class E1 : MonoBehaviour
         GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
         PlayerPrefs.SetInt("E1-CG", eCurrentGuard);
         StatusEffect.InflictStatusEnemy("steadfast", 1, 1);
-        Invoke("EndAnimation3", 0.1f);
+        EndTurn();
     }
 
     public void Skill() 
     {
         string skill = String.Concat(PlayerPrefs.GetString("E1-CAtt").Where(c => !Char.IsWhiteSpace(c)));
         SendMessage(skill);
-        Invoke("EndAnimation3", 0.1f);
+        EndTurn();
     }
     public void Move()
     {
@@ -724,6 +740,26 @@ public class E1 : MonoBehaviour
         PlayerPrefs.SetInt("E1-Loc", dest);
         PlayerPrefs.SetInt("E-Block-" + dest + "-Moveable", 0);
     }
+
+    IEnumerator Animation(string animation)
+    {
+        PlayerPrefs.SetInt("Processing", 1);
+        GameObject effect = GameObject.Find("SkillEffect");
+        Animator anim = effect.GetComponent<Animator>();
+        GameObject target = GameObject.Find("P" + PlayerPrefs.GetInt("E1-AttP"));
+        effect.transform.position = target.transform.position;
+        anim.SetBool(animation, true);
+        anim.SetBool("null", false);
+        GameObject InputDiss = GameObject.Find("InputDiss");
+        InputDiss.transform.position = new Vector3(0, 0, -100);
+        yield return new WaitForSeconds(1.0f);
+        anim.SetBool(animation, false);
+        anim.SetBool("null", true);
+        LoadSprite.FindSprite(effect, "null");
+        InputDiss.transform.position = new Vector3(0, -2000, -100);
+        PlayerPrefs.SetInt("Processing", 0);
+    }
+
     public void EndAnimation()
     {
         Vector3 ScreenPos = new Vector3(0, -192, -100);

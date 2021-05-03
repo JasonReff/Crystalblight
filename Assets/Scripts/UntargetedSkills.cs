@@ -576,7 +576,8 @@ public class UntargetedSkills : MonoBehaviour
 
     void Damage(int p, int e, int Att, string damageType)
     {
-        SingleTargetSkills.Damage(p, e, Att, damageType);
+        SingleTargetSkills singleTargetSkills = GameObject.Find("E1").GetComponent<SingleTargetSkills>();
+        singleTargetSkills.Damage(p, e, Att, damageType);
     }
 
     public void ETakeTurn()
@@ -665,12 +666,8 @@ public class UntargetedSkills : MonoBehaviour
         }
     }
 
-    public int PassiveSkillCheck(string status, int p, int statusX)
+    void FastSkill(int p)
     {
-        if (PlayerPrefs.GetString("P" + p + "-PassiveSkill") == "Poisoner1" && status == "poison")
-        {
-            statusX++;
-        }
-        return statusX;
+        SingleTargetSkills.FastSkill(p);
     }
 }
