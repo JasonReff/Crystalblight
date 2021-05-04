@@ -143,215 +143,14 @@ public class UntargetedSkills : MonoBehaviour
             StatusEffect.InflictStatusCharacter("decoy", p, PlayerPrefs.GetInt("P" + p + "-END"));
             SingleTargetSkills.SpecialCharge(p, PlayerPrefs.GetInt("P" + p + "-END"), "Ancient Defender");
             int loc = PlayerPrefs.GetInt("P" + p + "-Loc");
-            if (GameObject.Find("P" + p + "-Block-25").name != null)
+            int Coll = CollumnNumber()
+            for (int q = 1; q <= 4; q++)
             {
-                if (loc == 1 || loc == 6 || loc == 11 || loc == 16 || loc == 21)
+                if (q != p)
                 {
-
-                }
-                else if (loc == 2 || loc == 7 || loc == 12 || loc == 17 || loc == 22)
-                {
-                    for (int q = 1; q <= 4; q++)
+                    if ((PlayerPrefs.GetInt("P" + q + "-Loc") - 1) % 5 < (loc % Coll) - 1)
                     {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 6 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 11 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 16 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 21)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-                else if (loc == 3 || loc == 8 || loc == 13 || loc == 18 || loc == 23)
-                {
-                    for (int q = 1; q <= 4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 2 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 6 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 7 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 11 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 12 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 16 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 17 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 21 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 22)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-                else if (loc == 4 || loc == 9 || loc == 14 || loc == 19 || loc == 24)
-                {
-                    for (int q = 1; q <= 4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 2 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 3 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 6 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 7 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 8 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 11 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 12 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 13 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 16 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 17 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 18 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 21 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 22 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 23)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-                else if (loc == 5 || loc == 10 || loc == 15 || loc == 20 || loc == 25)
-                {
-                    for (int q = 1; q <= 4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 2 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 3 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 4 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 6 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 7 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 8 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 9 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 11 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 12 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 13 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 14 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 16 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 17 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 18 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 19 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 21 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 22 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 23 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 24)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-            }
-            else if (GameObject.Find("P" + p + "-Block-16") != null)
-            {
-                if (loc == 1 || loc == 5 || loc == 9 || loc == 13)
-                {
-
-                }
-                else if (loc == 2 || loc == 6 || loc == 10 || loc == 14)
-                {
-                    for (int q = 1; q <= 4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 5 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 9 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 13)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-                else if (loc == 3 || loc == 7 || loc == 11 || loc == 15)
-                {
-                    for (int q = 1; q <= 4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 2 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 5 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 6 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 9 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 10 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 13 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 14)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-                else if (loc == 4 || loc == 8 || loc == 12 || loc == 16)
-                {
-                    for (int q = 1; q <= 4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 2 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 3 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 5 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 6 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 7 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 9 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 10 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 11 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 13 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 14 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 15)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (loc == 1 || loc == 4 || loc == 7)
-                {
-
-                }
-                else if (loc == 2 || loc == 5 || loc == 8)
-                {
-                    for (int q = 1; q <= 4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 4 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 7)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
-                    }
-                }
-                else if (loc == 3 || loc == 6 || loc == 9)
-                {
-                    for (int q = 1; q <=4; q++)
-                    {
-                        if (q != p)
-                        {
-                            if (PlayerPrefs.GetInt("P" + q + "-Loc") == 1 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 2 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 4 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 5 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 7 ||
-                                PlayerPrefs.GetInt("P" + q + "-Loc") == 8)
-                            {
-                                PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
-                            }
-                        }
+                        PlayerPrefs.SetInt("P" + q + "CombatSTRGained", PlayerPrefs.GetInt("P" + q + "CombatSTRGained") + 3);
                     }
                 }
             }
@@ -443,7 +242,7 @@ public class UntargetedSkills : MonoBehaviour
     void HeatSeekers()
     {
         int p = Target();
-        for (int x = 1; x <=2; x++)
+        for (int x = 1; x <= 2; x++)
         {
             int e = RandomEnemy();
             int damage = 7 + PlayerPrefs.GetInt("P" + p + "-INT");
@@ -585,6 +384,21 @@ public class UntargetedSkills : MonoBehaviour
         GameObject.Find("E1").GetComponent<E1>().TakeTurn();
     }
 
+    public int CollumnNumber()
+    {
+        if (GameObject.Find("P" + p + "-Block-25").name != null)
+        {
+            return 5;
+        }
+        else if (GameObject.Find("P" + p + "-Block-16").name != null)
+        {
+            return 4;
+        }
+        else
+        {
+            return 3;
+        }
+    }
     //used for animations
     public void EndAnimation()
     {
