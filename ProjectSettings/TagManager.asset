@@ -37,9 +37,8 @@ TagManager:
   - P1Sp
   - P1SpBack
   - P1Guard
-  - yuffie
-  - vincent
   - Music
+  - clicked
   layers:
   - Default
   - TransparentFX

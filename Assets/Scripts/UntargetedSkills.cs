@@ -808,7 +808,6 @@ public class UntargetedSkills : MonoBehaviour
         int pNumber = 0;
         for (int p = 2; p <= 8; p++) { if (GameObject.Find("P" + p) == null) { pNumber = p; } }
         summon.name = "P" + pNumber.ToString();
-        PlayerPrefs.SetString("P" + pNumber + "-Name", summonName);
         LoadSprite.FindSprite(summon, summonName);
         summon.transform.position = GameObject.Find("P-Block-" + tile).transform.position;
     }

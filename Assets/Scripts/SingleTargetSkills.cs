@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditorInternal;
 
 public class SingleTargetSkills : MonoBehaviour
 {
-    // This script acts as a skill library
-    // OnMouseDown reads the skill and calls it
     private void Start()
     {
         for (int p = 1; p <= 2; p++)
@@ -34,6 +30,13 @@ public class SingleTargetSkills : MonoBehaviour
         }
     }
 
+    public void UseSkill()
+    {
+        CombatSystem combatSystem = GameObject.Find("CombatSystem").GetComponent<CombatSystem>();
+        string activeSkill = combatSystem.activeSkill;
+        Invoke(activeSkill, 0f);
+    }
+
     //The following are real skills
     void Attack()
     {
@@ -50,39 +53,47 @@ public class SingleTargetSkills : MonoBehaviour
     public void Damage(int p, int e, int Att, string damageType)
     {
         //accuracyCheck
-        int E1CHP = PlayerPrefs.GetInt("E" + e + "-CHP");
-        int E1CG = PlayerPrefs.GetInt("E" + e + "-CG");
+        P1Combat player = GameObject.Find("P" + p).GetComponent<P1Combat>();
+        E1 enemy = GameObject.Find("E" + e).GetComponent<E1>();
+        int E1CHP = enemy.GetComponent<E1>().health;
+        int E1CG = enemy.GetComponent<E1>().guard;
         int accuracyCheck = UnityEngine.Random.Range(1, 101);
-        if (PlayerPrefs.GetInt("P" + p + "-Accuracy") - PlayerPrefs.GetInt("E" + e + "-Dodge") < accuracyCheck)
+        if (player.accuracy - enemy.dodge < accuracyCheck)
         {
             Miss(e);
         }
         else
         {
             StartCoroutine(Animation(damageType));
-            if (PlayerPrefs.GetString("E" + e + "-Weakness1") == damageType || PlayerPrefs.GetString("E" + e + "-Weakness2") == damageType)
+            if (enemy.weakness1 == damageType || enemy.weakness2 == damageType)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
             }
-            if (PlayerPrefs.GetString("E" + e + "-Resistance1") == damageType || PlayerPrefs.GetString("E" + e + "-Resistance2") == damageType || PlayerPrefs.GetString("E" + e + "-Resistance3") == damageType)
+            if (enemy.resistance1 == damageType
+                || enemy.resistance2 == damageType
+                || enemy.resistance3 == damageType)
             {
                 Att = (int)Math.Round((float)Att * 0.75, 1);
             }
             int critCheck = UnityEngine.Random.Range(1, 101);
-            if (PlayerPrefs.GetInt("P" + p + "-CritRate") > critCheck)
+            if (player.critrate > critCheck)
             {
                 Att = (int)Math.Round((float)Att * 1.5, 1);
                 Crit(e);
             }
             if (damageType == "Fire")
             {
-                for (int status = 0; status <= 3; status++)
-                {
-                    if (PlayerPrefs.GetString("P" + p + "Status" + status) == "firestorm") { Att = 2 * Att;}
-                }
+                if (player.status0 == "firestorm" ||
+                    player.status1 == "firestorm" ||
+                    player.status2 == "firestorm" ||
+                    player.status3 == "firestorm")
+                        { Att = 2 * Att;}
                 SpecialCharge(p, Att, "Flamebearer");
             }
-            if (PlayerPrefs.GetString("E" + e + "Status0") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status1") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status2") == "steadfast" || PlayerPrefs.GetString("E" + e + "Status3") == "steadfast")
+            if (PlayerPrefs.GetString("E" + e + "Status0") == "steadfast" ||
+                PlayerPrefs.GetString("E" + e + "Status1") == "steadfast" || 
+                PlayerPrefs.GetString("E" + e + "Status2") == "steadfast" || 
+                PlayerPrefs.GetString("E" + e + "Status3") == "steadfast")
             {
                 E1CG -= Att;
             }
@@ -100,43 +111,8 @@ public class SingleTargetSkills : MonoBehaviour
                 E1CHP = E1CHP + E1CG;
                 E1CG = 0;
             }
-            GameObject GBar = GameObject.Find("E" + e + "-Guard");
-            PlayerPrefs.SetInt("E" + e + "-CG", E1CG);
-            int E1MaxG = PlayerPrefs.GetInt("E" + e + "-Guard");
-            float PercentG = ((float)E1CG / (float)E1MaxG);
-            GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-            GameObject Bar = GameObject.Find("E" + e + "-Hp");
-            if (E1CHP > 0)
-            {
-                PlayerPrefs.SetInt("E" + e + "-CHP", E1CHP);
-                int E1Max = PlayerPrefs.GetInt("E" + e + "-HP");
-                float PercentHP = ((float)E1CHP / (float)E1Max);
-                Bar.gameObject.transform.localScale = new Vector3(PercentHP, 1, 1);
-            }
-            else
-            {
-                PlayerPrefs.SetInt("E" + e + "-CHP", 0);
-                int E1Max = PlayerPrefs.GetInt("E" + e + "-HP");
-                float PercentHP = 0;
-                Bar.gameObject.transform.localScale = new Vector3(PercentHP, 1, 1);
-                GameObject enemy = GameObject.Find("E" + e);
-                enemy.GetComponent<SpriteRenderer>().color = Color.black;
-                if (PlayerPrefs.GetInt("E1-CHP") <= 0 && PlayerPrefs.GetInt("E2-CHP") <= 0)
-                {
-                    //change to map
-                    RewardsScreen.RewardDisplay("standard");
-                    PlayerPrefs.SetInt("E1-Set", 0);
-                    //Application.LoadLevel("Win");
-                }
-                else if (PlayerPrefs.GetInt("E1-CHP") <= 0 && PlayerPrefs.GetString("E2-Name") == "null")
-                {
-                    //change to map
-                    RewardsScreen.RewardDisplay("standard");
-                    PlayerPrefs.SetInt("E1-Set", 0);
-                    //Application.LoadLevel("Win");
-                }
-
-            }
+            enemy.health = E1CHP;
+            enemy.guard = E1CG;
         }
     }
 
@@ -147,25 +123,16 @@ public class SingleTargetSkills : MonoBehaviour
     public int Target()
     {
         int p = 0;
-        if (PlayerPrefs.GetInt("P1-Targeting") == 1)
+        for (int player = 1; player <= 25; player++)
         {
-            p = 1;
-            PlayerPrefs.SetInt("P1-Targeting", 0);
-        }
-        else if (PlayerPrefs.GetInt("P2-Targeting") == 1)
-        {
-            p = 2;
-            PlayerPrefs.SetInt("P2-Targeting", 0);
-        }
-        else if (PlayerPrefs.GetInt("P3-Targeting") == 1)
-        {
-            p = 3;
-            PlayerPrefs.SetInt("P3-Targeting", 0);
-        }
-        else if (PlayerPrefs.GetInt("P4-Targeting") == 1)
-        {
-            p = 4;
-            PlayerPrefs.SetInt("P4-Targeting", 0);
+            if (GameObject.Find("P" + player) != null)
+            {
+                if (GameObject.Find("P" + player).GetComponent<P1Combat>().targeting == true)
+                {
+                    p = player;
+                    break;
+                }
+            }
         }
         return p;
 
