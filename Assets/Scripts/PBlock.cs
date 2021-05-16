@@ -7,6 +7,20 @@ using System.Globalization;
 public class PBlock : MonoBehaviour
 {
     public unclick unclick;
+
+    public char side;
+    public int tileNumber;
+    public bool movable;
+    public bool clicked;
+    public int standingPlayer;
+
+    private void Start()
+    {
+        side = this.gameObject.name[0];
+        tileNumber = Int32.Parse(this.gameObject.name.Substring(8));
+        movable = true;
+    }
+
     void OnMouseDown()
     {
         if (PlayerPrefs.GetInt("setup") == 1)
@@ -23,23 +37,11 @@ public class PBlock : MonoBehaviour
     {
         //code to fine what player is clicked (if any)
         int p = 0;
-        if (PlayerPrefs.GetInt("P1-Clicked") == 1)
+        for (int player = 1; p <= 25; p++)
         {
-            p = 1;
+            if (GameObject.Find("P" + player) != null)
+            { if (GameObject.Find("P" + player).GetComponent<P1Combat>().clicked == true) { p = player; break; } }
         }
-        else if (PlayerPrefs.GetInt("P2-Clicked") == 1)
-        {
-            p = 2;
-        }
-        else if (PlayerPrefs.GetInt("P3-Clicked") == 1)
-        {
-            p = 3;
-        }
-        else if (PlayerPrefs.GetInt("P4-Clicked") == 1)
-        {
-            p = 4;
-        }
-
         if (p != 0)
         {
             //work on moveable
@@ -168,23 +170,11 @@ public class PBlock : MonoBehaviour
     {
         //code to fine what player is clicked (if any)
         int p = 0;
-        if (PlayerPrefs.GetInt("P1-Clicked") == 1)
+        for (int player = 1; p <= 25; p++)
         {
-            p = 1;
+            if (GameObject.Find("P" + player) != null)
+            { if (GameObject.Find("P" + player).GetComponent<P1Combat>().clicked == true) { p = player; break; } }
         }
-        else if (PlayerPrefs.GetInt("P2-Clicked") == 1)
-        {
-            p = 2;
-        }
-        else if (PlayerPrefs.GetInt("P3-Clicked") == 1)
-        {
-            p = 3;
-        }
-        else if (PlayerPrefs.GetInt("P4-Clicked") == 1)
-        {
-            p = 4;
-        }
-
         if (p != 0)
         {
             //work on moveable
