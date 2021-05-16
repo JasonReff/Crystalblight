@@ -9,13 +9,20 @@ public class E1 : MonoBehaviour
 {
     public Text textbox;
 
+    public bool clicked;
+    public bool turnTaken;
     public int eNumber;
-    public string name;
+    public int location;
+    public new string name;
     public int health;
     public int maxHealth;
     public int guard;
     public int maxGuard;
+    public int guardGain;
     public int attack;
+    public int accuracy;
+    public int dodge;
+    public int critrate;
     public string weakness1;
     public string weakness2;
     public string resistance1;
@@ -35,8 +42,17 @@ public class E1 : MonoBehaviour
     public int status1X;
     public int status2X;
     public int status3X;
-    void Start()
+    public string damageType;
+
+    public int target;
+
+    public GameObject HPBar;
+    public GameObject GuardBar;
+    void Awake()
     {
+        clicked = false;
+        turnTaken = false;
+        eNumber = Int32.Parse(this.gameObject.name[1].ToString());
         string tile = PlayerPrefs.GetString("CurrentTile");
         if (tile[0] == 'C')
         {
@@ -49,34 +65,32 @@ public class E1 : MonoBehaviour
                 {
                     combatNumber = Int32.Parse(tile[6].ToString() + tile[7].ToString());
                 }
-            name = PlayerPrefs.GetString("Combat" + combatNumber + "E1-Name");
+            name = PlayerPrefs.GetString("Combat" + combatNumber + "E" + eNumber + "-Name");
         }
         if (tile[0] == 'M')
         {
-            name = PlayerPrefs.GetString("MinibossE1-Name");
+            name = PlayerPrefs.GetString("MinibossE" + eNumber + "-Name");
         }
         if (tile[0] == 'B')
         {
-            name = PlayerPrefs.GetString("BossE1-Name");
+            name = PlayerPrefs.GetString("BossE" + eNumber + "-Name");
         }
-        PlayerPrefs.SetInt("E1-Loc", 0);
+        PlayerPrefs.SetInt("E" + eNumber + "-Loc", 0);
         SetLoc();
         RetrieveStats();
-        PlayerPrefs.SetInt("E1-AttL", 0);
+        PlayerPrefs.SetInt("E" + eNumber + "-AttL", 0);
         ChooseAttack();
-        StartCoroutine(CheckIfAlive());
+        InvokeRepeating("CheckIfAlive", 0f, 0.3f);
+        InvokeRepeating("UpdateStats", 0f, 0.3f);
     }
 
-    IEnumerator CheckIfAlive()
+    void CheckIfAlive()
     {
-        for (; ; )
+        if (health <= 0)
         {
-            if (health <= 0)
-            {
-                StartCoroutine(FadeOut());
-                Destroy(this);
-            }
-            yield return new WaitForSeconds(0.2f);
+            StartCoroutine(FadeOut());
+            Destroy(this);
+            CancelInvoke();
         }
     }
 
@@ -90,12 +104,27 @@ public class E1 : MonoBehaviour
         }
     }
 
+    void UpdateStats()
+    {
+        UpdateLocation();
+        HPBar.transform.localScale = new Vector3 (health / maxHealth, 1, 1);
+        GuardBar.transform.localScale = new Vector3(health / maxHealth, 1, 1);
+        if (clicked == true) { this.gameObject.tag = "clicked"; } else { this.gameObject.tag = "Untagged"; }
+    }
+
+    void UpdateLocation()
+    {
+        Vector3 tile = GameObject.Find("E-Block-" + location).transform.position;
+        this.transform.position = tile + new Vector3(0, 67, -2);
+    }
+
     void RetrieveStats()
     {
         maxHealth = PlayerPrefs.GetInt(name + "-HP");
         health = maxHealth;
         maxGuard = PlayerPrefs.GetInt(name + "-Guard");
         guard = maxGuard;
+        guardGain = PlayerPrefs.GetInt(name + "-GuardGain");
         status0 = PlayerPrefs.GetString(name + "Status0");
         status0X = PlayerPrefs.GetInt(name + "Status0X");
         status1 = PlayerPrefs.GetString(name + "Status1");
@@ -116,16 +145,7 @@ public class E1 : MonoBehaviour
         skill4 = PlayerPrefs.GetString(name + "-Skill4");
         skill5 = PlayerPrefs.GetString(name + "-Skill5");
         skill6 = PlayerPrefs.GetString(name + "-Skill6");
-        GameObject targetHP = GameObject.Find("E" + eNumber + "-Hp");
-        int PCHP = PlayerPrefs.GetInt("E1-CHP");
-        int PMax = PlayerPrefs.GetInt("E1-HP");
-        float Percent = ((float)PCHP / (float)PMax);
-        targetHP.gameObject.transform.localScale = new Vector3(Percent, 1, 1);
-        GameObject targetGuard = GameObject.Find("E1-Guard");
-        int PCGuard = PlayerPrefs.GetInt("E1-CG");
-        int PMaxGuard = PlayerPrefs.GetInt("E1-Guard");
-        float PercentGuard = ((float)PCGuard / (float)PMaxGuard);
-        targetGuard.gameObject.transform.localScale = new Vector3(PercentGuard, 1, 1);
+        damageType = PlayerPrefs.GetString(name + "-DamageType");
         GameObject sprite = GameObject.Find("E1");
         if (name.Substring(name.Length - 8) == "(Stage1)" || name.Substring(name.Length - 8) == "(Stage2)" || name.Substring(name.Length - 8) == "(Stage3)")
         {
@@ -142,46 +162,20 @@ public class E1 : MonoBehaviour
         UnityEngine.Random.seed = time;
         // the seed a number in that range
         int Loc = 0;
-        PlayerPrefs.SetInt("E-Block-" + PlayerPrefs.GetInt("E1-Loc") + "-Moveable", 1);
-        PlayerPrefs.SetInt("E-Block-0-Moveable", 0);
         while (Loc == 0)
         {
             Loc = UnityEngine.Random.Range(1, 16);
-            if (PlayerPrefs.GetInt("E-Block-" + Loc.ToString() + "-Moveable") == 0)
+            if (GameObject.Find("E-Block-" + Loc).GetComponent<PBlock>().movable == false)
             {
                 Loc = 0;
             }
-            PlayerPrefs.SetInt("E-Block-" + Loc.ToString() + "-Moveable", 0);
+            GameObject.Find("E-Block-" + Loc).GetComponent<PBlock>().movable = false;
         }
-        PlayerPrefs.SetInt("E1-Loc", Loc);
+        location = Loc;
         GameObject Vill = GameObject.Find("E" + eNumber);
         LoadSprite.FindSprite(Vill, name);
-        GameObject VillHp = GameObject.Find("E1-Hp");
-        GameObject VillHpBack = GameObject.Find("E1-HpBack");
-        GameObject VillGuard = GameObject.Find("E1-Guard");
-        GameObject VillStatus0 = GameObject.Find("E1Status0");
-        GameObject VillStatus0X = GameObject.Find("E1Status0X");
         Vector3 E1LocQuards = GameObject.Find("E-Block-" + Loc.ToString()).transform.position;
         Vill.transform.position = E1LocQuards + new Vector3(0, +67, -3);
-        SpriteRenderer sprite = Vill.GetComponent<SpriteRenderer>();
-        int l = Loc + 3;
-        l = l / 4;
-        sprite.sortingLayerName = "Char" + l;
-        VillHp.transform.position = E1LocQuards + new Vector3(-100, -17, 1);
-        VillHp = VillHp.transform.GetChild(0).gameObject;
-        sprite = VillHp.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Bar" + l;
-        VillHpBack.transform.position = E1LocQuards + new Vector3(0, -17, 1);
-        sprite = VillHpBack.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Back" + l;
-        VillStatus0.transform.position = E1LocQuards + new Vector3(-40, 20, 1);
-        sprite = VillStatus0.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Status" + 1;
-        VillStatus0X.transform.position = E1LocQuards + new Vector3(-40, 20, 1);
-        VillGuard.transform.position = E1LocQuards + new Vector3(-100, -17, 1);
-        VillGuard = VillGuard.transform.GetChild(0).gameObject;
-        sprite = VillGuard.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Guard" + l;
     }
     void OnMouseEnter()
     {
@@ -222,18 +216,14 @@ public class E1 : MonoBehaviour
     }
     public void OnMouseDown()
     {
-        PlayerPrefs.SetInt("ENumber", 1);
+        for (int p = 1; p <= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<P1Combat>().clicked = false; } }
+        for (int e = 1; e <= 25; e++) { if (GameObject.Find("E" + e) != null) { GameObject.Find("E" + e).GetComponent<E1>().clicked = false; } }
+        clicked = true;
     }
     public void GiveTurn()
     {
-        PlayerPrefs.SetInt("P1-TurnTaken", 0);
-        PlayerPrefs.SetInt("P2-TurnTaken", 0);
-        PlayerPrefs.SetInt("P3-TurnTaken", 0);
-        PlayerPrefs.SetInt("P4-TurnTaken", 0);
-        PlayerPrefs.SetInt("P1-CanMove", 1);
-        PlayerPrefs.SetInt("P2-CanMove", 1);
-        PlayerPrefs.SetInt("P3-CanMove", 1);
-        PlayerPrefs.SetInt("P4-CanMove", 1);
+        for (int p = 1; p <= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<P1Combat>().clicked = false; } }
+        for (int p = 1; p<= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<P1Combat>().canMove = true; } }
         //add more for more players
         GameObject hero = GameObject.Find(PlayerPrefs.GetString("P1-Name"));
         if (PlayerPrefs.GetInt("P1-CHP") > 0)
@@ -349,83 +339,56 @@ public class E1 : MonoBehaviour
             E2.GetComponent<E2>().TakeTurn2();
         }
     }
+
     public void Attack()
     {
-        GameObject target = GameObject.Find(PlayerPrefs.GetString("P" + PlayerPrefs.GetInt("E1-AttP") + "-Name"));
-        GameObject targetHP = GameObject.Find("P" + PlayerPrefs.GetInt("E1-AttP") + "-Hp");
-        GameObject targetG = GameObject.Find("P" + PlayerPrefs.GetInt("E1-AttP") + "-Guard");
-        int p = PlayerPrefs.GetInt("E1-AttP");
-        int PCHP = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CHP");
-        int PCG = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CG");
-        int Att = PlayerPrefs.GetInt("E1-Attack");
-        string damageType = "Physical";
+        Damage(target, this.attack);
+    }
+    public void Damage(int p, int damage)
+    {
+        P1Combat target = GameObject.Find("P" + p).GetComponent<P1Combat>();
+        int PCHP = target.health;
+        int PCG = target.guard;
         StartCoroutine(Animation(damageType));
-        if (PlayerPrefs.GetString("P" + p + "-Weakness1") == damageType || PlayerPrefs.GetString("P" + p + "-Weakness2") == damageType)
+        if (target.weakness1 == damageType || target.weakness2 == damageType)
         {
-            Att = (int)Math.Round((float)Att * 1.5, 1);
+            damage = (int)Math.Round((float)damage * 1.5, 1);
         }
-        if (PlayerPrefs.GetString("P" + p + "-Resistance1") == damageType || PlayerPrefs.GetString("P" + p + "-Resistance2") == damageType || PlayerPrefs.GetString("P" + p + "-Resistance3") == damageType)
+        if (target.resistance1 == damageType || PlayerPrefs.GetString("P" + p + "-Resistance2") == damageType || PlayerPrefs.GetString("P" + p + "-Resistance3") == damageType)
         {
-            Att = (int)Math.Round((float)Att * 0.75, 1);
+            damage = (int)Math.Round((float)damage * 0.75, 1);
         }
-        if (PlayerPrefs.GetString("P" + p + "Status0") == "steadfast" || PlayerPrefs.GetString("P" + p + "Status1") == "steadfast" || PlayerPrefs.GetString("P" + p + "Status2") == "steadfast" || PlayerPrefs.GetString("P" + p + "Status3") == "steadfast")
+        if (target.status0 == "steadfast" || target.status1 == "steadfast" || target.status2 == "steadfast" || target.status3 == "steadfast")
         {
-            PCG -= Att;
+            PCG -= damage;
         }
-        else if (PlayerPrefs.GetString("P" + p + "Status0") == "vulnerable" || PlayerPrefs.GetString("P" + p + "Status1") == "vulnerable" || PlayerPrefs.GetString("P" + p + "Status2") == "vulnerable" || PlayerPrefs.GetString("P" + p + "Status3") == "vulnerable")
+        else if (target.status0 == "vulnerable" || target.status1 == "vulnerable" || target.status2 == "vulnerable" || target.status3 == "vulnerable")
         {
-            PCHP -= Att;
+            PCHP -= damage;
         }
         else
         {
-            PCG = PCG - ((Att / 2) + (Att % 2));
-            PCHP = PCHP - ((Att / 2));
+            PCG = PCG - ((damage / 2) + (damage % 2));
+            PCHP = PCHP - ((damage / 2));
         }
         if (PCG < 0)
         {
             PCHP = PCHP + PCG;
-            PlayerPrefs.SetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CG", 0);
             PCG = 0;
         }
-        else
-        {
-            PlayerPrefs.SetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CG", PCG);
-        }
-        if (PCHP <= 0)
-        {
-            target.GetComponent<SpriteRenderer>().color = Color.black;
-            if (PlayerPrefs.GetInt("P1-CHP") == 0 && PlayerPrefs.GetInt("P2-CHP") == 0)
-            {
-                Application.LoadLevel("GameOver");
-            }
-            PCHP = 0;
-        }
-        PlayerPrefs.SetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CHP", PCHP);
-        PlayerPrefs.SetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-CG", PCG);
-        int PMax = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-HP");
-        float Percent = ((float)PCHP / (float)PMax);
-        targetHP.gameObject.transform.localScale = new Vector3(Percent, 1, 1);
-        PMax = PlayerPrefs.GetInt("P" + PlayerPrefs.GetInt("E1-AttP") + "-Guard");
-        Percent = ((float)PCG / (float)PMax);
-        targetG.gameObject.transform.localScale = new Vector3(Percent, 1, 1);
+        target.health = PCHP;
+        target.guard = PCG;
         EndTurn();
     }
 
     public void Defend()
     {
-        int eCurrentGuard = PlayerPrefs.GetInt("E1-CG");
-        int eMaxGuard = PlayerPrefs.GetInt("E1-Guard");
-        int eAddedGuard = PlayerPrefs.GetInt("E1-GuardGain");
-        eCurrentGuard = eCurrentGuard + eAddedGuard;
-        if (eCurrentGuard > eMaxGuard)
+        guard += guardGain;
+        if (guard > maxGuard)
         {
-            eCurrentGuard = eMaxGuard;
+            guard = maxGuard;
         }
-        GameObject GBar = GameObject.Find("E1-Guard");
-        float PercentG = ((float)eCurrentGuard / (float)eMaxGuard);
-        GBar.gameObject.transform.localScale = new Vector3(PercentG, 1, 1);
-        PlayerPrefs.SetInt("E1-CG", eCurrentGuard);
-        StatusEffect.InflictStatusEnemy("steadfast", 1, 1);
+        StatusEffect.InflictStatusEnemy("steadfast", eNumber, 1);
         EndTurn();
     }
 
@@ -718,50 +681,12 @@ public class E1 : MonoBehaviour
     public void MoveTo(int dest)
     {
         GameObject Vill = GameObject.Find("E1");
-        GameObject VillHp = GameObject.Find("E1-Hp");
-        GameObject VillHpBack = GameObject.Find("E1-HpBack");
-        GameObject VillGuard = GameObject.Find("E1-Guard");
-        GameObject Vill1Status0 = GameObject.Find("E1Status0");
-        GameObject Vill1Status0X = GameObject.Find("E1Status0X");
-        GameObject Vill1Status1 = GameObject.Find("E1Status1");
-        GameObject Vill1Status1X = GameObject.Find("E1Status1X");
-        GameObject Vill1Status2 = GameObject.Find("E1Status2");
-        GameObject Vill1Status2X = GameObject.Find("E1Status2X");
-        GameObject Vill1Status3 = GameObject.Find("E1Status3");
-        GameObject Vill1Status3X = GameObject.Find("E1Status3X");
         Vector3 E1LocQuards = GameObject.Find("E-Block-" + dest.ToString()).transform.position;
         Vill.transform.position = E1LocQuards + new Vector3(0, +67, -2);
         SpriteRenderer sprite = Vill.GetComponent<SpriteRenderer>();
         int layer = dest + 3;
         layer = layer / 4;
         sprite.sortingLayerName = "Char" + layer;
-        VillHp.transform.position = E1LocQuards + new Vector3(-100, -17, 1);
-        VillHp = VillHp.transform.GetChild(0).gameObject;
-        sprite = VillHp.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Bar" + layer;
-        VillHpBack.transform.position = E1LocQuards + new Vector3(0, -17, 1);
-        sprite = VillHpBack.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Back" + layer;
-        Vill1Status0.transform.position = E1LocQuards + new Vector3(-40, 20, 1);
-        sprite = Vill1Status0.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Status" + layer;
-        Vill1Status0X.transform.position = E1LocQuards + new Vector3(-40, 20, 1);
-        Vill1Status1.transform.position = E1LocQuards + new Vector3(-30, 20, 1);
-        sprite = Vill1Status1.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Status" + layer;
-        Vill1Status1X.transform.position = E1LocQuards + new Vector3(-30, 20, 1);
-        Vill1Status2.transform.position = E1LocQuards + new Vector3(-20, 20, 1);
-        sprite = Vill1Status2.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Status" + layer;
-        Vill1Status2X.transform.position = E1LocQuards + new Vector3(-20, 20, 1);
-        Vill1Status3.transform.position = E1LocQuards + new Vector3(-10, 20, 1);
-        sprite = Vill1Status3.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Status" + layer;
-        Vill1Status3X.transform.position = E1LocQuards + new Vector3(-10, 20, 1);
-        VillGuard.transform.position = E1LocQuards + new Vector3(-100, -17, 1);
-        VillGuard = VillGuard.transform.GetChild(0).gameObject;
-        sprite = VillGuard.GetComponent<SpriteRenderer>();
-        sprite.sortingLayerName = "Guard" + layer;
         PlayerPrefs.SetInt("E-Block-" + PlayerPrefs.GetInt("E1-Loc") + "-Moveable", 1);
         PlayerPrefs.SetInt("E1-Loc", dest);
         PlayerPrefs.SetInt("E-Block-" + dest + "-Moveable", 0);
@@ -769,7 +694,6 @@ public class E1 : MonoBehaviour
 
     IEnumerator Animation(string animation)
     {
-        PlayerPrefs.SetInt("Processing", 1);
         GameObject effect = GameObject.Find("SkillEffect");
         Animator anim = effect.GetComponent<Animator>();
         GameObject target = GameObject.Find("P" + PlayerPrefs.GetInt("E1-AttP"));
@@ -783,35 +707,19 @@ public class E1 : MonoBehaviour
         anim.SetBool("null", true);
         LoadSprite.FindSprite(effect, "null");
         InputDiss.transform.position = new Vector3(0, -2000, -100);
-        PlayerPrefs.SetInt("Processing", 0);
-    }
-
-    public void EndAnimation()
-    {
-        Vector3 ScreenPos = new Vector3(0, -192, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation2", 0.1f);
-    }
-    public void EndAnimation2()
-    {
-        Vector3 ScreenPos = new Vector3(-3000, 0, -100);
-        GameObject InputDiss = GameObject.Find("InputDiss");
-        InputDiss.transform.position = ScreenPos;
-        Invoke("EndAnimation3", 0.1f);
-    }
-    public void EndAnimation3()
-    {
-        Vector3 temp = new Vector3(-5000, 0, 0);
-        GameObject animg = GameObject.Find("slasher");
-        animg.transform.position = temp;
-        EndTurn();
     }
 
     public void EndTurn()
     {
         StatusEffect.StatusTickEnd("E1");
-        GameObject E2 = GameObject.Find("E2");
-        E2.GetComponent<E2>().TakeTurn2();
+        if (GameObject.Find("E2") != null)
+        {
+            GameObject E2 = GameObject.Find("E2");
+            E2.GetComponent<E2>().TakeTurn2();
+        }
+        else
+        {
+            GiveTurn();
+        }
     }
 }
