@@ -23,8 +23,10 @@ public class E1 : MonoBehaviour
     public int accuracy;
     public int dodge;
     public int critrate;
+    public List<string> weaknesses;
     public string weakness1;
     public string weakness2;
+    public List<string> resistances;
     public string resistance1;
     public string resistance2;
     public string resistance3;
@@ -34,6 +36,7 @@ public class E1 : MonoBehaviour
     public string skill4;
     public string skill5;
     public string skill6;
+    public List<string> statusEffects;
     public string status0;
     public string status1;
     public string status2;
