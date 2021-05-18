@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class P1Combat : MonoBehaviour
+public class Character : MonoBehaviour
 {
 
     public bool clicked;
@@ -26,16 +26,20 @@ public class P1Combat : MonoBehaviour
     public int accuracy;
     public int dodge;
     public int critrate;
+    public List<string> weaknesses;
     public string weakness1;
     public string weakness2;
+    public List<string> resistances;
     public string resistance1;
     public string resistance2;
     public string resistance3;
     public string passiveSkill;
+    public List<Skill> skills;
     public string skill1;
     public string skill2;
     public string skill3;
     public string skill4;
+    public List<string> statuses;
     public string status0;
     public string status1;
     public string status2;
@@ -63,6 +67,27 @@ public class P1Combat : MonoBehaviour
 
     public CombatSystem combatSystem;
 
+    Character(int characterNumber, string characterName, int startingVitality, int startingStrength, int startingIntelligence, int startingDexterity, int startingEndurance, Skill startingSkill)
+    {
+        pNumber = characterNumber;
+        name = characterName;
+        skills.Add(startingSkill);
+        vitality = startingVitality;
+        strength = startingStrength;
+        intelligence = startingIntelligence;
+        dexterity = startingDexterity;
+        endurance = startingEndurance;
+        maxHealth = 40 + (20 * vitality);
+        health = maxHealth;
+        maxSP = 30 + (10 * intelligence);
+        SP = maxSP;
+        attack = 5 + 2 * strength;
+        maxGuard = 10 * endurance;
+        accuracy = 85 + 2 * dexterity;
+        critrate = 5 + 2 * dexterity;
+        dodge = 5 + dexterity;
+    }
+    
     private void Awake()
     {
         clicked = false;
@@ -272,7 +297,7 @@ public class P1Combat : MonoBehaviour
                 { 
                     if (GameObject.Find("P" + p) != null) 
                     { 
-                        GameObject.Find("P" + p).GetComponent<P1Combat>().clicked = false; 
+                        GameObject.Find("P" + p).GetComponent<Character>().clicked = false; 
                     } 
                 }
                 for (int e = 1; e <= 25; e++)
