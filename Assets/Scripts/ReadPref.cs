@@ -2,16 +2,15 @@
 using System.IO;
 public class ReadPref : MonoBehaviour
 {
-    public static string FindFromCSV(string column1)
+    public static string FindFromCSV(string dataFile, string variableName)
     {
-        PlayerPrefs.SetString("test7", "test8");
-        using (var reader = new StreamReader("pref.csv"))
+        using (var reader = new StreamReader(dataFile))
         {
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
                 var values = line.Split(',');
-                if (values[0] == column1)
+                if (values[0] == variableName)
                 {
                     return values[1];
                 }

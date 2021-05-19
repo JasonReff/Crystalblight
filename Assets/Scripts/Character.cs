@@ -22,7 +22,7 @@ public class Character : MonoBehaviour
     public int maxGuard;
     public int special;
     public int maxSpecial;
-    public int attack;
+    public int attackDamage;
     public int accuracy;
     public int dodge;
     public int critrate;
@@ -67,7 +67,7 @@ public class Character : MonoBehaviour
 
     public CombatSystem combatSystem;
 
-    Character(int characterNumber, string characterName, int startingVitality, int startingStrength, int startingIntelligence, int startingDexterity, int startingEndurance, Skill startingSkill)
+    public Character(int characterNumber, string characterName, int startingVitality, int startingStrength, int startingIntelligence, int startingDexterity, int startingEndurance, Skill startingSkill)
     {
         pNumber = characterNumber;
         name = characterName;
@@ -81,11 +81,13 @@ public class Character : MonoBehaviour
         health = maxHealth;
         maxSP = 30 + (10 * intelligence);
         SP = maxSP;
-        attack = 5 + 2 * strength;
+        attackDamage = 5 + 2 * strength;
         maxGuard = 10 * endurance;
         accuracy = 85 + 2 * dexterity;
         critrate = 5 + 2 * dexterity;
         dodge = 5 + dexterity;
+        Skill attack = new Skill("Attack", 0, attackDamage, "Physical", "SingleTarget", "Deal " + attackDamage + " damage to an enemy.");
+        skills.Add(attack);
     }
     
     private void Awake()
@@ -159,7 +161,7 @@ public class Character : MonoBehaviour
         status2X = PlayerPrefs.GetInt("P" + pNumber + "Status2X");
         status3 = PlayerPrefs.GetString("P" + pNumber + "Status3");
         status3X = PlayerPrefs.GetInt("P" + pNumber + "Status3X");
-        attack = PlayerPrefs.GetInt("P" + pNumber + "-Attack");
+        attackDamage = PlayerPrefs.GetInt("P" + pNumber + "-Attack");
         weakness1 = PlayerPrefs.GetString("P" + pNumber + "-Weakness1");
         weakness2 = PlayerPrefs.GetString("P" + pNumber + "-Weakness2");
         resistance1 = PlayerPrefs.GetString("P" + pNumber + "-Resistance1");

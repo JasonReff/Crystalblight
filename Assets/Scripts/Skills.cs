@@ -9,24 +9,43 @@ public class Skill : MonoBehaviour
     public int baseDamage;
     public string damageType;
     public string targetingType;
+    public string skillDescription;
+    public GameObject activePlayer;
+    public GameObject target;
 
+    public Skill()
+    {
+
+    }
+    
+    public Skill(string name, int SP, int damage, string type, string targeting, string description)
+    {
+        skillName = name;
+        SPCost = SP;
+        baseDamage = damage;
+        damageType = type;
+        targetingType = targeting;
+        skillDescription = description;
+    }
+    
     public class SingleTargetSkill : Skill
     {
-        public GameObject activePlayer;
-        public GameObject target;
+
     }
 
     public class Attack : SingleTargetSkill
-    {
+    {   
         void Activate()
         {
-            var player = activePlayer.GetComponent<P1Combat>();
+            var player = activePlayer.GetComponent<Character>();
             var enemy = target.GetComponent<E1>();
+            baseDamage = player.attackDamage;
             Damage(player, enemy);
+            player.turnTaken = true;
         }
     }
 
-    void Damage(P1Combat player, E1 enemy)
+    void Damage(Character player, E1 enemy)
     {
         int damage = baseDamage;
         if (DoesSkillTarget(player, enemy) == true)
@@ -52,12 +71,13 @@ public class Skill : MonoBehaviour
         }
     }
 
-    int CriticalDamage(P1Combat player, int damage)
+    int CriticalDamage(Character player, int damage)
     {
+        double criticalModifier = 1.5;
         int criticalCheck = UnityEngine.Random.Range(1, 101);
         if (criticalCheck < player.critrate)
         {
-            Math.Round(damage * 1.5);
+            damage = (int)Math.Round(damage * criticalModifier);
         }
         return damage;
     }
@@ -103,7 +123,7 @@ public class Skill : MonoBehaviour
         }
     }
 
-    bool DoesSkillTarget(P1Combat player, E1 enemy)
+    bool DoesSkillTarget(Character player, E1 enemy)
     {
         int accuracyCheck = UnityEngine.Random.Range(1, 101); //generate number between 1 and 100
         if (player.accuracy - enemy.dodge < accuracyCheck)
