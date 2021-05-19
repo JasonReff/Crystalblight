@@ -219,14 +219,14 @@ public class E1 : MonoBehaviour
     }
     public void OnMouseDown()
     {
-        for (int p = 1; p <= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<P1Combat>().clicked = false; } }
+        for (int p = 1; p <= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<Character>().clicked = false; } }
         for (int e = 1; e <= 25; e++) { if (GameObject.Find("E" + e) != null) { GameObject.Find("E" + e).GetComponent<E1>().clicked = false; } }
         clicked = true;
     }
     public void GiveTurn()
     {
-        for (int p = 1; p <= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<P1Combat>().clicked = false; } }
-        for (int p = 1; p<= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<P1Combat>().canMove = true; } }
+        for (int p = 1; p <= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<Character>().clicked = false; } }
+        for (int p = 1; p<= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<Character>().canMove = true; } }
         //add more for more players
         GameObject hero = GameObject.Find(PlayerPrefs.GetString("P1-Name"));
         if (PlayerPrefs.GetInt("P1-CHP") > 0)
@@ -349,7 +349,7 @@ public class E1 : MonoBehaviour
     }
     public void Damage(int p, int damage)
     {
-        P1Combat target = GameObject.Find("P" + p).GetComponent<P1Combat>();
+        Character target = GameObject.Find("P" + p).GetComponent<Character>();
         int PCHP = target.health;
         int PCG = target.guard;
         StartCoroutine(Animation(damageType));

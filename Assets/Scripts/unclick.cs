@@ -15,7 +15,7 @@ public class unclick : MonoBehaviour
             PlayerPrefs.SetInt("P3-Clicked", 0);
             PlayerPrefs.SetInt("P4-Clicked", 0);
             GameObject P1 = GameObject.Find("P1");
-            P1.GetComponent<P1Combat>().OnMouseExit();
+            P1.GetComponent<Character>().OnMouseExit();
             if (PlayerPrefs.GetInt("Processing") != 1)
             {
                 GameObject PDiss = GameObject.Find("PDiss");

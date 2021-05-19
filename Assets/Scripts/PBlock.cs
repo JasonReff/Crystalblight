@@ -40,7 +40,7 @@ public class PBlock : MonoBehaviour
         for (int player = 1; p <= 25; p++)
         {
             if (GameObject.Find("P" + player) != null)
-            { if (GameObject.Find("P" + player).GetComponent<P1Combat>().clicked == true) { p = player; break; } }
+            { if (GameObject.Find("P" + player).GetComponent<Character>().clicked == true) { p = player; break; } }
         }
         if (p != 0)
         {
@@ -173,7 +173,7 @@ public class PBlock : MonoBehaviour
         for (int player = 1; p <= 25; p++)
         {
             if (GameObject.Find("P" + player) != null)
-            { if (GameObject.Find("P" + player).GetComponent<P1Combat>().clicked == true) { p = player; break; } }
+            { if (GameObject.Find("P" + player).GetComponent<Character>().clicked == true) { p = player; break; } }
         }
         if (p != 0)
         {
@@ -265,7 +265,7 @@ public class PBlock : MonoBehaviour
                 //add more for more charaters
                 if (p == 1)
                 {
-                    Hero.GetComponent<P1Combat>().OnMouseDown();
+                    Hero.GetComponent<Character>().OnMouseDown();
                 }
                 else if (p == 2)
                 {

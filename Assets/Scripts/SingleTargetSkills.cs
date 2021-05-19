@@ -53,7 +53,7 @@ public class SingleTargetSkills : MonoBehaviour
     public void Damage(int p, int e, int Att, string damageType)
     {
         //accuracyCheck
-        P1Combat player = GameObject.Find("P" + p).GetComponent<P1Combat>();
+        Character player = GameObject.Find("P" + p).GetComponent<Character>();
         E1 enemy = GameObject.Find("E" + e).GetComponent<E1>();
         int E1CHP = enemy.GetComponent<E1>().health;
         int E1CG = enemy.GetComponent<E1>().guard;
@@ -127,7 +127,7 @@ public class SingleTargetSkills : MonoBehaviour
         {
             if (GameObject.Find("P" + player) != null)
             {
-                if (GameObject.Find("P" + player).GetComponent<P1Combat>().targeting == true)
+                if (GameObject.Find("P" + player).GetComponent<Character>().targeting == true)
                 {
                     p = player;
                     break;

@@ -25,7 +25,7 @@ public class CombatSystem : MonoBehaviour
     IEnumerator Skill()
     {
         GameObject activeCharacter = GameObject.FindWithTag("clicked");
-        while (activeCharacter.GetComponent<P1Combat>().targeting == false)
+        while (activeCharacter.GetComponent<Character>().targeting == false)
         {
             yield return new WaitForSeconds(0.1f);
         }
@@ -111,7 +111,7 @@ public class CombatSystem : MonoBehaviour
         {
             if (GameObject.Find("P" + p) != null)
             {
-                if (GameObject.Find("P" + p).GetComponent<P1Combat>().turnTaken == false)
+                if (GameObject.Find("P" + p).GetComponent<Character>().turnTaken == false)
                 {
                     yield return new WaitForSeconds(0.3f);
                     CheckIfGameOver();

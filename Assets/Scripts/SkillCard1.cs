@@ -36,15 +36,15 @@ public class SkillCard1 : MonoBehaviour
         for (int x = 1; x <= 4; x++)
         {
             GameObject player = GameObject.Find("P" + x);
-            if (player.GetComponent<P1Combat>().clicked == true) { p = x; break; }
+            if (player.GetComponent<Character>().clicked == true) { p = x; break; }
         }
         unclick.OnMouseDown();
         FindSkillNumber(p);
         textbox.text = "Choose target for skill";
         GameObject PDiss = GameObject.Find("PDiss");
         PDiss.transform.position = new Vector3(-500, 0, -100);
-        GameObject.Find("P" + p).GetComponent<P1Combat>().targeting = true;
-        GameObject.Find("P" + p).GetComponent<P1Combat>().clicked = false;
+        GameObject.Find("P" + p).GetComponent<Character>().targeting = true;
+        GameObject.Find("P" + p).GetComponent<Character>().clicked = false;
         combatSystem.activePlayer = p;
         }
 
@@ -54,10 +54,10 @@ public class SkillCard1 : MonoBehaviour
         {
             case 'A': skillName = "Attack"; break;
             case 'D': skillName = "Defend"; break;
-            case '1': skillName = GameObject.Find("P" + p).GetComponent<P1Combat>().skill1; break;
-            case '2': skillName = GameObject.Find("P" + p).GetComponent<P1Combat>().skill2; break;
-            case '3': skillName = GameObject.Find("P" + p).GetComponent<P1Combat>().skill3; break;
-            case '4': skillName = GameObject.Find("P" + p).GetComponent<P1Combat>().skill4; break;
+            case '1': skillName = GameObject.Find("P" + p).GetComponent<Character>().skill1; break;
+            case '2': skillName = GameObject.Find("P" + p).GetComponent<Character>().skill2; break;
+            case '3': skillName = GameObject.Find("P" + p).GetComponent<Character>().skill3; break;
+            case '4': skillName = GameObject.Find("P" + p).GetComponent<Character>().skill4; break;
         }
     }
 }
