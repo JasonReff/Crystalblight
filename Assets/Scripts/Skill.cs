@@ -11,7 +11,7 @@ public class Skill : MonoBehaviour
     public string damageType;
     public string targetingType;
     public string skillDescription;
-    public Character activePlayer;
+    public Character character;
     public GameObject target;
 
     public Skill()
@@ -31,7 +31,7 @@ public class Skill : MonoBehaviour
 
     public virtual void Activate()
     {
-        activePlayer = GetComponent<Character>(); //Find character that this skill is attached to.
+        character = GetComponent<Character>(); //Find character that this skill is attached to.
         SPSpend();
     }
 
@@ -51,6 +51,14 @@ public class Skill : MonoBehaviour
         }
     }
 
+    public class UntargetedSkill : Skill
+    {
+        public override void Activate()
+        {
+            base.Activate();
+        }
+    }
+
     public class Attack : SingleTargetSkill
     {   
         public Attack(int damage)
@@ -60,15 +68,39 @@ public class Skill : MonoBehaviour
         public override void Activate()
         {
             base.Activate();
-            baseDamage = activePlayer.attackDamage;
-            Damage(activePlayer, target);
-            activePlayer.turnTaken = true;
+            baseDamage = character.attackDamage;
+            Damage(character, target);
+            character.turnTaken = true;
+        }
+    }
+
+    public class Defend : UntargetedSkill
+    {
+        public int defendingGuard;
+        public Defend(int endurance)
+        {
+            defendingGuard = 2 * endurance;
+        }
+
+        public override void Activate()
+        {
+            base.Activate();
+            GainGuard(character, defendingGuard);
         }
     }
 
     void SPSpend()
     {
-        activePlayer.SP -= SPCost;
+        character.SP -= SPCost;
+    }
+
+    void GainGuard(Character character, int guard)
+    {
+        character.guard += guard;
+        if (character.guard > character.maxGuard)
+        {
+            character.guard = character.maxGuard;
+        }
     }
 
     void Damage(Character player, E1 enemy)
