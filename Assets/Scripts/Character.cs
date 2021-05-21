@@ -39,7 +39,7 @@ public class Character : MonoBehaviour
     public string skill2;
     public string skill3;
     public string skill4;
-    public List<string> statuses;
+    public Dictionary<StatusEffect, int> statuses;
     public string status0;
     public string status1;
     public string status2;
@@ -86,8 +86,11 @@ public class Character : MonoBehaviour
         accuracy = 85 + 2 * dexterity;
         critrate = 5 + 2 * dexterity;
         dodge = 5 + dexterity;
-        Skill attack = new Skill("Attack", 0, attackDamage, "Physical", "SingleTarget", "Deal " + attackDamage + " damage to an enemy.");
+        Skill attack = new Skill.Attack(attackDamage);
         skills.Add(attack);
+        Skill defend = new Skill.Defend(endurance);
+        skills.Add(defend);
+        skills.Add(startingSkill);
     }
     
     private void Awake()
