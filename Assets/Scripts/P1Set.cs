@@ -9,6 +9,9 @@ public class P1Set : MonoBehaviour
     public GoToMap GoMap;
     public Text textbox;
     public EnemyAllocation enemyAllocation;
+
+    public string characterName;
+    public CharacterSelect characterSelect;
     void OnMouseEnter()
     {
         string playerName = this.name.Remove(this.name.Length - 4, 4);
@@ -31,14 +34,25 @@ public class P1Set : MonoBehaviour
 
     void OnMouseDown()
     {
-        string playerName = this.name.Remove(this.name.Length - 4, 4);
-        PlayerPrefs.SetString("SelectedCharacter", playerName);
+        characterSelect.selectedCharacter = characterName;
+        GetDisciplineScreen();
+        GetCharacterDisciplines();
+        
+    }
+
+    void GetDisciplineScreen()
+    {
         GameObject disciplineDiss = GameObject.Find("DisciplineDiss");
         disciplineDiss.transform.localPosition = new Vector3(0, 0, -2);
         GameObject disciplineDisplay = GameObject.Find("DisciplineDisplay");
         disciplineDisplay.transform.localPosition = new Vector3(0, 0, -3);
         GameObject disciplineText = GameObject.Find("DisciplineText");
         disciplineText.transform.localPosition = new Vector3(0, 0, -3);
+    }
+
+    void GetCharacterDisciplines()
+    {
+        string playerName = characterName;
         GameObject.Find("Discipline1Text").GetComponent<Text>().text = PlayerPrefs.GetString(playerName + "Discipline1");
         GameObject.Find("Discipline2Text").GetComponent<Text>().text = PlayerPrefs.GetString(playerName + "Discipline2");
         GameObject.Find("Discipline3Text").GetComponent<Text>().text = PlayerPrefs.GetString(playerName + "Discipline3");

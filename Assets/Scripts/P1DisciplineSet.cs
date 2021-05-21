@@ -6,6 +6,7 @@ using UnityEngine;
 public class P1DisciplineSet : MonoBehaviour
 {
     public GoToMap GoMap;
+    public int disciplineNumber;
     void OnMouseDown()
     {
         string playerName = PlayerPrefs.GetString("SelectedCharacter");
