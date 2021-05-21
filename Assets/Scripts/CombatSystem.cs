@@ -7,14 +7,16 @@ using UnityEngine.SceneManagement;
 public class CombatSystem : MonoBehaviour
 {
 
-    public int activePlayer;
-    public string activeSkill;
+    public Character activePlayer;
+    public Skill activeSkill;
     public string skillTargeting;
+    public bool charactersPlaced;
 
     public GameObject background;
     public GameObject Enemy;
-    public GameObject Character;
+    public GameObject characterObject;
     public PlayerTurn playerTurn;
+    public PlayerData playerData;
     private void Start()
     {
         CreateEnemies();
@@ -24,30 +26,7 @@ public class CombatSystem : MonoBehaviour
 
     IEnumerator Skill()
     {
-        GameObject activeCharacter = GameObject.FindWithTag("clicked");
-        while (activeCharacter.GetComponent<Character>().targeting == false)
-        {
-            yield return new WaitForSeconds(0.1f);
-        }
-        for (float t = 1f; t > 0.7f; t -= 0.1f)
-        {
-            Color color = background.GetComponent<SpriteRenderer>().color;
-            background.GetComponent<SpriteRenderer>().color = new Color (color.r, color.g, color.b, t);
-            yield return new WaitForSeconds(0.1f);
-        }
-        switch (skillTargeting)
-        {
-            case "SingleTargetEnemy":
-            case "FriendlyTargetOther":
-            case "FriendlyTarget":
-            case "EnemyTile":
-            case "FriendlyTile":
-                while (GameObject.FindWithTag("clicked") != null) { yield return new WaitForSeconds(0.1f); }
-                break;
-            case "Untargeted":
-                break;
-        }
-        GameObject target = GameObject.FindWithTag("clicked");
+        
     }
 
     void CreateEnemies()
@@ -87,15 +66,22 @@ public class CombatSystem : MonoBehaviour
 
     void CreateCharacters()
     {
-        for (int p = 1; p <= 1; p++)
+        foreach (Character character in playerData.characters)
         {
-            string name = PlayerPrefs.GetString("P" + p + "-Name");
-            if (name != "null")
-            {
-                GameObject P1 = Instantiate(Character);
-                P1.gameObject.name = "P" + p.ToString();
-            }
+            LoadCharacter(character);
         }
+    }
+
+    void LoadCharacter(Character character)
+    {
+        GameObject player = Instantiate(characterObject);
+        Character characterInPlay = player.GetComponent<Character>();
+        characterInPlay.GetCharacterData(character);
+        characterInPlay.clicked = false;
+        characterInPlay.turnTaken = false;
+        characterInPlay.guard = characterInPlay.maxGuard;
+        characterInPlay.special = 0;
+        LoadSprite.FindSprite(player, characterInPlay.name);
     }
 
     IEnumerator PlayerTransition()

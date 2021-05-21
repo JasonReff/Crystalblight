@@ -92,6 +92,33 @@ public class Character : MonoBehaviour
         skills.Add(defend);
         skills.Add(startingSkill);
     }
+
+    public void GetCharacterData(Character character)
+    {
+        clicked = character.clicked;
+        name = character.name;
+        skills = character.skills;
+        passiveSkill = character.passiveSkill;
+        statuses = character.statuses;
+        vitality = character.vitality;
+        strength = character.strength;
+        intelligence = character.intelligence;
+        dexterity = character.dexterity;
+        endurance = character.endurance;
+        maxHealth = character.maxHealth;
+        health = character.health;
+        special = character.special;
+        maxSpecial = character.maxSpecial;
+        SP = character.SP;
+        maxSP = character.maxSP;
+        attackDamage = character.attackDamage;
+        maxGuard = character.maxGuard;
+        accuracy = character.accuracy;
+        critrate = character.critrate;
+        dodge = character.dodge;
+        weaknesses = character.weaknesses;
+        resistances = character.resistances;
+    }
     
     private void Awake()
     {
