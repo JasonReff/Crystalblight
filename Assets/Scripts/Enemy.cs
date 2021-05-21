@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Collections;
 
-public class E1 : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     public Text textbox;
 
@@ -220,7 +220,7 @@ public class E1 : MonoBehaviour
     public void OnMouseDown()
     {
         for (int p = 1; p <= 25; p++) { if (GameObject.Find("P" + p) != null) { GameObject.Find("P" + p).GetComponent<Character>().clicked = false; } }
-        for (int e = 1; e <= 25; e++) { if (GameObject.Find("E" + e) != null) { GameObject.Find("E" + e).GetComponent<E1>().clicked = false; } }
+        for (int e = 1; e <= 25; e++) { if (GameObject.Find("E" + e) != null) { GameObject.Find("E" + e).GetComponent<Enemy>().clicked = false; } }
         clicked = true;
     }
     public void GiveTurn()

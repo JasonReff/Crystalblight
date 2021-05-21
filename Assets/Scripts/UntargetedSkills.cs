@@ -765,7 +765,7 @@ public class UntargetedSkills : MonoBehaviour
 
     public void ETakeTurn()
     {
-        GameObject.Find("E1").GetComponent<E1>().TakeTurn();
+        GameObject.Find("E1").GetComponent<Enemy>().TakeTurn();
     }
 
     void EndPlayerTurn()

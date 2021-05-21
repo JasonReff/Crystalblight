@@ -54,9 +54,9 @@ public class SingleTargetSkills : MonoBehaviour
     {
         //accuracyCheck
         Character player = GameObject.Find("P" + p).GetComponent<Character>();
-        E1 enemy = GameObject.Find("E" + e).GetComponent<E1>();
-        int E1CHP = enemy.GetComponent<E1>().health;
-        int E1CG = enemy.GetComponent<E1>().guard;
+        Enemy enemy = GameObject.Find("E" + e).GetComponent<Enemy>();
+        int E1CHP = enemy.GetComponent<Enemy>().health;
+        int E1CG = enemy.GetComponent<Enemy>().guard;
         int accuracyCheck = UnityEngine.Random.Range(1, 101);
         if (player.accuracy - enemy.dodge < accuracyCheck)
         {

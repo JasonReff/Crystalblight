@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using UnityEngine;
 
 public class CharacterSelect : MonoBehaviour
@@ -34,13 +30,8 @@ public class CharacterSelect : MonoBehaviour
     public Skill GetCharacterSkill()
     {
         string skillName = CharacterSkillName();
-        int SPCost = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", skillName + "SPCost"));
-        int baseDamage = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", skillName + "BaseDamage"));
-        string damageType = ReadPref.FindFromCSV("CharacterSkillData.csv", skillName + "DamageType");
-        string targetingType = ReadPref.FindFromCSV("CharacterSkillData.csv", skillName + "TargetingType");
-        string skillDescription = ReadPref.FindFromCSV("CharacterSkillData.csv", skillName + "Description");
-        Skill skill1 = new Skill(skillName, SPCost, baseDamage, damageType, targetingType, skillDescription);
-        return skill1;
+        Skill skill = Skill.CreateSkill(skillName);
+        return skill;
     }
 
     public string CharacterSkillName()

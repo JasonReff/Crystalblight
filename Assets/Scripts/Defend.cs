@@ -7,7 +7,7 @@ using System;
 
 public class Defend : MonoBehaviour
 {
-    public E1 e1;
+    public Enemy e1;
     public GameObject shield;
     public GameObject Bar;
     public Text textbox;

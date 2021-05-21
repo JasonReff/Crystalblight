@@ -830,7 +830,7 @@ public class E3 : MonoBehaviour
     public void TakeTurn()
     {
         GameObject E1 = GameObject.Find("E1");
-        E1.GetComponent<E1>().TakeTurn();
+        E1.GetComponent<Enemy>().TakeTurn();
     }
     public void TakeTurn3()
     {

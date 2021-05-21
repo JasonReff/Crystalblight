@@ -44,7 +44,7 @@ public class Skill : MonoBehaviour
     
     public class SingleTargetSkill : Skill
     {
-        new public E1 target;
+        new public Enemy target;
         public override void Activate()
         {
             base.Activate();
@@ -103,7 +103,7 @@ public class Skill : MonoBehaviour
         }
     }
 
-    void Damage(Character player, E1 enemy)
+    void Damage(Character player, Enemy enemy)
     {
         int damage = baseDamage;
         if (DoesSkillTarget(player, enemy) == true)
@@ -140,7 +140,7 @@ public class Skill : MonoBehaviour
         return damage;
     }
 
-    int ResistanceWeaknessAdjustment(E1 enemy, int damage)
+    int ResistanceWeaknessAdjustment(Enemy enemy, int damage)
     {
         double resistanceModifier = 0.5;
         double weaknessModifier = 1.5;
@@ -155,12 +155,12 @@ public class Skill : MonoBehaviour
         return damage;
     }
 
-    void DamageVulnerableEnemy(E1 enemy, int damage)
+    void DamageVulnerableEnemy(Enemy enemy, int damage)
     {
         enemy.health -= damage;
     }
 
-    void DamageSteadfastEnemy(E1 enemy, int damage)
+    void DamageSteadfastEnemy(Enemy enemy, int damage)
     {
         enemy.guard -= damage;
         if (enemy.guard < 0)
@@ -170,7 +170,7 @@ public class Skill : MonoBehaviour
         }
     }
 
-    void DamageEnemy(E1 enemy, int damage)
+    void DamageEnemy(Enemy enemy, int damage)
     {
         enemy.guard -= (damage / 2) + (damage % 2);
         enemy.health -= (damage / 2);
@@ -181,7 +181,7 @@ public class Skill : MonoBehaviour
         }
     }
 
-    bool DoesSkillTarget(Character player, E1 enemy)
+    bool DoesSkillTarget(Character player, Enemy enemy)
     {
         int accuracyCheck = UnityEngine.Random.Range(1, 101); //generate number between 1 and 100
         if (player.accuracy - enemy.dodge < accuracyCheck)
@@ -191,7 +191,7 @@ public class Skill : MonoBehaviour
         else return true;
     }
 
-    void Miss(E1 enemy)
+    void Miss(Enemy enemy)
     {
         GameObject miss = GameObject.Find("Miss");
         GameObject target = enemy.GetComponent<GameObject>();

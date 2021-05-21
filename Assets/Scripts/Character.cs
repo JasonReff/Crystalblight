@@ -336,7 +336,7 @@ public class Character : MonoBehaviour
                 {
                     if (GameObject.Find("E" + e) != null)
                     {
-                        GameObject.Find("E" + e).GetComponent<E1>().clicked = false;
+                        GameObject.Find("E" + e).GetComponent<Enemy>().clicked = false;
                     }
                 }
                 clicked = true;
