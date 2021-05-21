@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Runtime.Remoting;
 using UnityEngine;
 
 public class Skill : MonoBehaviour
@@ -10,7 +11,7 @@ public class Skill : MonoBehaviour
     public string damageType;
     public string targetingType;
     public string skillDescription;
-    public GameObject activePlayer;
+    public Character activePlayer;
     public GameObject target;
 
     public Skill()
@@ -27,22 +28,47 @@ public class Skill : MonoBehaviour
         targetingType = targeting;
         skillDescription = description;
     }
+
+    public virtual void Activate()
+    {
+        activePlayer = GetComponent<Character>(); //Find character that this skill is attached to.
+        SPSpend();
+    }
+
+    public static Skill CreateSkill(string name)
+    {
+        ObjectHandle handle = Activator.CreateInstance("Skill.cs", name);
+        Skill skill = (Skill)handle.Unwrap();
+        return skill;
+    }
     
     public class SingleTargetSkill : Skill
     {
-
+        new public E1 target;
+        public override void Activate()
+        {
+            base.Activate();
+        }
     }
 
     public class Attack : SingleTargetSkill
     {   
-        void Activate()
+        public Attack(int damage)
         {
-            var player = activePlayer.GetComponent<Character>();
-            var enemy = target.GetComponent<E1>();
-            baseDamage = player.attackDamage;
-            Damage(player, enemy);
-            player.turnTaken = true;
+            baseDamage = damage;
         }
+        public override void Activate()
+        {
+            base.Activate();
+            baseDamage = activePlayer.attackDamage;
+            Damage(activePlayer, target);
+            activePlayer.turnTaken = true;
+        }
+    }
+
+    void SPSpend()
+    {
+        activePlayer.SP -= SPCost;
     }
 
     void Damage(Character player, E1 enemy)
