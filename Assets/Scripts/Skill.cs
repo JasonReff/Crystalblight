@@ -35,6 +35,16 @@ public class Skill : MonoBehaviour
         SPSpend();
     }
 
+    public virtual bool IsValid()
+    {
+        if (SPCost > character.SP)
+        {
+            Console.WriteLine("Not Enough SP");
+            return false;
+        }
+        else return true;
+    }
+
     public static Skill CreateSkill(string name)
     {
         ObjectHandle handle = Activator.CreateInstance("Skill.cs", name);
@@ -48,6 +58,16 @@ public class Skill : MonoBehaviour
         public override void Activate()
         {
             base.Activate();
+        }
+
+        public override bool IsValid()
+        {
+            if (target = null)
+            {
+                Console.WriteLine("Invalid Target");
+                return false;
+            }
+            return base.IsValid();
         }
     }
 
@@ -67,10 +87,13 @@ public class Skill : MonoBehaviour
         }
         public override void Activate()
         {
-            base.Activate();
-            baseDamage = character.attackDamage;
-            Damage(character, target);
-            character.turnTaken = true;
+            if (IsValid() == true)
+            {
+                base.Activate();
+                baseDamage = character.attackDamage;
+                Damage(character, target);
+                character.turnTaken = true;
+            }
         }
     }
 
@@ -84,8 +107,11 @@ public class Skill : MonoBehaviour
 
         public override void Activate()
         {
-            base.Activate();
-            GainGuard(character, defendingGuard);
+            if (IsValid() == true)
+            {
+                base.Activate();
+                GainGuard(character, defendingGuard);
+            }
         }
     }
 
