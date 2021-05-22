@@ -39,7 +39,7 @@ public class Character : MonoBehaviour
     public string skill2;
     public string skill3;
     public string skill4;
-    public Dictionary<StatusEffect, int> statuses;
+    public List<StatusEffect> statuses;
     public string status0;
     public string status1;
     public string status2;

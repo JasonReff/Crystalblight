@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
     public string skill4;
     public string skill5;
     public string skill6;
-    public List<string> statusEffects;
+    public List<StatusEffect> statusEffects;
     public string status0;
     public string status1;
     public string status2;
