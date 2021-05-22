@@ -30,13 +30,6 @@ public class SingleTargetSkills : MonoBehaviour
         }
     }
 
-    public void UseSkill()
-    {
-        CombatSystem combatSystem = GameObject.Find("CombatSystem").GetComponent<CombatSystem>();
-        string activeSkill = combatSystem.activeSkill;
-        Invoke(activeSkill, 0f);
-    }
-
     //The following are real skills
     void Attack()
     {
