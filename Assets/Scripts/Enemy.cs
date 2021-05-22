@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
     public int guard;
     public int maxGuard;
     public int guardGain;
-    public int attack;
+    public int attackDamage;
     public int accuracy;
     public int dodge;
     public int critrate;
@@ -288,7 +288,7 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
-        Damage(target, this.attack);
+        Damage(target, this.attackDamage);
     }
     public void Damage(int p, int damage)
     {
