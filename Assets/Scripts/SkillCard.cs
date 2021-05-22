@@ -33,6 +33,13 @@ public class SkillCard : MonoBehaviour
     }
     void OnMouseDown()
     {
-        skill.Activate();
+        if (skill.targetingType == Skill.TargetingType.Untargeted)
+        {
+            skill.Activate();
+        }
+        else
+        {
+            combatSystem.activeSkill = skill;
+        }
     }
 }

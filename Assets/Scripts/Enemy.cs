@@ -23,10 +23,10 @@ public class Enemy : MonoBehaviour
     public int accuracy;
     public int dodge;
     public int critrate;
-    public List<string> weaknesses;
+    public List<Skill.DamageType> weaknesses;
     public string weakness1;
     public string weakness2;
-    public List<string> resistances;
+    public List<Skill.DamageType> resistances;
     public string resistance1;
     public string resistance2;
     public string resistance3;
