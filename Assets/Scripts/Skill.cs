@@ -117,7 +117,8 @@ public class Skill : MonoBehaviour
     }
 
     public class Attack : SingleTargetEnemySkill
-    {   
+    {
+        //attack damage is set when attack skill is created. need better way to have variable update regularly
         public Attack(int damage)
         {
             baseDamage = damage;
@@ -136,7 +137,7 @@ public class Skill : MonoBehaviour
 
     public class Defend : UntargetedSkill
     {
-        public int defendingGuard;
+        public int defendingGuard; //defending guard is set when defend skill is created. need better way to have variable update regularly
         public Defend(int endurance)
         {
             defendingGuard = 2 * endurance;
