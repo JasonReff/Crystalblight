@@ -27,27 +27,10 @@ public class Character : MonoBehaviour
     public int dodge;
     public int critrate;
     public List<Skill.DamageType> weaknesses;
-    public string weakness1;
-    public string weakness2;
     public List<Skill.DamageType> resistances;
-    public string resistance1;
-    public string resistance2;
-    public string resistance3;
     public string passiveSkill;
     public List<Skill> skills;
-    public string skill1;
-    public string skill2;
-    public string skill3;
-    public string skill4;
     public List<StatusEffect> statuses;
-    public string status0;
-    public string status1;
-    public string status2;
-    public string status3;
-    public int status0X;
-    public int status1X;
-    public int status2X;
-    public int status3X;
     public string equippedRune;
     public string equippedSigil;
     public string equippedVeil;
@@ -172,48 +155,6 @@ public class Character : MonoBehaviour
         Vector3 tile = GameObject.Find("P-Block-" + location).transform.position;
         this.transform.position = tile + new Vector3(0, 67, -2);
     }
-
-    void RetrieveStats()
-    {
-        maxHealth = PlayerPrefs.GetInt("P" + pNumber + "-HP");
-        health = PlayerPrefs.GetInt("P" + pNumber + "-CHP");
-        SP = PlayerPrefs.GetInt("P" + pNumber + "-CSP");
-        maxSP = PlayerPrefs.GetInt("P" + pNumber + "-SP");
-        maxGuard = PlayerPrefs.GetInt("P" + pNumber + "-Guard");
-        guard = maxGuard;
-        special = 0;
-        maxSpecial = PlayerPrefs.GetInt("P" + pNumber + "-MaxSpecial");
-        status0 = PlayerPrefs.GetString("P" + pNumber + "Status0");
-        status0X = PlayerPrefs.GetInt("P" + pNumber + "Status0X");
-        status1 = PlayerPrefs.GetString("P" + pNumber + "Status1");
-        status1X = PlayerPrefs.GetInt("P" + pNumber + "Status1X");
-        status2 = PlayerPrefs.GetString("P" + pNumber + "Status2");
-        status2X = PlayerPrefs.GetInt("P" + pNumber + "Status2X");
-        status3 = PlayerPrefs.GetString("P" + pNumber + "Status3");
-        status3X = PlayerPrefs.GetInt("P" + pNumber + "Status3X");
-        attackDamage = PlayerPrefs.GetInt("P" + pNumber + "-Attack");
-        weakness1 = PlayerPrefs.GetString("P" + pNumber + "-Weakness1");
-        weakness2 = PlayerPrefs.GetString("P" + pNumber + "-Weakness2");
-        resistance1 = PlayerPrefs.GetString("P" + pNumber + "-Resistance1");
-        resistance2 = PlayerPrefs.GetString("P" + pNumber + "-Resistance2");
-        resistance3 = PlayerPrefs.GetString("P" + pNumber + "-Resistance3");
-        passiveSkill = PlayerPrefs.GetString("P" + pNumber + "-PassiveSkill");
-        skill1 = PlayerPrefs.GetString("P" + pNumber + "-Skill1");
-        skill2 = PlayerPrefs.GetString("P" + pNumber + "-Skill2");
-        skill3 = PlayerPrefs.GetString("P" + pNumber + "-Skill3");
-        skill4 = PlayerPrefs.GetString("P" + pNumber + "-Skill4");
-        vitality = PlayerPrefs.GetInt("P" + pNumber + "-VIT");
-        strength = PlayerPrefs.GetInt("P" + pNumber + "-STR");
-        intelligence = PlayerPrefs.GetInt("P" + pNumber + "-INT");
-        dexterity = PlayerPrefs.GetInt("P" + pNumber + "-DEX");
-        endurance = PlayerPrefs.GetInt("P" + pNumber + "-END");
-        GameObject sprite = GameObject.Find("P" + pNumber);
-        LoadSprite.FindSprite(sprite, name);
-        BoxCollider2D _boxCollider = GetComponent<BoxCollider2D>();
-        Destroy(_boxCollider);
-        _boxCollider = gameObject.AddComponent<BoxCollider2D>() as BoxCollider2D;
-    }
-
     void OnMouseEnter()
     {
         if (clicked == false)

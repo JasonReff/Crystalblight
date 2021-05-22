@@ -24,28 +24,10 @@ public class Enemy : MonoBehaviour
     public int dodge;
     public int critrate;
     public List<Skill.DamageType> weaknesses;
-    public string weakness1;
-    public string weakness2;
     public List<Skill.DamageType> resistances;
-    public string resistance1;
-    public string resistance2;
-    public string resistance3;
-    public string skill1;
-    public string skill2;
-    public string skill3;
-    public string skill4;
-    public string skill5;
-    public string skill6;
+    public List<EnemySkill> enemySkills;
     public List<StatusEffect> statusEffects;
-    public string status0;
-    public string status1;
-    public string status2;
-    public string status3;
-    public int status0X;
-    public int status1X;
-    public int status2X;
-    public int status3X;
-    public string damageType;
+    public Skill.DamageType damageType;
 
     public int target;
 
@@ -119,45 +101,6 @@ public class Enemy : MonoBehaviour
     {
         Vector3 tile = GameObject.Find("E-Block-" + location).transform.position;
         this.transform.position = tile + new Vector3(0, 67, -2);
-    }
-
-    void RetrieveStats()
-    {
-        maxHealth = PlayerPrefs.GetInt(name + "-HP");
-        health = maxHealth;
-        maxGuard = PlayerPrefs.GetInt(name + "-Guard");
-        guard = maxGuard;
-        guardGain = PlayerPrefs.GetInt(name + "-GuardGain");
-        status0 = PlayerPrefs.GetString(name + "Status0");
-        status0X = PlayerPrefs.GetInt(name + "Status0X");
-        status1 = PlayerPrefs.GetString(name + "Status1");
-        status1X = PlayerPrefs.GetInt(name + "Status1X");
-        status2 = PlayerPrefs.GetString(name + "Status2");
-        status2X = PlayerPrefs.GetInt(name + "Status2X");
-        status3 = PlayerPrefs.GetString(name + "Status3");
-        status3X = PlayerPrefs.GetInt(name + "Status3X");
-        attack = PlayerPrefs.GetInt(name + "-Attack");
-        weakness1 = PlayerPrefs.GetString(name + "-Weakness1");
-        weakness2 = PlayerPrefs.GetString(name + "-Weakness2");
-        resistance1 = PlayerPrefs.GetString(name + "-Resistance1");
-        resistance2 = PlayerPrefs.GetString(name + "-Resistance2");
-        resistance3 = PlayerPrefs.GetString(name + "-Resistance3");
-        skill1 = PlayerPrefs.GetString(name + "-Skill1");
-        skill2 = PlayerPrefs.GetString(name + "-Skill2");
-        skill3 = PlayerPrefs.GetString(name + "-Skill3");
-        skill4 = PlayerPrefs.GetString(name + "-Skill4");
-        skill5 = PlayerPrefs.GetString(name + "-Skill5");
-        skill6 = PlayerPrefs.GetString(name + "-Skill6");
-        damageType = PlayerPrefs.GetString(name + "-DamageType");
-        GameObject sprite = GameObject.Find("E1");
-        if (name.Substring(name.Length - 8) == "(Stage1)" || name.Substring(name.Length - 8) == "(Stage2)" || name.Substring(name.Length - 8) == "(Stage3)")
-        {
-            name = name.Remove(name.Length - 9, 9);
-        }
-        LoadSprite.FindSprite(sprite, name);
-        BoxCollider2D _boxCollider = GetComponent<BoxCollider2D>();
-        Destroy(_boxCollider);
-        _boxCollider = gameObject.AddComponent<BoxCollider2D>() as BoxCollider2D;
     }
     void SetLoc()
     {
