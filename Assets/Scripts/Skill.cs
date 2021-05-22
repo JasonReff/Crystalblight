@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Runtime.Remoting;
 using UnityEngine;
 
 public class Skill : MonoBehaviour
@@ -84,10 +83,11 @@ public class Skill : MonoBehaviour
     //this is the method used to create skill objects
     public static Skill CreateSkill(string name)
     {
-        ObjectHandle handle = Activator.CreateInstance("Skill.cs", name);
-        Skill skill = (Skill)handle.Unwrap();
+        Type t = Type.GetType(name);
+        Skill skill = (Skill)Activator.CreateInstance(t);
         return skill;
     }
+
     
     public class SingleTargetEnemySkill : Skill
     {
