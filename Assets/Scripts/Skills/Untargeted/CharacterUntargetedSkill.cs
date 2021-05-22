@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UntargetedSkill : Skill
+public class CharacterUntargetedSkill : Skill
 {
     public override void Activate()
     {

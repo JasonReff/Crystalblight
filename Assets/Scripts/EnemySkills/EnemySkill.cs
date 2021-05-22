@@ -52,60 +52,6 @@ public class EnemySkill : MonoBehaviour
         enemy.turnTaken = true;
     }
 
-    public class SingleTargetCharacterSkill : EnemySkill
-    {
-        new public Character target;
-
-        public override void Activate()
-        {
-            base.Activate();
-        }
-
-        public override bool IsValid()
-        {
-            if (target = null)
-            {
-                return false;
-            }
-            return base.IsValid();
-        }
-    }
-
-    public class UntargetedSkill : EnemySkill
-    {
-        public override void Activate()
-        {
-            base.Activate();
-        }
-    }
-
-    public class Attack : SingleTargetCharacterSkill
-    {
-        public override void Activate()
-        {
-            if (IsValid() == true)
-            { 
-                base.Activate();
-                baseDamage = enemy.attackDamage;
-                Damage(enemy, target);
-                EndSkill();
-            }
-        }
-    }
-
-    public class Defend : UntargetedSkill
-    {   
-        public override void Activate()
-        {
-            if (IsValid() == true)
-            {
-                base.Activate();
-                GuardGain();
-                EndSkill();
-            }
-        }
-    }
-
     public void Damage(Enemy enemy, Character character)
     {
         int damage = baseDamage;
@@ -208,7 +154,7 @@ public class EnemySkill : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
     }
 
-    void GuardGain()
+    public void GuardGain()
     {
         enemy.guard += enemy.guardGain;
         if (enemy.guard > enemy.maxGuard)

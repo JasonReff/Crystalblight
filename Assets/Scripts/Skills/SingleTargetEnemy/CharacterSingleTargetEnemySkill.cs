@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class SingleTargetEnemySkill : Skill
+public class CharacterSingleTargetEnemySkill : Skill
 {
     new public Enemy target;
     public override void Activate()

@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : SingleTargetEnemySkill
+public class CharacterDefend : CharacterUntargetedSkill
 {
-    public Attack(int damage)
+    public int defendingGuard;
+    public CharacterDefend(int endurance)
     {
-        baseDamage = damage;
+        defendingGuard = 2 * endurance;
     }
+
     public override void Activate()
     {
         if (IsValid() == true)
         {
             base.Activate();
-            baseDamage = character.attackDamage;
-            Damage(character, target);
+            GainGuard(character, defendingGuard);
             EndSkill();
         }
     }
