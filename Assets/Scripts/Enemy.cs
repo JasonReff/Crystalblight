@@ -33,6 +33,26 @@ public class Enemy : MonoBehaviour
 
     public GameObject HPBar;
     public GameObject GuardBar;
+
+    public Enemy(string enemyName)
+    {
+        name = enemyName;
+        string fileName = "EnemyData.csv";
+        maxHealth = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "MaxHealth"));
+        health = maxHealth;
+        maxGuard = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "MaxGuard"));
+        guard = maxGuard;
+        guardGain = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "GuardGain"));
+        attackDamage = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "AttackDamage"));
+        accuracy = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Accuracy"));
+        dodge = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Dodge"));
+        critrate = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "CritRate"));
+        EnemySkill attack = new EnemySkill.Attack();
+        enemySkills.Add(attack);
+        EnemySkill defend = new EnemySkill.Defend();
+        enemySkills.Add(defend);
+
+    }
     void Awake()
     {
         clicked = false;
@@ -286,64 +306,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Attack()
-    {
-        Damage(target, this.attackDamage);
-    }
-    public void Damage(int p, int damage)
-    {
-        Character target = GameObject.Find("P" + p).GetComponent<Character>();
-        int PCHP = target.health;
-        int PCG = target.guard;
-        StartCoroutine(Animation(damageType));
-        if (target.weakness1 == damageType || target.weakness2 == damageType)
-        {
-            damage = (int)Math.Round((float)damage * 1.5, 1);
-        }
-        if (target.resistance1 == damageType || PlayerPrefs.GetString("P" + p + "-Resistance2") == damageType || PlayerPrefs.GetString("P" + p + "-Resistance3") == damageType)
-        {
-            damage = (int)Math.Round((float)damage * 0.75, 1);
-        }
-        if (target.status0 == "steadfast" || target.status1 == "steadfast" || target.status2 == "steadfast" || target.status3 == "steadfast")
-        {
-            PCG -= damage;
-        }
-        else if (target.status0 == "vulnerable" || target.status1 == "vulnerable" || target.status2 == "vulnerable" || target.status3 == "vulnerable")
-        {
-            PCHP -= damage;
-        }
-        else
-        {
-            PCG = PCG - ((damage / 2) + (damage % 2));
-            PCHP = PCHP - ((damage / 2));
-        }
-        if (PCG < 0)
-        {
-            PCHP = PCHP + PCG;
-            PCG = 0;
-        }
-        target.health = PCHP;
-        target.guard = PCG;
-        EndTurn();
-    }
-
-    public void Defend()
-    {
-        guard += guardGain;
-        if (guard > maxGuard)
-        {
-            guard = maxGuard;
-        }
-        StatusEffect.InflictStatusEnemy("steadfast", eNumber, 1);
-        EndTurn();
-    }
-
-    public void Skill() 
-    {
-        string skill = String.Concat(PlayerPrefs.GetString("E1-CAtt").Where(c => !Char.IsWhiteSpace(c)));
-        SendMessage(skill);
-        EndTurn();
-    }
     public void Move()
     {
         //4x4 movement
