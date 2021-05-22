@@ -8,18 +8,21 @@ public class Skill : MonoBehaviour
     public string skillName;
     public int SPCost;
     public int baseDamage;
-    public string damageType;
-    public string targetingType;
+    public DamageType damageType;
+    public TargetingType targetingType;
     public string skillDescription;
     public Character character;
     public GameObject target;
+    public CombatSystem combatSystem;
 
     public Skill()
     {
-
+        skillName = name;
     }
     
-    public Skill(string name, int SP, int damage, string type, string targeting, string description)
+    
+    // right now, this constructor is not being used
+    public Skill(string name, int SP, int damage, DamageType type, TargetingType targeting, string description)
     {
         skillName = name;
         SPCost = SP;
@@ -27,6 +30,31 @@ public class Skill : MonoBehaviour
         damageType = type;
         targetingType = targeting;
         skillDescription = description;
+    }
+    
+    public enum TargetingType 
+    {
+        SingleTargetEnemy,
+        SingleTargetAlly,
+        SingleTargetAllyOther,
+        Untargeted,
+        EnemyRow,
+        EnemyColumn
+    }
+
+    public enum DamageType
+    {
+        Acid,
+        Blood,
+        Dark,
+        Electric,
+        Explosive,
+        Fire,
+        Frost,
+        Light,
+        Magic,
+        Physical,
+        Toxic
     }
 
     public virtual void Activate()
@@ -45,6 +73,15 @@ public class Skill : MonoBehaviour
         else return true;
     }
 
+    public void EndSkill()
+    {
+        character.turnTaken = true;
+        combatSystem = GameObject.Find("CombatSystem").GetComponent<CombatSystem>();
+        combatSystem.activeSkill = null;
+    }
+
+    
+    //this is the method used to create skill objects
     public static Skill CreateSkill(string name)
     {
         ObjectHandle handle = Activator.CreateInstance("Skill.cs", name);
@@ -52,7 +89,7 @@ public class Skill : MonoBehaviour
         return skill;
     }
     
-    public class SingleTargetSkill : Skill
+    public class SingleTargetEnemySkill : Skill
     {
         new public Enemy target;
         public override void Activate()
@@ -79,7 +116,7 @@ public class Skill : MonoBehaviour
         }
     }
 
-    public class Attack : SingleTargetSkill
+    public class Attack : SingleTargetEnemySkill
     {   
         public Attack(int damage)
         {
@@ -92,7 +129,7 @@ public class Skill : MonoBehaviour
                 base.Activate();
                 baseDamage = character.attackDamage;
                 Damage(character, target);
-                character.turnTaken = true;
+                EndSkill();
             }
         }
     }
@@ -111,6 +148,7 @@ public class Skill : MonoBehaviour
             {
                 base.Activate();
                 GainGuard(character, defendingGuard);
+                EndSkill();
             }
         }
     }
