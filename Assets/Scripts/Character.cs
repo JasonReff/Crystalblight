@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
 public class Character : MonoBehaviour
 {
 
@@ -50,6 +51,11 @@ public class Character : MonoBehaviour
 
     public CombatSystem combatSystem;
 
+    public Character()
+    {
+
+    }
+    
     public Character(int characterNumber, string characterName, int startingVitality, int startingStrength, int startingIntelligence, int startingDexterity, int startingEndurance, Skill startingSkill)
     {
         pNumber = characterNumber;
@@ -69,9 +75,9 @@ public class Character : MonoBehaviour
         accuracy = 85 + 2 * dexterity;
         critrate = 5 + 2 * dexterity;
         dodge = 5 + dexterity;
-        Skill attack = new Skill.Attack(attackDamage);
+        Skill attack = new CharacterAttack(attackDamage);
         skills.Add(attack);
-        Skill defend = new Skill.Defend(endurance);
+        Skill defend = new CharacterDefend(endurance);
         skills.Add(defend);
         skills.Add(startingSkill);
     }
@@ -102,29 +108,13 @@ public class Character : MonoBehaviour
         weaknesses = character.weaknesses;
         resistances = character.resistances;
     }
-    
-    private void Awake()
-    {
-        clicked = false;
-        targeting = false;
-        turnTaken = false;
-        pNumber = Int32.Parse(this.gameObject.name[1].ToString());
-        RetrieveStats();
-        LoadSprite.FindSprite(this.gameObject, PlayerPrefs.GetString("P" + pNumber + "-Name"));
-        BoxCollider2D _boxCollider = GetComponent<BoxCollider2D>();
-        Destroy(_boxCollider);
-        _boxCollider = gameObject.AddComponent<BoxCollider2D>() as BoxCollider2D;
-        LoadSprite.FindSprite(GameObject.Find("P" + pNumber + "Holo"), PlayerPrefs.GetString("P" + pNumber + "-Name"));
-        InvokeRepeating("CheckIfAlive", 0f, 0.2f);
-        InvokeRepeating("UpdateStats", 0f, 0.2f);
-    }
 
     void CheckIfAlive()
     {
             if (health <= 0)
             {
                 StartCoroutine(FadeOut());
-                Destroy(this);
+                Destroy(gameObject);
                 CancelInvoke();
             }
     }
@@ -166,32 +156,6 @@ public class Character : MonoBehaviour
                 + maxSP + "\n" + "Guard: " + guard + "/" + maxGuard;
                 if (turnTaken == false)
                 {
-                    //this moves cards
-                    SingleTargetSkills.UltSwitch(pNumber);
-                    Vector3 temp = new Vector3(-300 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
-                    GameObject.Find("skillcard-A").transform.position = temp;
-                    GameObject.Find("A-Damage").GetComponent<Text>().text = PlayerPrefs.GetInt("P1-Attack").ToString();
-                    GameObject.Find("Special").transform.position = temp + new Vector3(0, 120, 0);
-                    GameObject.Find("SpecialBack").transform.position = temp + new Vector3(0, 120, 0);
-                    temp = new Vector3(-200 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
-                    GameObject.Find("skillcard-D").transform.position = temp;
-                    temp = new Vector3(-100 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
-                    GameObject.Find("skillcard-1").transform.position = temp;
-                    GameObject.Find("1-Damage").GetComponent<Text>().text = PlayerPrefs.GetInt("P1-S1-Damage").ToString();
-                    GameObject.Find("1-Cost").GetComponent<Text>().text = PlayerPrefs.GetInt("P1-S1-Cost").ToString();
-                    GameObject.Find("1-Text").GetComponent<Text>().text = skill1;
-                    temp = new Vector3(0 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
-                    GameObject.Find("skillcard-2").transform.position = temp;
-                    GameObject.Find("2-Text").GetComponent<Text>().text = skill2;
-                    temp = new Vector3(100 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
-                    GameObject.Find("skillcard-3").transform.position = temp;
-                    GameObject.Find("3-Text").GetComponent<Text>().text = skill3;
-                    temp = new Vector3(200 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
-                    GameObject.Find("skillcard-4").transform.position = temp;
-                    GameObject.Find("4-Text").GetComponent<Text>().text = skill4;
-                    temp = new Vector3(300 * 2.893986f, -154 * 2.893986f, -1 * 2.893986f);
-                    GameObject.Find("skillcard-M").transform.position = temp;
-                    GameObject.Find("M-Text").GetComponent<Text>().text = PlayerPrefs.GetString("InventoryItem" + PlayerPrefs.GetInt("ActiveItem"));
                     if (canMove == true) 
                     {
                         int left = 0;

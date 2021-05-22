@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections;
 
+[Serializable]
 public class Enemy : MonoBehaviour
 {
     public Text textbox;
@@ -34,6 +35,11 @@ public class Enemy : MonoBehaviour
     public GameObject HPBar;
     public GameObject GuardBar;
 
+    public Enemy()
+    {
+
+    }
+    
     public Enemy(string enemyName)
     {
         name = enemyName;
@@ -47,46 +53,11 @@ public class Enemy : MonoBehaviour
         accuracy = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Accuracy"));
         dodge = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Dodge"));
         critrate = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "CritRate"));
-        EnemySkill attack = new EnemySkill.EnemyAttack();
+        EnemySkill attack = new EnemyAttack();
         enemySkills.Add(attack);
-        EnemySkill defend = new EnemySkill.Defend();
+        EnemySkill defend = new EnemyDefend();
         enemySkills.Add(defend);
 
-    }
-    void Awake()
-    {
-        clicked = false;
-        turnTaken = false;
-        eNumber = Int32.Parse(this.gameObject.name[1].ToString());
-        string tile = PlayerPrefs.GetString("CurrentTile");
-        if (tile[0] == 'C')
-        {
-            int combatNumber = 0;
-            if (tile.Length == 7)
-                {
-                    combatNumber = Int32.Parse(tile[6].ToString());
-                }
-            if (tile.Length == 8)
-                {
-                    combatNumber = Int32.Parse(tile[6].ToString() + tile[7].ToString());
-                }
-            name = PlayerPrefs.GetString("Combat" + combatNumber + "E" + eNumber + "-Name");
-        }
-        if (tile[0] == 'M')
-        {
-            name = PlayerPrefs.GetString("MinibossE" + eNumber + "-Name");
-        }
-        if (tile[0] == 'B')
-        {
-            name = PlayerPrefs.GetString("BossE" + eNumber + "-Name");
-        }
-        PlayerPrefs.SetInt("E" + eNumber + "-Loc", 0);
-        SetLoc();
-        RetrieveStats();
-        PlayerPrefs.SetInt("E" + eNumber + "-AttL", 0);
-        ChooseAttack();
-        InvokeRepeating("CheckIfAlive", 0f, 0.3f);
-        InvokeRepeating("UpdateStats", 0f, 0.3f);
     }
 
     void CheckIfAlive()
@@ -94,7 +65,7 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             StartCoroutine(FadeOut());
-            Destroy(this);
+            Destroy(gameObject);
             CancelInvoke();
         }
     }
