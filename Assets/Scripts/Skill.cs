@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Skill : MonoBehaviour
@@ -106,6 +107,22 @@ public class Skill : MonoBehaviour
             }
             return base.IsValid();
         }
+
+        public void InflictStatus(Enemy enemy, StatusEffect.StatusType status, int statusValue)
+        {
+            List<StatusEffect> effects = enemy.statusEffects;
+            if (effects.Contains(new StatusEffect(status)))
+            {
+                StatusEffect enemyStatus = effects.Find(x => x.statusType == status);
+                enemyStatus.statusValue += statusValue;
+
+            }
+            else
+            {
+                StatusEffect statusEffect = new StatusEffect(status, statusValue);
+                effects.Add(statusEffect);
+            }
+        }
     }
 
     public class UntargetedSkill : Skill
@@ -174,11 +191,11 @@ public class Skill : MonoBehaviour
         {
             damage = CriticalDamage(player, damage);
             damage = ResistanceWeaknessAdjustment(enemy, damage);
-            if (enemy.statusEffects.Contains("vulnerable"))
+            if (enemy.statusEffects.Contains(new StatusEffect(StatusEffect.StatusType.Vulnerable)))
             {
                 DamageVulnerableEnemy(enemy, damage);
             }
-            else if (enemy.statusEffects.Contains("steadfast"))
+            else if (enemy.statusEffects.Contains(new StatusEffect(StatusEffect.StatusType.Steadfast)))
             {
                 DamageSteadfastEnemy(enemy, damage);
             }
@@ -192,6 +209,7 @@ public class Skill : MonoBehaviour
             Miss(enemy);
         }
     }
+
 
     int CriticalDamage(Character player, int damage)
     {
