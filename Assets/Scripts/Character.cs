@@ -42,6 +42,10 @@ public class Character : MonoBehaviour
     public int dexterity;
     public int endurance;
 
+    public int level;
+    public int experience;
+    public int experienceUntilLevelUp;
+
     public int stageNumber;
     public int combatGuardGained;
 
