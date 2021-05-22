@@ -19,14 +19,10 @@ public class CombatSystem : MonoBehaviour
     public PlayerData playerData;
     private void Start()
     {
+        playerData = GameObject.Find("PlayerData").GetComponent<PlayerData>();
         CreateEnemies();
         CreateCharacters();
         //StartCoroutine(PlayerTransition());
-    }
-
-    IEnumerator Skill()
-    {
-        
     }
 
     void CreateEnemies()
