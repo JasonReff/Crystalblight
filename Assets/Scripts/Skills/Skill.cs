@@ -95,93 +95,13 @@ public class Skill : MonoBehaviour
         return skill;
     }
 
-    
-    public class SingleTargetEnemySkill : Skill
-    {
-        new public Enemy target;
-        public override void Activate()
-        {
-            base.Activate();
-        }
-
-        public override bool IsValid()
-        {
-            if (target = null)
-            {
-                Console.WriteLine("Invalid Target");
-                return false;
-            }
-            return base.IsValid();
-        }
-
-        public void InflictStatus(Enemy enemy, StatusEffect.StatusType status, int statusValue)
-        {
-            List<StatusEffect> effects = enemy.statusEffects;
-            if (effects.Contains(new StatusEffect(status)))
-            {
-                StatusEffect enemyStatus = effects.Find(x => x.statusType == status);
-                enemyStatus.statusValue += statusValue;
-
-            }
-            else
-            {
-                StatusEffect statusEffect = new StatusEffect(status, statusValue);
-                effects.Add(statusEffect);
-            }
-        }
-    }
-
-    public class UntargetedSkill : Skill
-    {
-        public override void Activate()
-        {
-            base.Activate();
-        }
-    }
-
-    public class Attack : SingleTargetEnemySkill
-    {   
-        public Attack(int damage)
-        {
-            baseDamage = damage;
-        }
-        public override void Activate()
-        {
-            if (IsValid() == true)
-            {
-                base.Activate();
-                baseDamage = character.attackDamage;
-                Damage(character, target);
-                EndSkill();
-            }
-        }
-    }
-
-    public class Defend : UntargetedSkill
-    {
-        public int defendingGuard;
-        public Defend(int endurance)
-        {
-            defendingGuard = 2 * endurance;
-        }
-
-        public override void Activate()
-        {
-            if (IsValid() == true)
-            {
-                base.Activate();
-                GainGuard(character, defendingGuard);
-                EndSkill();
-            }
-        }
-    }
 
     void SPSpend()
     {
         character.SP -= SPCost;
     }
 
-    void GainGuard(Character character, int guard)
+    public void GainGuard(Character character, int guard)
     {
         character.guard += guard;
         if (character.guard > character.maxGuard)
@@ -190,7 +110,7 @@ public class Skill : MonoBehaviour
         }
     }
 
-    void Damage(Character player, Enemy enemy)
+    public void Damage(Character player, Enemy enemy)
     {
         int damage = baseDamage;
         if (DoesSkillTarget(player, enemy) == true)
