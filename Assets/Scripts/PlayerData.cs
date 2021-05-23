@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerData : MonoBehaviour
 {
     public int seed;
+    public int currentStage;
     public List<Character> characters;
     public List<CombatEncounter> combatEncounters;
     private static PlayerData instance = null;

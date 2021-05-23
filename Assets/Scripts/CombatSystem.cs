@@ -12,6 +12,7 @@ public class CombatSystem : MonoBehaviour
     public string skillTargeting;
     public bool charactersPlaced;
 
+    public List<CombatTileSet> tileSets;
     public GameObject background;
     public GameObject Enemy;
     public GameObject characterObject;
@@ -22,6 +23,7 @@ public class CombatSystem : MonoBehaviour
         playerData = GameObject.Find("PlayerData").GetComponent<PlayerData>();
         CreateEnemies();
         CreateCharacters();
+        CreateTileSets();
         //StartCoroutine(PlayerTransition());
     }
 
@@ -78,6 +80,30 @@ public class CombatSystem : MonoBehaviour
         characterInPlay.guard = characterInPlay.maxGuard;
         characterInPlay.special = 0;
         LoadSprite.FindSprite(player, characterInPlay.name);
+    }
+
+    void CreateTileSets()
+    {
+        CombatTileSet characterTileSet = new CombatTileSet();
+        CombatTileSet enemyTileSet = new CombatTileSet();
+        int currentStage = playerData.currentStage;
+        switch (currentStage)
+        {
+            case 1:
+                characterTileSet = CombatTileSet.Create3x3(CombatTileSet.CharacterOrEnemy.Character);
+                enemyTileSet = CombatTileSet.Create3x3(CombatTileSet.CharacterOrEnemy.Enemy);
+                break;
+            case 2:
+                characterTileSet = CombatTileSet.Create4x4(CombatTileSet.CharacterOrEnemy.Character);
+                enemyTileSet = CombatTileSet.Create4x4(CombatTileSet.CharacterOrEnemy.Enemy);
+                break;
+            case 3:
+                characterTileSet = CombatTileSet.Create5x5(CombatTileSet.CharacterOrEnemy.Character);
+                enemyTileSet = CombatTileSet.Create5x5(CombatTileSet.CharacterOrEnemy.Enemy);
+                break;
+        }
+        tileSets.Add(characterTileSet);
+        tileSets.Add(enemyTileSet);
     }
 
     IEnumerator PlayerTransition()
