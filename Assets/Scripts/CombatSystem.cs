@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 public class CombatSystem : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class CombatSystem : MonoBehaviour
         CreateEnemies();
         CreateCharacters();
         CreateTileSets();
+        InstantiateTiles();
         //StartCoroutine(PlayerTransition());
     }
 
@@ -105,6 +107,39 @@ public class CombatSystem : MonoBehaviour
         }
         tileSets.Add(characterTileSet);
         tileSets.Add(enemyTileSet);
+    }
+
+    void InstantiateTiles()
+    {
+        foreach (CombatTileSet tileSet in tileSets)
+        {
+            foreach (CombatTile tile in tileSet.tiles)
+            {
+                GameObject newTile = Instantiate(tileObject);
+                CombatTile newTileData = newTile.GetComponent<CombatTile>();
+                newTileData.rowNumber = tile.rowNumber;
+                newTileData.columnNumber = tile.columnNumber;
+                Vector3 tileLocation = AdjustTilePosition(tile, tileSet);
+                newTile.transform.localPosition = tileLocation;
+            }
+        }
+    }
+
+    Vector3 AdjustTilePosition(CombatTile tile, CombatTileSet tileSet)
+    {
+        Vector3 tileLocation = new Vector3(0, 0, -1);
+        tileLocation.x -= 100 * tile.columnNumber;
+        tileLocation.y += 100 * tile.rowNumber;
+        switch (tileSet.characterOrEnemy)
+        {
+            case CombatTileSet.CharacterOrEnemy.Character:
+                tileLocation.x -= 500;
+                break;
+            case CombatTileSet.CharacterOrEnemy.Enemy:
+                tileLocation.x += 500;
+                break;
+        }
+        return tileLocation;
     }
 
     IEnumerator PlayerTransition()
