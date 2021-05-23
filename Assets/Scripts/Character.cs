@@ -162,51 +162,14 @@ public class Character : MonoBehaviour
                 {
                     if (canMove == true) 
                     {
-                        int left = 0;
-                        int right = 0;
-                        int up = 0;
-                        int down = 0;
-                        int[] adjacentTiles = new int[] {left, right, up, down};
-                        switch (stageNumber)
+                        CombatTileSet characterTileSet = combatSystem.tileSets.Find(x => x.characterOrEnemy == CombatTileSet.CharacterOrEnemy.Character);
+                        List<CombatTile> adjacentTiles = CombatTile.AdjacentTiles(characterTileSet, location);
+                        foreach (CombatTile tile in adjacentTiles)
                         {
-                                case 3:
-                                    up = location + 5;
-                                    if (up > 25) { up = 0; }
-                                    right = location + 1;
-                                    if (right%5 == 1) { right = 0; }
-                                    left = location - 1;
-                                    if (left%5 == 0) { left = 0; }
-                                    down = location - 5;
-                                    if (down < 1) { down = 0; }
-                                    break;
-                                case 2:
-                                    up = location + 4;
-                                    if (up > 16) { up = 0; }
-                                    right = location + 1;
-                                    if (right%4 == 1) { right = 0; }
-                                    left = location - 1;
-                                    if (left%4 == 0) { left = 0; }
-                                    down = location - 4;
-                                    if (down < 1) { down = 0; }
-                                    break;
-                                case 1:
-                                    up = location + 3;
-                                    if (up > 9) { up = 0; }
-                                    right = location + 1;
-                                    if (right%3 == 1) { right = 0; }
-                                    left = location - 1;
-                                    if (left%3 == 0) { left = 0; }
-                                    down = location - 3;
-                                    if (down < 1) { down = 0; }
-                                    break;
-                        }
-                        for (int t = 0; t <= 3; t++)
-                        {
-                        int tile = adjacentTiles[t];
-                        if (tile != 0 && GameObject.Find("P-Block-" + tile).GetComponent<PBlock>().movable == true)
-                        {
-                            GameObject.Find("P-Block-" + tile).GetComponent<SpriteRenderer>().color = Color.green;
-                        }
+                            if (tile.movable == true)
+                            {
+                                tile.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+                            }
                         }
                     }
                 }
