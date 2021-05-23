@@ -6,6 +6,7 @@ public class PlayerData : MonoBehaviour
 {
     public int seed;
     public int currentStage;
+    public string stageName;
     public List<Character> characters;
     public List<CombatEncounter> combatEncounters;
     private static PlayerData instance = null;

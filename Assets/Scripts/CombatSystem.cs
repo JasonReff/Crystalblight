@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
-
 public class CombatSystem : MonoBehaviour
 {
 
@@ -15,7 +13,8 @@ public class CombatSystem : MonoBehaviour
 
     public List<CombatTileSet> tileSets;
     public GameObject background;
-    public GameObject Enemy;
+    public GameObject music;
+    public GameObject enemyObject;
     public GameObject characterObject;
     public GameObject tileObject;
     public PlayerTurn playerTurn;
@@ -23,11 +22,26 @@ public class CombatSystem : MonoBehaviour
     private void Start()
     {
         playerData = GameObject.Find("PlayerData").GetComponent<PlayerData>();
+        SetBackground();
+        SetMusic();
         CreateEnemies();
         CreateCharacters();
         CreateTileSets();
         InstantiateTiles();
         //StartCoroutine(PlayerTransition());
+    }
+
+    void SetBackground()
+    {
+        string backgroundName = playerData.stageName;
+        LoadSprite.FindSprite(background, backgroundName);
+    }
+
+    void SetMusic()
+    {
+        string musicName = playerData.stageName + " Music";
+        music.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>(musicName);
+        music.GetComponent<AudioSource>().Play();
     }
 
     void CreateEnemies()
@@ -59,7 +73,7 @@ public class CombatSystem : MonoBehaviour
             }
             if (name != "null")
             {
-                GameObject E1 = Instantiate(Enemy);
+                GameObject E1 = Instantiate(enemyObject);
                 E1.gameObject.name = "E" + e.ToString();
             }
         }
