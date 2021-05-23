@@ -11,4 +11,9 @@ public class CombatEncounter : MonoBehaviour
     public int difficulty;
     public int XPReward;
     public List<Item> itemRewards;
+
+    public CombatEncounter()
+    {
+
+    }
 }

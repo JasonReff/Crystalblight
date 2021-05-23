@@ -1088,6 +1088,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: attackCard
       objectReference: {fileID: 0}
+    - target: {fileID: 1071369455149525018, guid: 35d2047d19aeb244fb055d0cc82056d8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1071369455149525020, guid: 35d2047d19aeb244fb055d0cc82056d8,
         type: 3}
       propertyPath: skillNumber
