@@ -116,7 +116,29 @@ public class Character : MonoBehaviour
     public void OnMouseDown()
     {
         clicked = true;
-        combatSystem.activePlayer = this;
+        if (combatSystem.activeSkill = null)
+        {
+            combatSystem.activePlayer = this;
+        }
+        if (combatSystem.activeSkill != null)
+        {
+            if (combatSystem.activePlayer == this)
+            {
+                if (combatSystem.activeSkill.targetingType == Skill.TargetingType.SingleTargetAlly)
+                {
+                    combatSystem.activeSkill.target = gameObject;
+                    combatSystem.activeSkill.Activate();
+                }
+            }
+            else
+            {
+                if (combatSystem.activeSkill.targetingType == Skill.TargetingType.SingleTargetAllyOther)
+                {
+                    combatSystem.activeSkill.target = gameObject;
+                    combatSystem.activeSkill.Activate();
+                }
+            }
+        }
     }
 
     void CheckIfAlive()
