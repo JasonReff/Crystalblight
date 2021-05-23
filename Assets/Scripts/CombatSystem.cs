@@ -16,6 +16,7 @@ public class CombatSystem : MonoBehaviour
     public GameObject background;
     public GameObject Enemy;
     public GameObject characterObject;
+    public GameObject tileObject;
     public PlayerTurn playerTurn;
     public PlayerData playerData;
     private void Start()

@@ -113,6 +113,12 @@ public class Character : MonoBehaviour
         resistances = character.resistances;
     }
 
+    public void OnMouseDown()
+    {
+        clicked = true;
+        combatSystem.activePlayer = this;
+    }
+
     void CheckIfAlive()
     {
             if (health <= 0)
@@ -177,62 +183,6 @@ public class Character : MonoBehaviour
                 {
                     PlayerPrefs.SetInt("P1Big", 1);
                     transform.localScale = transform.localScale * 1.1f;
-                }
-            }
-        }
-    }
-    public void OnMouseDown()
-    {
-        if (combatSystem.activeSkill != null && combatSystem.skillTargeting != "FriendlyTargetOther")
-        {
-            PlayerPrefs.SetInt("PNumber", pNumber);
-        }
-        else if (combatSystem.activeSkill != null && combatSystem.skillTargeting == "FriendlyTargetOther" && clicked == false)
-        {
-            PlayerPrefs.SetInt("PNumber", pNumber);
-        }
-        else 
-        {
-            if (turnTaken == false)
-            {
-                OnMouseExit();
-                OnMouseEnter();
-                for (int p = 1; p <= 25; p++) 
-                { 
-                    if (GameObject.Find("P" + p) != null) 
-                    { 
-                        GameObject.Find("P" + p).GetComponent<Character>().clicked = false; 
-                    } 
-                }
-                for (int e = 1; e <= 25; e++)
-                {
-                    if (GameObject.Find("E" + e) != null)
-                    {
-                        GameObject.Find("E" + e).GetComponent<Enemy>().clicked = false;
-                    }
-                }
-                clicked = true;
-                //makes blocks clickable over him
-                if (PlayerPrefs.GetInt("DownInFrame") == 0)
-                {
-                    PlayerPrefs.SetInt("DownInFrame", 1);
-                    GameObject hero = GameObject.Find("P1");
-                    hero.transform.position += new Vector3(0, 0, 2);
-                    if (PlayerPrefs.GetString("P2-Name") != "null")
-                    {
-                        hero = GameObject.Find("P2");
-                        hero.transform.position += new Vector3(0, 0, 2);
-                    }
-                    if (PlayerPrefs.GetString("P3-Name") != "null")
-                    {
-                        hero = GameObject.Find("P3");
-                        hero.transform.position += new Vector3(0, 0, 2);
-                    }
-                    if (PlayerPrefs.GetString("P4-Name") != "null")
-                    {
-                        hero = GameObject.Find("P4");
-                        hero.transform.position += new Vector3(0, 0, 2);
-                    }
                 }
             }
         }
