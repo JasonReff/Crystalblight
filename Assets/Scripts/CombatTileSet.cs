@@ -8,6 +8,11 @@ public class CombatTileSet : MonoBehaviour
     public CharacterOrEnemy characterOrEnemy;
     
 
+    public CombatTileSet()
+    {
+
+    }
+    
     public CombatTileSet(CharacterOrEnemy _characterOrEnemy)
     {
         characterOrEnemy = _characterOrEnemy;
@@ -19,7 +24,7 @@ public class CombatTileSet : MonoBehaviour
         Enemy
     }
 
-    public CombatTileSet Create3x3(CharacterOrEnemy characterOrEnemy)
+    public static CombatTileSet Create3x3(CharacterOrEnemy characterOrEnemy)
     {
         CombatTileSet tileSet = new CombatTileSet(characterOrEnemy);
         for (int x = 1; x <= 3; x++)
@@ -33,7 +38,7 @@ public class CombatTileSet : MonoBehaviour
         return tileSet;
     }
 
-    public CombatTileSet Create4x4(CharacterOrEnemy characterOrEnemy)
+    public static CombatTileSet Create4x4(CharacterOrEnemy characterOrEnemy)
     {
         CombatTileSet tileSet = new CombatTileSet(characterOrEnemy);
         for (int x = 1; x <= 4; x++)
@@ -47,7 +52,7 @@ public class CombatTileSet : MonoBehaviour
         return tileSet;
     }
 
-    public CombatTileSet Create5x5(CharacterOrEnemy characterOrEnemy)
+    public static CombatTileSet Create5x5(CharacterOrEnemy characterOrEnemy)
     {
         CombatTileSet tileSet = new CombatTileSet(characterOrEnemy);
         for (int x = 1; x <= 5; x++)
