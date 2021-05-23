@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,18 +5,18 @@ public class CombatTileSet : MonoBehaviour
 {
     public List<CombatTile> tiles;
     public CharacterOrEnemy characterOrEnemy;
-    
+
 
     public CombatTileSet()
     {
 
     }
-    
+
     public CombatTileSet(CharacterOrEnemy _characterOrEnemy)
     {
         characterOrEnemy = _characterOrEnemy;
     }
-    
+
     public enum CharacterOrEnemy
     {
         Character,

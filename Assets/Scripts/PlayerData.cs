@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class PlayerData : MonoBehaviour
 {
     public int seed;
@@ -9,6 +11,7 @@ public class PlayerData : MonoBehaviour
     public string stageName;
     public List<Character> characters;
     public List<CombatEncounter> combatEncounters;
+    public Dictionary<Item, int> itemsInInventory;
     private static PlayerData instance = null;
 
     private void Awake()
