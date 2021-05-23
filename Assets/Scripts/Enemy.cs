@@ -35,6 +35,8 @@ public class Enemy : MonoBehaviour
     public GameObject HPBar;
     public GameObject GuardBar;
 
+    public CombatSystem combatSystem;
+
     public Enemy()
     {
 
@@ -98,21 +100,11 @@ public class Enemy : MonoBehaviour
         int time = (int)System.DateTime.Now.Ticks;
         UnityEngine.Random.seed = time;
         // the seed a number in that range
-        int Loc = 0;
-        while (Loc == 0)
-        {
-            Loc = UnityEngine.Random.Range(1, 16);
-            if (GameObject.Find("E-Block-" + Loc).GetComponent<PBlock>().movable == false)
-            {
-                Loc = 0;
-            }
-            GameObject.Find("E-Block-" + Loc).GetComponent<PBlock>().movable = false;
-        }
-        location = Loc;
-        GameObject Vill = GameObject.Find("E" + eNumber);
-        LoadSprite.FindSprite(Vill, name);
-        Vector3 E1LocQuards = GameObject.Find("E-Block-" + Loc.ToString()).transform.position;
-        Vill.transform.position = E1LocQuards + new Vector3(0, +67, -3);
+        CombatTileSet tileSet = combatSystem.tileSets.Find(x => x.characterOrEnemy == CombatTileSet.CharacterOrEnemy.Enemy);
+        List<CombatTile> emptyTiles = tileSet.tiles.FindAll(x => x.movable == true);
+        int randomEmptyTile = UnityEngine.Random.Range(0, emptyTiles.Count - 1);
+        CombatTile newLocation = tileSet.tiles[randomEmptyTile];
+        location = newLocation;
     }
     void OnMouseEnter()
     {
@@ -250,30 +242,6 @@ public class Enemy : MonoBehaviour
                 PlayerPrefs.SetInt("E1-AttP", p);
                 PlayerPrefs.SetInt("E1-AttL", PlayerPrefs.GetInt("P" + p + "-Loc"));
             }
-        }
-    }
-    public void TakeTurn()
-    {
-        for (int e = 1; e <= 8; e++)
-        {
-            StatusEffect.StatusTickStart("E" + e);
-        }
-        GameObject PlayerTurn = GameObject.Find("EnemyTurn");
-        PlayerTurn.GetComponent<PlayerTurn>().Begin();
-        //forgot C lmao
-        if (PlayerPrefs.GetInt("E1-CHP") > 0)
-        {
-            Invoke("Move", 3.8f);
-            int choice = PlayerPrefs.GetInt("E1-Choice");
-            if (choice == 1) { Invoke("Attack", 3.9f);}
-            if (choice == 2) { Invoke("Defend", 3.9f);}
-            if (choice == 3) { Invoke("Skill", 3.9f);}
-            Invoke("ChooseAttack", 4.0f);
-        }
-        else
-        {
-            GameObject E2 = GameObject.Find("E2");
-            E2.GetComponent<E2>().TakeTurn2();
         }
     }
 
@@ -586,19 +554,5 @@ public class Enemy : MonoBehaviour
         anim.SetBool("null", true);
         LoadSprite.FindSprite(effect, "null");
         InputDiss.transform.position = new Vector3(0, -2000, -100);
-    }
-
-    public void EndTurn()
-    {
-        StatusEffect.StatusTickEnd("E1");
-        if (GameObject.Find("E2") != null)
-        {
-            GameObject E2 = GameObject.Find("E2");
-            E2.GetComponent<E2>().TakeTurn2();
-        }
-        else
-        {
-            GiveTurn();
-        }
     }
 }

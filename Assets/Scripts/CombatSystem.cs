@@ -146,7 +146,6 @@ public class CombatSystem : MonoBehaviour
             {
                 if (GameObject.Find("E" + e).GetComponent<Enemy>().turnTaken == false)
                 {
-                    GameObject.Find("E" + e).GetComponent<Enemy>().TakeTurn();
                     CheckIfGameOver();
                     yield return new WaitForSeconds(0.5f);
                 }
