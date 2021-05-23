@@ -14,7 +14,7 @@ public class Character : MonoBehaviour
     public bool canMove;
     public int pNumber;
     public new string name;
-    public int location;
+    public CombatTile location;
     public int health;
     public int maxHealth;
     public int SP;

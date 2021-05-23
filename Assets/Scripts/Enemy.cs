@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public bool clicked;
     public bool turnTaken;
     public int eNumber;
-    public int location;
+    public CombatTile location;
     public new string name;
     public int health;
     public int maxHealth;
