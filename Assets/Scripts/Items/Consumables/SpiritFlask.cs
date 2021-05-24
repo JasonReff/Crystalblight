@@ -10,7 +10,7 @@ public class SpiritFlask : Consumable
     public SpiritFlask()
     {
         itemName = ToString();
-        price = Int32.Parse(ReadPref.FindFromCSV("ItemData.csv", itemName + "Price"));
+        price = Int32.Parse(ReadPref.FindFromCSV_PLUS_C("ItemData.csv", itemName, "Shard Cost"));
     }
 
     public override void UseItem(Character character)

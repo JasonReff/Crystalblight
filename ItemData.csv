@@ -1,0 +1,32 @@
+Item,Effect,Shard Cost
+Health Flask,Restore 20 Health to a character.,15
+Health Font,Restore 50 Health to a character.,30
+Spirit Flask,Restore 10 SP to a character.,20
+Spirit Font,Restore 25 SP to a character.,40
+Essence Flask,Restore 30% Max HP and 15% Max SP to a character.,70
+Essence Font,Restore 50% Max HP and 25% Max SP to a character.,100
+Bottled Prayers,Give a character a random Blessing.,60
+Curse Remover,Remove a random Curse from a character.,60
+Cleansing Mist,Remove all status effects from a character.,25
+Cleansing Powder,Remove all hazards from a space and adjacent spaces.,30
+Contaminant,Deal 12 acid damage to an enemy. Inflict Corrosion: 4.,25
+Blood Bomb,Deal 15 blood damage to an enemy. Inflict Berserk: 3.,25
+Void Fragment,Deal 10 dark damage to an enemy. Inflict Vulnerable: 2.,25
+Electron,Deal 5 electric damage to an enemy. Inflict Stun: 1.,25
+Dynamite,Deal 20 explosive damage to an enemy. Deal 10 explosive damage to adjacent spaces.,25
+Matchstick,Deal 5 fire damage to an enemy. Inflict Burning: 5.,25
+Icicle,Deal 15 frost damage to an enemy. Inflict Frozen: 2.,25
+Broken Mirror,Deal 13 light damage to an enemy. Inflict Blind: 2.,25
+Mana Canister,Deal 10 magic damage to an enemy. Inflict Jammed: 2.,25
+Throwing Knife,Deal 12 piercing physical damage to an enemy.,25
+Spore,Inflict Poison: 6 on an enemy.,25
+Hive Jar,Place Swarm: 5 on an enemy space.,30
+Tier 1 Rune,,50
+Tier 2 Rune,,100
+Tier 3 Rune,,150
+Tier 1 Sigil,,40
+Tier 2 Sigil,,80
+Tier 3 Sigil,,120
+Tier 1 Veil,,40
+Tier 2 Veil,,80
+Tier 3 Veil,,120
