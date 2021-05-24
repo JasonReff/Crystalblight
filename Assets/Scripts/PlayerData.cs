@@ -7,8 +7,7 @@ using UnityEngine;
 public class PlayerData : MonoBehaviour
 {
     public int seed;
-    public int currentStage;
-    public string stageName;
+    public Stage currentStage;
     public List<Character> characters;
     public List<CombatEncounter> combatEncounters;
     public Dictionary<Item, int> itemsInInventory;

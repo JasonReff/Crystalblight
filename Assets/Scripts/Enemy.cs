@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
     public int accuracy;
     public int dodge;
     public int critrate;
+    public int XP;
     public List<Skill.DamageType> weaknesses;
     public List<Skill.DamageType> resistances;
     public List<EnemySkill> enemySkills;
@@ -55,6 +56,7 @@ public class Enemy : MonoBehaviour
         accuracy = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Accuracy"));
         dodge = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Dodge"));
         critrate = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "CritRate"));
+        XP = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "XP"));
         EnemySkill attack = new EnemyAttack();
         enemySkills.Add(attack);
         EnemySkill defend = new EnemyDefend();
