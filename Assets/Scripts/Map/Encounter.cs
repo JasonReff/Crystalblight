@@ -6,10 +6,12 @@ using UnityEngine;
 [Serializable]
 public class Encounter : MonoBehaviour
 {
-    public int[] mapLocation = new int[2];
+    public int[] mapLocation;
     public EncounterType encounterType;
     public enum EncounterType
     {
+        Home,
+        Character,
         Combat,
         Merchant,
         EssenceSource,
