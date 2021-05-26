@@ -17,28 +17,46 @@ public class Map : MonoBehaviour
     public Tile bossTile;
     public Tile minibossTile;
 
+    public int leftmostTile = 1;
+    public int rightmostTile = 10;
+    public int lowermostTile = -10;
+    public int uppermostTile = 10;
+
     public Map()
     {
-        int leftmostTile = 1;
-        int rightmostTile = 10;
-        int lowermostTile = -10;
-        int uppermostTile = 10;
-        for (int x = leftmostTile; x <= rightmostTile; x++)
-        {
-            for (int y = lowermostTile; y <= uppermostTile; y++)
-            {
-                MapTile mapTile = MapTile.RandomMapTile(x, y);
-            }
-        }
-        FillFixedEncounters(this);
-        FillVariableEncounters(this);
+        CreateVariableEncounters(this);
+        CreateFixedEncounters(this);
         foreach (MapTile mapTile in mapTiles)
         {
             LeftMapTilesEmpty(this, mapTile);
         }
     }
 
+    public void FillTilemap(Map map)
+    {
+        FillFixedEncounters(map);
+        FillVariableEncounters(map);
+    }
 
+    public void CreateFixedEncounters(Map map)
+    {
+        CreateHomeTile(map);
+        CreateCharacterTiles(map);
+        CreateBossTile(map);
+        CreateMinibossTile(map);
+    }
+
+    public void CreateVariableEncounters(Map map)
+    {
+        for (int x = leftmostTile; x <= rightmostTile; x++)
+        {
+            for (int y = lowermostTile; y <= uppermostTile; y++)
+            {
+                MapTile mapTile = MapTile.RandomMapTile(x, y);
+                map.mapTiles.Add(mapTile);
+            }
+        }
+    }
 
     public void LeftMapTilesEmpty(Map map, MapTile mapTile)
     {
@@ -115,9 +133,12 @@ public class Map : MonoBehaviour
     {
         foreach (MapTile mapTile in map.mapTiles)
         {
+            Vector3Int tileMapCoordinates = new Vector3Int(mapTile.mapCoordinates[0], mapTile.mapCoordinates[1], 0);
             switch (mapTile.encounter.encounterType)
             {
+                
                 case Encounter.EncounterType.Combat:
+                    tilemap.SetTile(tileMapCoordinates, combatTile);
                     break;
 
             }
