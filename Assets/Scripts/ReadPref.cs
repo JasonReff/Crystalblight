@@ -14,25 +14,24 @@ public class ReadPref : MonoBehaviour
                 {
                     return values[1];
                 }
-                //return "null";
             }
             return "null";
         }
     }
 
-    public static string FindFromCSV_PLUS_C(string dataFile, string RowName, string CollumnName)
+    public static string FindFromCSV(string dataFile, string RowName, string ColumnName)
     {
         using (var reader = new StreamReader(dataFile))
         {
             var line = reader.ReadLine();
             var values = line.Split(',');
             var names = values;
-            int collumn = 0;
+            int column = 0;
             for (int i = 0; i < names.Length; i++)
             {
-                if (names[i] == CollumnName)
+                if (names[i] == ColumnName)
                 {
-                    collumn = i;
+                    column = i;
                 }
             }
             while (!reader.EndOfStream)
@@ -42,9 +41,8 @@ public class ReadPref : MonoBehaviour
                 if (values[0] == RowName)
                 {
 
-                    return values[collumn];
+                    return values[column];
                 }
-                //return "null";
             }
             return "null";
         }
