@@ -16,6 +16,8 @@ public class Encounter : MonoBehaviour
         Merchant,
         EssenceSource,
         Gambler,
+        Miniboss,
+        Boss
     }
 
     public Encounter()

@@ -69,6 +69,20 @@ public class Map : MonoBehaviour
         home.encounter.encounterType = Encounter.EncounterType.Home;
     }
 
+    public void CreateMinibossTile(Map map)
+    {
+        int[] minibossCoordinates = new int[] { 0, 0 };
+        MapTile miniboss = map.mapTiles.Find(x => x.mapCoordinates == minibossCoordinates);
+        miniboss.encounter.encounterType = Encounter.EncounterType.Miniboss;
+    }
+
+    public void CreateBossTile(Map map)
+    {
+        int[] bossCoordinates = new int[] { 10, 0 };
+        MapTile boss = map.mapTiles.Find(x => x.mapCoordinates == bossCoordinates);
+        boss.encounter.encounterType = Encounter.EncounterType.Boss;
+    }
+
     public void FillVariableEncounters(Map map)
     {
         foreach (MapTile mapTile in map.mapTiles)
