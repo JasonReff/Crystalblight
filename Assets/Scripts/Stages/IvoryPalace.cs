@@ -12,7 +12,18 @@ public class IvoryPalace : Stage
     public override List<Enemy> GetEnemyPool()
     {
         List<Enemy> enemyPool = base.GetEnemyPool();
-        return enemyPool;
+        List<Enemy> newEnemyPool = IvoryPalaceEnemies(enemyPool);
+        return newEnemyPool;
     }
 
+    public List<Enemy> IvoryPalaceEnemies(List<Enemy> enemyPool)
+    {
+        for (int enemy = 1; enemy <= 4; enemy++)
+        {
+            string enemyName = ReadPref.FindFromCSV("EnemyData.csv", "IvoryPalaceEnemy" + enemy);
+            Enemy newEnemy = new Enemy(enemyName);
+            enemyPool.Add(newEnemy);
+        }
+        return enemyPool;
+    }
 }
