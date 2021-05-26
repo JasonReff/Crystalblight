@@ -26,6 +26,7 @@ public class Map : MonoBehaviour
     {
         CreateVariableEncounters(this);
         CreateFixedEncounters(this);
+        CreateEmptySpaceInPath();
         foreach (MapTile mapTile in mapTiles)
         {
             LeftMapTilesEmpty(this, mapTile);
@@ -77,7 +78,7 @@ public class Map : MonoBehaviour
 
     public void FillFixedEncounters(Map map)
     {
-        foreach(MapTile mapTile in map.mapTiles)
+        foreach (MapTile mapTile in map.mapTiles)
         {
             Vector3Int tileMapCoordinates = new Vector3Int(mapTile.mapCoordinates[0], mapTile.mapCoordinates[1], 0);
             switch (mapTile.encounter.encounterType)
@@ -136,12 +137,46 @@ public class Map : MonoBehaviour
             Vector3Int tileMapCoordinates = new Vector3Int(mapTile.mapCoordinates[0], mapTile.mapCoordinates[1], 0);
             switch (mapTile.encounter.encounterType)
             {
-                
+
                 case Encounter.EncounterType.Combat:
                     tilemap.SetTile(tileMapCoordinates, combatTile);
                     break;
 
             }
+        }
+    }
+
+    public void CreateEmptySpaceInPath()
+    {
+        foreach (MapTile mapTile in mapTiles)
+        {
+            CreateEmptySpaceAdjacentToEmptySpace(mapTile);
+            CreateEmptySpaceSurroundedByFilledSpaces(mapTile);
+        }
+    }
+
+    public void CreateEmptySpaceSurroundedByFilledSpaces(MapTile mapTile)
+    {
+        switch (mapTile.encounter.encounterType)
+        {
+            case Encounter.EncounterType.Home:
+            case Encounter.EncounterType.Character:
+            case Encounter.EncounterType.Boss:
+            case Encounter.EncounterType.Miniboss:
+                return;
+        }
+        List<MapTile> adjacentTiles = mapTile.AdjacentTiles(this, mapTile);
+        if (adjacentTiles.Find(x => x.encounter == null) != null)
+        {
+            mapTile.encounter = null;
+        }
+    }
+
+    public void CreateEmptySpaceAdjacentToEmptySpace(MapTile mapTile)
+    {
+        if (mapTile.DoesAdjacentLeftTileExist(this) == false || mapTile.DoesAdjacentRightTileExist(this) == false)
+        {
+            mapTile.encounter = null;
         }
     }
 }

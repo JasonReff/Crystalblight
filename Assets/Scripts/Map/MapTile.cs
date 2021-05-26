@@ -104,4 +104,24 @@ public class MapTile : MonoBehaviour
         MapTile lowerRightTile = map.mapTiles.Find(tile => tile.mapCoordinates == new int[] { x - 1, y + 1 });
         return lowerRightTile;
     }
+
+    public bool DoesAdjacentLeftTileExist(Map map)
+    {
+        List<MapTile> leftTiles = LeftTiles(map, this);
+        if (leftTiles.Find(x => x.encounter != null) != null)
+        {
+            return true;
+        }
+        else return false;
+    }
+
+    public bool DoesAdjacentRightTileExist(Map map)
+    {
+        List<MapTile> rightTiles = RightTiles(map, this);
+        if (rightTiles.Find(x => x.encounter != null) != null)
+        {
+            return true;
+        }
+        else return false;
+    }
 }
