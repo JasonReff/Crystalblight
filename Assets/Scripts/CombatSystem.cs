@@ -33,13 +33,13 @@ public class CombatSystem : MonoBehaviour
 
     void SetBackground()
     {
-        string backgroundName = playerData.stageName;
+        string backgroundName = playerData.currentStage.stageName.ToString();
         LoadSprite.FindSprite(background, backgroundName);
     }
 
     void SetMusic()
     {
-        string musicName = playerData.stageName + " Music";
+        string musicName = playerData.currentStage.stageName.ToString() + " Music";
         music.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>(musicName);
         music.GetComponent<AudioSource>().Play();
     }
@@ -103,7 +103,7 @@ public class CombatSystem : MonoBehaviour
     {
         CombatTileSet characterTileSet = new CombatTileSet();
         CombatTileSet enemyTileSet = new CombatTileSet();
-        int currentStage = playerData.currentStage;
+        int currentStage = playerData.currentStage.stageNumber;
         switch (currentStage)
         {
             case 1:
