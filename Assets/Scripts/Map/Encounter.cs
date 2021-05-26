@@ -23,6 +23,11 @@ public class Encounter : MonoBehaviour
 
     }
 
+    public Encounter(int [] coordinates)
+    {
+        mapLocation = coordinates;
+    }
+
     public Encounter(EncounterType encounter)
     {
         encounterType = encounter;
