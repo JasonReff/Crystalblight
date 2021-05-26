@@ -33,17 +33,15 @@ public class CombatSystem : MonoBehaviour
 
     void SetBackground()
     {
-        //was causing an error
-        //string backgroundName = playerData.stageName;
-        //LoadSprite.FindSprite(background, backgroundName);
+        string backgroundName = playerData.currentStage.stageName.ToString();
+        LoadSprite.FindSprite(background, backgroundName);
     }
 
     void SetMusic()
     {
-        //was causing an error
-        //string musicName = playerData.stageName + " Music";
-        //music.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>(musicName);
-        //music.GetComponent<AudioSource>().Play();
+        string musicName = playerData.currentStage.stageName.ToString() + " Music";
+        music.GetComponent<AudioSource>().clip = Resources.Load<AudioClip>(musicName);
+        music.GetComponent<AudioSource>().Play();
     }
 
     void CreateEnemies()
@@ -105,8 +103,7 @@ public class CombatSystem : MonoBehaviour
     {
         CombatTileSet characterTileSet = new CombatTileSet();
         CombatTileSet enemyTileSet = new CombatTileSet();
-        /* was causing an error
-        int currentStage = playerData.currentStage;
+        int currentStage = playerData.currentStage.stageNumber;
         switch (currentStage)
         {
             case 1:
@@ -122,7 +119,6 @@ public class CombatSystem : MonoBehaviour
                 enemyTileSet = CombatTileSet.Create5x5(CombatTileSet.CharacterOrEnemy.Enemy);
                 break;
         }
-        */
         tileSets.Add(characterTileSet);
         tileSets.Add(enemyTileSet);
     }
