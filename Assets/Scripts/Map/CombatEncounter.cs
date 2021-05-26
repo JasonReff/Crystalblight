@@ -14,8 +14,9 @@ public class CombatEncounter : Encounter
     public int XPReward;
     public List<Item> itemRewards;
 
-    public CombatEncounter(int mapXValue)
+    public CombatEncounter()
     {
+        int mapXValue = mapLocation[0];
         int newDifficulty = mapXValue / 2 + mapXValue % 2;
         encounterType = EncounterType.Combat;
         difficulty = newDifficulty;
