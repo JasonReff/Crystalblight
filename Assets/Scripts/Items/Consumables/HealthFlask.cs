@@ -11,7 +11,7 @@ public class HealthFlask : Consumable
     public HealthFlask()
     {
         itemName = ToString();
-        price = Int32.Parse(ReadPref.FindFromCSV("ItemData.csv", itemName + "Price"));
+        price = Int32.Parse(ReadPref.FindFromCSV("ItemData.csv", itemName, "Shard Cost"));
     }
     public override void UseItem(Character character)
     {
