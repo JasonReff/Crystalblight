@@ -14,6 +14,8 @@ public class Map : MonoBehaviour
     public Tile shopTile;
     public Tile gamblerTile;
     public Tile essenceTile;
+    public Tile bossTile;
+    public Tile minibossTile;
 
     public Map()
     {
@@ -28,6 +30,8 @@ public class Map : MonoBehaviour
                 MapTile mapTile = MapTile.RandomMapTile(x, y);
             }
         }
+        FillFixedEncounters(this);
+        FillVariableEncounters(this);
         foreach (MapTile mapTile in mapTiles)
         {
             LeftMapTilesEmpty(this, mapTile);
@@ -38,6 +42,14 @@ public class Map : MonoBehaviour
 
     public void LeftMapTilesEmpty(Map map, MapTile mapTile)
     {
+        switch (mapTile.encounter.encounterType)
+        {
+            case Encounter.EncounterType.Home:
+            case Encounter.EncounterType.Character:
+            case Encounter.EncounterType.Boss:
+            case Encounter.EncounterType.Miniboss:
+                return;
+        }
         List<MapTile> leftTiles = mapTile.LeftTiles(map, mapTile);
         if (leftTiles.Find(x => x.encounter != null) == null)
         {
@@ -58,6 +70,12 @@ public class Map : MonoBehaviour
                 case Encounter.EncounterType.Character:
                     tilemap.SetTile(tileMapCoordinates, characterTile);
                     break;
+                case Encounter.EncounterType.Boss:
+                    tilemap.SetTile(tileMapCoordinates, bossTile);
+                    break;
+                case Encounter.EncounterType.Miniboss:
+                    tilemap.SetTile(tileMapCoordinates, minibossTile);
+                    break;
             }
         }
     }
@@ -67,6 +85,16 @@ public class Map : MonoBehaviour
         int[] homeCoordinates = new int[] { -10, 0 };
         MapTile home = map.mapTiles.Find(x => x.mapCoordinates == homeCoordinates);
         home.encounter.encounterType = Encounter.EncounterType.Home;
+    }
+
+    public void CreateCharacterTiles(Map map)
+    {
+        int[] characterACoordinates = new int[] { -10, 1 };
+        MapTile characterATile = map.mapTiles.Find(x => x.mapCoordinates == characterACoordinates);
+        characterATile.encounter.encounterType = Encounter.EncounterType.Character;
+        int[] characterBCoordinates = new int[] { -10, -1 };
+        MapTile characterBTile = map.mapTiles.Find(x => x.mapCoordinates == characterBCoordinates);
+        characterBTile.encounter.encounterType = Encounter.EncounterType.Character;
     }
 
     public void CreateMinibossTile(Map map)
