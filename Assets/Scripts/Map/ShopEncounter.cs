@@ -7,6 +7,7 @@ public class ShopEncounter : Encounter
     public List<Consumable> consumables;
     public ShopEncounter()
     {
+        encounterType = EncounterType.Merchant;
         PopulateShop();
     }
 
@@ -17,6 +18,4 @@ public class ShopEncounter : Encounter
         SpiritFlask spiritFlask = new SpiritFlask();
         consumables.Add(spiritFlask);
     }
-
-
 }

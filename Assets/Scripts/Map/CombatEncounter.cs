@@ -23,6 +23,16 @@ public class CombatEncounter : Encounter
         enemies = EnemiesInCombat(difficulty);
     }
 
+    public CombatEncounter(int[] mapCoordinates)
+    {
+        mapLocation = mapCoordinates;
+        int mapXValue = mapLocation[0];
+        int newDifficulty = mapXValue / 2 + mapXValue % 2;
+        encounterType = EncounterType.Combat;
+        difficulty = newDifficulty;
+        enemies = EnemiesInCombat(difficulty);
+    }
+
     public List<Enemy> EnemiesInCombat(int difficulty)
     {
         int combatXP = 0;

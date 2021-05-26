@@ -20,12 +20,12 @@ public class MapTile : MonoBehaviour
 
     public static Encounter GenerateRandomEncounter(int [] mapCoordinates)
     {
-        Encounter encounter = new Encounter(mapCoordinates);
+        Encounter encounter = new Encounter();
         int encounterType = UnityEngine.Random.Range(1, 3); //add in gambler and essence source
         switch (encounterType)
         {
             case 1:
-                encounter = new CombatEncounter();
+                encounter = new CombatEncounter(mapCoordinates);
                 break;
             case 2: encounter = new ShopEncounter();
                 break;
