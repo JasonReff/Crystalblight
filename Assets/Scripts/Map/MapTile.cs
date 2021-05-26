@@ -47,6 +47,18 @@ public class MapTile : MonoBehaviour
         return adjacentTiles;
     }
 
+    public List<Encounter> AdjacentEncounters(Map map)
+    {
+        List<MapTile> adjacentTiles = AdjacentTiles(map, this);
+        List<Encounter> adjacentEncounters = new List<Encounter> { };
+        foreach (MapTile mapTile in adjacentTiles)
+        {
+            Encounter encounter = mapTile.encounter;
+            adjacentEncounters.Add(encounter);
+        }
+        return adjacentEncounters;
+    }
+
     public List<MapTile> LeftTiles(Map map, MapTile mapTile)
     {
         int x = mapTile.mapCoordinates[0];

@@ -69,8 +69,7 @@ public class Map : MonoBehaviour
             case Encounter.EncounterType.Miniboss:
                 return;
         }
-        List<MapTile> leftTiles = mapTile.LeftTiles(map, mapTile);
-        if (leftTiles.Find(x => x.encounter != null) == null)
+        if (mapTile.DoesAdjacentLeftTileExist(this) == false)
         {
             mapTile.encounter = null;
         }
