@@ -8,8 +8,8 @@ public class PlayerData : MonoBehaviour
 {
     public int seed;
     public Stage currentStage;
+    public Map map;
     public List<Character> characters;
-    public List<CombatEncounter> combatEncounters;
     public Dictionary<Item, int> itemsInInventory;
     private static PlayerData instance = null;
 
