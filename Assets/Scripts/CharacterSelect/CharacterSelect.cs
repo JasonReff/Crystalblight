@@ -7,8 +7,19 @@ public class CharacterSelect : MonoBehaviour
     public int selectedDiscipline;
 
     public PlayerData playerData;
+    public GenerateGame generateGame;
 
     private void OnMouseDown()
+    {
+        if (selectedCharacter == "" || selectedDiscipline == 0)
+        {
+            return;
+        }
+        NewCharacter();
+        generateGame.StartGame();
+    }
+
+    public void NewCharacter()
     {
         int vitality = GetCharacterStat("Vitality");
         int intelligence = GetCharacterStat("Intelligence");

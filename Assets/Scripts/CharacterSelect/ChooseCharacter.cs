@@ -11,6 +11,9 @@ public class ChooseCharacter : MonoBehaviour
     private void OnMouseDown()
     {
         characterSelect.selectedCharacter = characterName;
+        characterSelect.selectedDiscipline = 0;
+        GetDisciplineScreen();
+        GetDisciplineData();
     }
 
     public void GetDisciplineScreen()
@@ -28,10 +31,15 @@ public class ChooseCharacter : MonoBehaviour
         for (int disciplineNumber = 1; disciplineNumber <= 3; disciplineNumber++)
         {
             GameObject disciplineButton = GameObject.Find("Discipline" + disciplineNumber);
+            ChooseDiscipline chooseDiscipline = disciplineButton.GetComponent<ChooseDiscipline>();
             string disciplineName = ReadPref.FindFromCSV("CharacterData.csv", "Discipline" + disciplineNumber);
+            chooseDiscipline.disciplineName.text = disciplineName;
             string disciplineDescription = ReadPref.FindFromCSV("CharacterData.csv", "Discipline" + disciplineNumber + "Description");
+            chooseDiscipline.disciplineDescription.text = disciplineDescription;
             string skillName = ReadPref.FindFromCSV("CharacterData.csv", "Discipline" + disciplineNumber + "Skill");
+            chooseDiscipline.skillName.text = skillName;
             string ultimateName = ReadPref.FindFromCSV("CharacterData.csv", "Discipline" + disciplineNumber + "Ultimate");
+            chooseDiscipline.ultimateName.text = ultimateName;
         }
     }
 }

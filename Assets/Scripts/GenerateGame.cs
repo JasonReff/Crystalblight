@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GenerateGame : MonoBehaviour
 {
     public PlayerData playerData;
 
-    public void OnMouseDown()
+    public void StartGame()
     {
         GenerateSeed();
         GenerateMap();
@@ -25,5 +26,10 @@ public class GenerateGame : MonoBehaviour
     {
         Map map = new Map();
         playerData.map = map;
+    }
+
+    public void GoToMap()
+    {
+        SceneManager.LoadScene("Map");
     }
 }
