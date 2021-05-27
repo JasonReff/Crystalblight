@@ -10,6 +10,7 @@ public class PlayerData : MonoBehaviour
     public Stage currentStage;
     public Map map;
     public List<Character> characters;
+    public Encounter currentEncounter;
     public Dictionary<Item, int> itemsInInventory;
     private static PlayerData instance = null;
 
