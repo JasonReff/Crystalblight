@@ -57,7 +57,7 @@ EditorBuildSettings:
     path: Assets/Scenes/2E Battle- 2.unity
     guid: ad345fd03274aae45b94a60daf06766d
   - enabled: 1
-    path: Assets/Scenes/Map- Hexagon.unity
+    path: Assets/Scenes/Map.unity
     guid: 071cecc202dd0d549a64970517cdca9f
   - enabled: 1
     path: Assets/Scenes/Shop.unity
