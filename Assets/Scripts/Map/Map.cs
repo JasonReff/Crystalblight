@@ -102,31 +102,39 @@ public class Map : MonoBehaviour
     {
         int[] homeCoordinates = new int[] { -10, 0 };
         MapTile home = map.mapTiles.Find(x => x.mapCoordinates == homeCoordinates);
-        home.encounter.encounterType = Encounter.EncounterType.Home;
+        Encounter homeEncounter = new Encounter();
+        homeEncounter.encounterType = Encounter.EncounterType.Home;
+        home.encounter = homeEncounter;
     }
 
     public void CreateCharacterTiles(Map map)
     {
         int[] characterACoordinates = new int[] { -10, 1 };
         MapTile characterATile = map.mapTiles.Find(x => x.mapCoordinates == characterACoordinates);
-        characterATile.encounter.encounterType = Encounter.EncounterType.Character;
+        Encounter characterAEncounter = new Encounter();
+        characterAEncounter.encounterType = Encounter.EncounterType.Character;
+        characterATile.encounter = characterAEncounter;
         int[] characterBCoordinates = new int[] { -10, -1 };
         MapTile characterBTile = map.mapTiles.Find(x => x.mapCoordinates == characterBCoordinates);
-        characterBTile.encounter.encounterType = Encounter.EncounterType.Character;
+        Encounter characterBEncounter = new Encounter();
+        characterBEncounter.encounterType = Encounter.EncounterType.Character;
+        characterBTile.encounter = characterBEncounter;
     }
 
     public void CreateMinibossTile(Map map)
     {
         int[] minibossCoordinates = new int[] { 0, 0 };
         MapTile miniboss = map.mapTiles.Find(x => x.mapCoordinates == minibossCoordinates);
-        miniboss.encounter.encounterType = Encounter.EncounterType.Miniboss;
+        Encounter minibossEncounter = new MinibossEncounter();
+        miniboss.encounter = minibossEncounter;
     }
 
     public void CreateBossTile(Map map)
     {
         int[] bossCoordinates = new int[] { 10, 0 };
         MapTile boss = map.mapTiles.Find(x => x.mapCoordinates == bossCoordinates);
-        boss.encounter.encounterType = Encounter.EncounterType.Boss;
+        Encounter bossEncounter = new BossEncounter();
+        boss.encounter = bossEncounter;
     }
 
     public void FillVariableEncounters(Map map)
@@ -173,6 +181,14 @@ public class Map : MonoBehaviour
 
     public void CreateEmptySpaceAdjacentToEmptySpace(MapTile mapTile)
     {
+        switch (mapTile.encounter.encounterType)
+        {
+            case Encounter.EncounterType.Home:
+            case Encounter.EncounterType.Character:
+            case Encounter.EncounterType.Boss:
+            case Encounter.EncounterType.Miniboss:
+                return;
+        }
         if (mapTile.DoesAdjacentLeftTileExist(this) == false || mapTile.DoesAdjacentRightTileExist(this) == false)
         {
             mapTile.encounter = null;
