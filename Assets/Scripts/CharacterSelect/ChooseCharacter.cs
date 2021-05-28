@@ -22,8 +22,6 @@ public class ChooseCharacter : MonoBehaviour
         disciplineDiss.transform.localPosition = new Vector3(0, 0, -2);
         GameObject disciplineDisplay = GameObject.Find("DisciplineDisplay");
         disciplineDisplay.transform.localPosition = new Vector3(0, 0, -3);
-        GameObject disciplineText = GameObject.Find("DisciplineText");
-        disciplineText.transform.localPosition = new Vector3(0, 0, -3);
     }
 
     public void GetDisciplineData()
