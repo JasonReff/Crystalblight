@@ -33,8 +33,8 @@ public class CharacterSelect : MonoBehaviour
 
     public int GetCharacterStat(string stat)
     {
-        string characterStat = selectedCharacter + stat;
-        int statValue = Int32.Parse(ReadPref.FindFromCSV("CharacterData.csv", characterStat));
+        string characterStat = stat;
+        int statValue = Int32.Parse(ReadPref.FindFromCSV("CharacterData.csv", selectedCharacter, characterStat));
         return statValue;
     }
     
@@ -47,8 +47,8 @@ public class CharacterSelect : MonoBehaviour
 
     public string CharacterSkillName()
     {
-        string characterSkill = selectedCharacter + "Skill" + selectedDiscipline;
-        string skillName = ReadPref.FindFromCSV("CharacterData.csv", characterSkill);
+        string characterSkill = "Skill" + selectedDiscipline;
+        string skillName = ReadPref.FindFromCSV("CharacterSkillData.csv", selectedCharacter, characterSkill);
         return skillName;
     }
 
