@@ -30,13 +30,13 @@ public class ChooseCharacter : MonoBehaviour
         {
             GameObject disciplineButton = GameObject.Find("Discipline" + disciplineNumber);
             ChooseDiscipline chooseDiscipline = disciplineButton.GetComponent<ChooseDiscipline>();
-            string disciplineName = ReadPref.FindFromCSV("CharacterData.csv", characterName + "Discipline" + disciplineNumber);
+            string disciplineName = ReadPref.FindFromCSV("CharacterData.csv", characterName, "Discipline" + disciplineNumber);
             chooseDiscipline.disciplineName.text = disciplineName;
-            string disciplineDescription = ReadPref.FindFromCSV("CharacterData.csv", characterName + "Discipline" + disciplineNumber + "Description");
+            string disciplineDescription = ReadPref.FindFromCSV("CharacterData.csv", characterName, "Discipline" + disciplineNumber + "Description");
             chooseDiscipline.disciplineDescription.text = disciplineDescription;
-            string skillName = ReadPref.FindFromCSV("CharacterData.csv", characterName + "Discipline" + disciplineNumber + "Skill");
+            string skillName = ReadPref.FindFromCSV("CharacterData.csv", characterName, "Discipline" + disciplineNumber + "Skill");
             chooseDiscipline.skillName.text = skillName;
-            string ultimateName = ReadPref.FindFromCSV("CharacterData.csv", characterName + "Discipline" + disciplineNumber + "Ultimate");
+            string ultimateName = ReadPref.FindFromCSV("CharacterData.csv", characterName, "Discipline" + disciplineNumber + "Ultimate");
             chooseDiscipline.ultimateName.text = ultimateName;
         }
     }
