@@ -10,6 +10,7 @@ public class GenerateGame : MonoBehaviour
     public void StartGame()
     {
         GenerateSeed();
+        GenerateStages();
         GenerateMap();
     }
 
@@ -20,6 +21,12 @@ public class GenerateGame : MonoBehaviour
         int seed = UnityEngine.Random.Range(0, 99999999);
         Random.InitState(seed);
         return seed;
+    }
+
+    public void GenerateStages()
+    {
+        Stage stage = new Dungeon();
+        playerData.currentStage = stage;
     }
 
     public void GenerateMap()
