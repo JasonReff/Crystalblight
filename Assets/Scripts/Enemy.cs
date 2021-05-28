@@ -47,16 +47,16 @@ public class Enemy : MonoBehaviour
     {
         name = enemyName;
         string fileName = "EnemyData.csv";
-        maxHealth = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "MaxHealth"));
+        maxHealth = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "MaxHealth"));
         health = maxHealth;
-        maxGuard = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "MaxGuard"));
+        maxGuard = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "MaxGuard"));
         guard = maxGuard;
-        guardGain = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "GuardGain"));
-        attackDamage = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "AttackDamage"));
-        accuracy = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Accuracy"));
-        dodge = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Dodge"));
-        critrate = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "CritRate"));
-        XP = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "XP"));
+        guardGain = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "GuardGain"));
+        attackDamage = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "AttackDamage"));
+        accuracy = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "Accuracy"));
+        dodge = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "Dodge"));
+        critrate = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "CritRate"));
+        XP = Int32.Parse(ReadPref.FindFromCSV(fileName, name, "XP"));
         EnemySkill attack = new EnemyAttack();
         enemySkills.Add(attack);
         EnemySkill defend = new EnemyDefend();
