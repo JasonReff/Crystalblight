@@ -328,6 +328,12 @@ PrefabInstance:
       propertyPath: characterSelect
       value: 
       objectReference: {fileID: 20018612}
+    - target: {fileID: 5443156460904404736, guid: bc97d5e4a820b0448ac8e6bceebffa06,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5453c3322c2388740b339bf8f36732e4,
+        type: 3}
     - target: {fileID: 5443156460904404737, guid: bc97d5e4a820b0448ac8e6bceebffa06,
         type: 3}
       propertyPath: m_RootOrder
@@ -336,12 +342,12 @@ PrefabInstance:
     - target: {fileID: 5443156460904404737, guid: bc97d5e4a820b0448ac8e6bceebffa06,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 181
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 5443156460904404737, guid: bc97d5e4a820b0448ac8e6bceebffa06,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -155
+      value: -161
       objectReference: {fileID: 0}
     - target: {fileID: 5443156460904404737, guid: bc97d5e4a820b0448ac8e6bceebffa06,
         type: 3}
@@ -1092,6 +1098,7 @@ MonoBehaviour:
   currentStage: {fileID: 0}
   map: {fileID: 0}
   characters: []
+  currentEncounter: {fileID: 0}
 --- !u!4 &717253188
 Transform:
   m_ObjectHideFlags: 0
@@ -1260,6 +1267,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7363967566244785931, guid: c7b652b139d60774f9859f2e3bbf0238,
         type: 3}
+      propertyPath: characterSelect
+      value: 
+      objectReference: {fileID: 20018612}
+    - target: {fileID: 7363967566244785931, guid: c7b652b139d60774f9859f2e3bbf0238,
+        type: 3}
       propertyPath: disciplineNumber
       value: 2
       objectReference: {fileID: 0}
@@ -1288,6 +1300,11 @@ PrefabInstance:
       propertyPath: characterName
       value: Hollow
       objectReference: {fileID: 0}
+    - target: {fileID: -6206604542837823615, guid: bc97d5e4a820b0448ac8e6bceebffa06,
+        type: 3}
+      propertyPath: characterSelect
+      value: 
+      objectReference: {fileID: 20018612}
     - target: {fileID: 5443156460904404736, guid: bc97d5e4a820b0448ac8e6bceebffa06,
         type: 3}
       propertyPath: m_Sprite
@@ -2134,6 +2151,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7363967566244785931, guid: c7b652b139d60774f9859f2e3bbf0238,
         type: 3}
+      propertyPath: characterSelect
+      value: 
+      objectReference: {fileID: 20018612}
+    - target: {fileID: 7363967566244785931, guid: c7b652b139d60774f9859f2e3bbf0238,
+        type: 3}
       propertyPath: disciplineNumber
       value: 3
       objectReference: {fileID: 0}
@@ -2302,6 +2324,11 @@ PrefabInstance:
       propertyPath: m_RenderMode
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7363967566244785931, guid: c7b652b139d60774f9859f2e3bbf0238,
+        type: 3}
+      propertyPath: characterSelect
+      value: 
+      objectReference: {fileID: 20018612}
     - target: {fileID: 7363967566244785931, guid: c7b652b139d60774f9859f2e3bbf0238,
         type: 3}
       propertyPath: disciplineNumber
@@ -2832,18 +2859,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: GoMap
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: textbox
-      value: 
-      objectReference: {fileID: 1116964623}
-    - target: {fileID: 0}
-      propertyPath: enemyAllocation
-      value: 
-      objectReference: {fileID: 1134493324}
     - target: {fileID: 5443156460904404750, guid: bc97d5e4a820b0448ac8e6bceebffa06,
         type: 3}
       propertyPath: m_Name
