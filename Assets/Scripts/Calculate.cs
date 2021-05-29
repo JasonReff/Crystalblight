@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-//unfinished
 public class Calculate : MonoBehaviour
 {
     public static int Calc(string equation)
@@ -91,6 +90,10 @@ public class Calculate : MonoBehaviour
                     {
                         operand2.Push((int)equation[i] - 48);
                     }
+                    else
+                    {
+                        operand3.Push((int)equation[i] - 48);
+                    }
                     break;
                 default:
                     break;
@@ -111,6 +114,202 @@ public class Calculate : MonoBehaviour
         {
             number2 = number2 * 10;
             number2 += operand2.Pop();
+        }
+        while (operand3.Count != 0)
+        {
+            number3 = number3 * 10;
+            number3 += operand3.Pop();
+        }
+
+        switch (operator1)
+        {
+            case "null":
+                return number1;
+                break;
+            case "*":
+                result = number1 * number2;
+                break;
+            case "/":
+                result = number1 / number2;
+                break;
+            case "+":
+                if (operator2 != "*" && operator2 != "/")
+                {
+                    result = number1 + number2;
+                }
+                else if (operator2 == "*")
+                {
+                    return number1 + (number2 * number3);
+                }
+                else if (operator2 == "/")
+                {
+                    return number1 + (number2 / number3);
+                }
+                break;
+            case "-":
+                if (operator2 != "*" && operator2 != "/")
+                {
+                    result = number1 - number2;
+                }
+                else if (operator2 == "*")
+                {
+                    return number1 - (number2 * number3);
+                }
+                else if (operator2 == "/")
+                {
+                    return number1 - (number2 / number3);
+                }
+                break;
+            default:
+                break;
+        }
+        switch (operator2)
+        {
+            case "null":
+                return result;
+                break;
+            case "+":
+                return result + number3;
+                break;
+            case "-":
+                return result - number3;
+                break;
+            case "*":
+                return result * number3;
+                break;
+            case "/":
+                return result / number3;
+                break;
+            default:
+                break;
+        }
+        return 0;
+    }
+
+    public static int Calc(string equation, int S)
+    {
+        //I do not know how fast or slow this code will preform
+        Stack<int> operand1 = new Stack<int>();
+        Stack<int> operand2 = new Stack<int>();
+        Stack<int> operand3 = new Stack<int>();
+        string operator1 = "none";
+        string operator2 = "none";
+
+        //string parsing section
+        for (int i = 0; i < equation.Length; i++)
+        {
+            switch ((int)equation[i])
+            {
+                case 32:
+                    // ' '
+                    break;
+                case 83:
+                    // S
+                    if (operator1 == "null")
+                    {
+                        operand1.Push(S);
+                    }
+                    else if (operator2 == "null")
+                    {
+                        operand2.Push(S);
+                    }
+                    else
+                    {
+                        operand3.Push(S);
+                    }
+                    break;
+                case 43:
+                    // +
+                    if (operator1 == "null")
+                    {
+                        operator1 = "+";
+                    }
+                    else
+                    {
+                        operator2 = "+";
+                    }
+                    break;
+                case 45:
+                    // -
+                    if (operator1 == "null")
+                    {
+                        operator1 = "-";
+                    }
+                    else
+                    {
+                        operator2 = "-";
+                    }
+                    break;
+                case 42:
+                    // *
+                    if (operator1 == "null")
+                    {
+                        operator1 = "*";
+                    }
+                    else
+                    {
+                        operator2 = "*";
+                    }
+                    break;
+                case 47:
+                    // /
+                    if (operator1 == "null")
+                    {
+                        operator1 = "/";
+                    }
+                    else
+                    {
+                        operator2 = "/";
+                    }
+                    break;
+                case 48:
+                case 49:
+                case 50:
+                case 51:
+                case 52:
+                case 53:
+                case 54:
+                case 55:
+                case 56:
+                case 57:
+                    // 0 through 9
+                    if (operator1 == "null")
+                    {
+                        operand1.Push((int)equation[i] - 48);
+                    }
+                    else if (operator2 == "null")
+                    {
+                        operand2.Push((int)equation[i] - 48);
+                    }
+                    else
+                    {
+                        operand3.Push((int)equation[i] - 48);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //math section
+        int number1 = 0;
+        int number2 = 0;
+        int number3 = 0;
+        int result = 0;
+        while (operand1.Count != 0)
+        {
+            number1 = number1 * 10;
+            number1 += operand1.Pop();
+        }
+        while (operand2.Count != 0)
+        {
+            number2 = number2 * 10;
+            number2 += operand2.Pop();
+        }
+        while (operand3.Count != 0)
+        {
+            number3 = number3 * 10;
+            number3 += operand3.Pop();
         }
 
         switch (operator1)
