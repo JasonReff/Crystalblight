@@ -11,30 +11,66 @@ public class Calculate : MonoBehaviour
         //I do not know how fast or slow this code will preform
         Stack<int> operand1 = new Stack<int>();
         Stack<int> operand2 = new Stack<int>();
+        Stack<int> operand3 = new Stack<int>();
         string operator1 = "none";
+        string operator2 = "none";
+
+        //string parsing section
         for (int i = 0; i < equation.Length; i++)
         {
             switch ((int)equation[i])
             {
                 case 32:
-                    //' '
+                    // ' '
                     break;
                 case 83:
-                    //S
+                    // S
                     //this method only gets called if no stage number is given so a 0 is returned as an error
                     return 0;
                     break;
                 case 43:
-                    //+
+                    // +
+                    if (operator1 == "null")
+                    {
+                        operator1 = "+";
+                    }
+                    else
+                    {
+                        operator2 = "+";
+                    }
                     break;
                 case 45:
-                    //+
+                    // -
+                    if (operator1 == "null")
+                    {
+                        operator1 = "-";
+                    }
+                    else
+                    {
+                        operator2 = "-";
+                    }
                     break;
                 case 42:
-                    //*
+                    // *
+                    if (operator1 == "null")
+                    {
+                        operator1 = "*";
+                    }
+                    else
+                    {
+                        operator2 = "*";
+                    }
                     break;
                 case 47:
-                    //*
+                    // /
+                    if (operator1 == "null")
+                    {
+                        operator1 = "/";
+                    }
+                    else
+                    {
+                        operator2 = "/";
+                    }
                     break;
                 case 48:
                 case 49:
@@ -46,12 +82,12 @@ public class Calculate : MonoBehaviour
                 case 55:
                 case 56:
                 case 57:
-                    //0 through 9
+                    // 0 through 9
                     if (operator1 == "null")
                     {
                         operand1.Push((int)equation[i] - 48);
                     }
-                    else
+                    else if (operator2 == "null")
                     {
                         operand2.Push((int)equation[i] - 48);
                     }
@@ -59,6 +95,85 @@ public class Calculate : MonoBehaviour
                 default:
                     break;
             }
+        }
+
+        //math section
+        int number1 = 0;
+        int number2 = 0;
+        int number3 = 0;
+        int result = 0;
+        while (operand1.Count != 0)
+        {
+            number1 = number1 * 10;
+            number1 += operand1.Pop();
+        }
+        while (operand2.Count != 0)
+        {
+            number2 = number2 * 10;
+            number2 += operand2.Pop();
+        }
+
+        switch (operator1)
+        {
+            case "null":
+                return number1;
+                break;
+            case "*":
+                result = number1 * number2;
+                break;
+            case "/":
+                result = number1 / number2;
+                break;
+            case "+":
+                if (operator2 != "*" && operator2 != "/")
+                {
+                    result = number1 + number2;
+                }
+                else if (operator2 == "*")
+                {
+                    return number1 + (number2 * number3);
+                }
+                else if (operator2 == "/")
+                {
+                    return number1 + (number2 / number3);
+                }
+                break;
+            case "-":
+                if (operator2 != "*" && operator2 != "/")
+                {
+                    result = number1 - number2;
+                }
+                else if (operator2 == "*")
+                {
+                    return number1 - (number2 * number3);
+                }
+                else if (operator2 == "/")
+                {
+                    return number1 - (number2 / number3);
+                }
+                break;
+            default:
+                break;
+        }
+        switch (operator2)
+        {
+            case "null":
+                return result;
+                break;
+            case "+":
+                return result + number3;
+                break;
+            case "-":
+                return result - number3;
+                break;
+            case "*":
+                return result * number3;
+                break;
+            case "/":
+                return result / number3;
+                break;
+            default:
+                break;
         }
         return 0;
     }
