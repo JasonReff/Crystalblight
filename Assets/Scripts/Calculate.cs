@@ -2,16 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
-using UnityEngine.UI;
-using System;
-using System.Linq;
-
 public class Calculate : MonoBehaviour
 {
-    public Text textbox;
-
     public static int Calc(string equation)
     {
         //I do not know how fast or slow this code will preform
@@ -199,8 +191,8 @@ public class Calculate : MonoBehaviour
         Stack<int> operand1 = new Stack<int>();
         Stack<int> operand2 = new Stack<int>();
         Stack<int> operand3 = new Stack<int>();
-        string operator1 = "none";
-        string operator2 = "none";
+        string operator1 = "null";
+        string operator2 = "null";
 
         //string parsing section
         for (int i = 0; i < equation.Length; i++)
@@ -382,11 +374,5 @@ public class Calculate : MonoBehaviour
                 break;
         }
         return 0;
-    }
-
-    public void OnMouseDown()
-    {
-        //if (Calculate.Calc(ReadPref.FindFromCSV("EnemyData.csv", "Crystal Matron", "Guard"), 1) == 10)
-        textbox.text = ReadPref.FindFromCSV("EnemyData.csv", "Crystal Matron", "Guard");
     }
 }
