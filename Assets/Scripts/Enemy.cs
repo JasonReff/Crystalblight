@@ -58,8 +58,10 @@ public class Enemy : MonoBehaviour
         critrate = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "CritRate"));
         XP = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "XP"));
         EnemySkill attack = new EnemyAttack();
+        attack.enemy = this;
         enemySkills.Add(attack);
         EnemySkill defend = new EnemyDefend();
+        defend.enemy = this;
         enemySkills.Add(defend);
 
     }

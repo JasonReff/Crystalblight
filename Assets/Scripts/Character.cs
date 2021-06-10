@@ -80,10 +80,13 @@ public class Character : MonoBehaviour
         critrate = 5 + 2 * dexterity;
         dodge = 5 + dexterity;
         Skill attack = new CharacterAttack(attackDamage);
+        attack.character = this;
         skills.Add(attack);
         Skill defend = new CharacterDefend(endurance);
+        defend.character = this;
         skills.Add(defend);
         skills.Add(startingSkill);
+        startingSkill.character = this;
     }
 
     public void GetCharacterData(Character character)
