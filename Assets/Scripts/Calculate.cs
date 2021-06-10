@@ -7,9 +7,9 @@ public class Calculate : MonoBehaviour
     public static int Calc(string equation)
     {
         //I do not know how fast or slow this code will preform
-        Stack<int> operand1 = new Stack<int>();
-        Stack<int> operand2 = new Stack<int>();
-        Stack<int> operand3 = new Stack<int>();
+        Queue<int> operand1 = new Queue<int>();
+        Queue<int> operand2 = new Queue<int>();
+        Queue<int> operand3 = new Queue<int>();
         string operator1 = "none";
         string operator2 = "none";
 
@@ -83,15 +83,15 @@ public class Calculate : MonoBehaviour
                     // 0 through 9
                     if (operator1 == "null")
                     {
-                        operand1.Push((int)equation[i] - 48);
+                        operand1.Enqueue((int)equation[i] - 48);
                     }
                     else if (operator2 == "null")
                     {
-                        operand2.Push((int)equation[i] - 48);
+                        operand2.Enqueue((int)equation[i] - 48);
                     }
                     else
                     {
-                        operand3.Push((int)equation[i] - 48);
+                        operand3.Enqueue((int)equation[i] - 48);
                     }
                     break;
                 default:
@@ -107,17 +107,17 @@ public class Calculate : MonoBehaviour
         while (operand1.Count != 0)
         {
             number1 = number1 * 10;
-            number1 += operand1.Pop();
+            number1 += operand1.Dequeue();
         }
         while (operand2.Count != 0)
         {
             number2 = number2 * 10;
-            number2 += operand2.Pop();
+            number2 += operand2.Dequeue();
         }
         while (operand3.Count != 0)
         {
             number3 = number3 * 10;
-            number3 += operand3.Pop();
+            number3 += operand3.Dequeue();
         }
 
         switch (operator1)
@@ -188,9 +188,9 @@ public class Calculate : MonoBehaviour
     public static int Calc(string equation, int S)
     {
         //I do not know how fast or slow this code will preform
-        Stack<int> operand1 = new Stack<int>();
-        Stack<int> operand2 = new Stack<int>();
-        Stack<int> operand3 = new Stack<int>();
+        Queue<int> operand1 = new Queue<int>();
+        Queue<int> operand2 = new Queue<int>();
+        Queue<int> operand3 = new Queue<int>();
         string operator1 = "null";
         string operator2 = "null";
 
@@ -206,15 +206,15 @@ public class Calculate : MonoBehaviour
                     // S
                     if (operator1 == "null")
                     {
-                        operand1.Push(S);
+                        operand1.Enqueue(S);
                     }
                     else if (operator2 == "null")
                     {
-                        operand2.Push(S);
+                        operand2.Enqueue(S);
                     }
                     else
                     {
-                        operand3.Push(S);
+                        operand3.Enqueue(S);
                     }
                     break;
                 case 43:
@@ -274,15 +274,15 @@ public class Calculate : MonoBehaviour
                     // 0 through 9
                     if (operator1 == "null")
                     {
-                        operand1.Push((int)equation[i] - 48);
+                        operand1.Enqueue((int)equation[i] - 48);
                     }
                     else if (operator2 == "null")
                     {
-                        operand2.Push((int)equation[i] - 48);
+                        operand2.Enqueue((int)equation[i] - 48);
                     }
                     else
                     {
-                        operand3.Push((int)equation[i] - 48);
+                        operand3.Enqueue((int)equation[i] - 48);
                     }
                     break;
                 default:
@@ -298,17 +298,17 @@ public class Calculate : MonoBehaviour
         while (operand1.Count != 0)
         {
             number1 = number1 * 10;
-            number1 += operand1.Pop();
+            number1 += operand1.Dequeue();
         }
         while (operand2.Count != 0)
         {
             number2 = number2 * 10;
-            number2 += operand2.Pop();
+            number2 += operand2.Dequeue();
         }
         while (operand3.Count != 0)
         {
             number3 = number3 * 10;
-            number3 += operand3.Pop();
+            number3 += operand3.Dequeue();
         }
 
         switch (operator1)

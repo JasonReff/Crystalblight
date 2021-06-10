@@ -87,8 +87,8 @@ public class Skill : MonoBehaviour
         Type t = Type.GetType(name);
         Skill skill = (Skill)Activator.CreateInstance(t);
         skill.skillName = name;
-        skill.SPCost = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", name + "SPCost"));
-        skill.baseDamage = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", name + "BaseDamage"));
+        skill.SPCost = Calculate.Calc(ReadPref.FindFromCSV("CharacterSkillData.csv", name + "SPCost"));
+        skill.baseDamage = Calculate.Calc(ReadPref.FindFromCSV("CharacterSkillData.csv", name + "BaseDamage"));
         skill.damageType = (DamageType)Enum.Parse(typeof(DamageType), ReadPref.FindFromCSV("CharacterSkillData.csv", name + "DamageType"));
         skill.targetingType = (TargetingType)Enum.Parse(typeof(TargetingType), ReadPref.FindFromCSV("CharacterSkillData.csv", name + "TargetingType"));
         skill.skillDescription = ReadPref.FindFromCSV("CharacterSkillData.csv", name + "Description");
