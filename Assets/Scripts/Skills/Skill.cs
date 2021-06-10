@@ -17,7 +17,7 @@ public class Skill : MonoBehaviour
 
     public Skill()
     {
-        skillName = name;
+
     }
     
     
