@@ -163,4 +163,36 @@ public class EnemySkill : MonoBehaviour
             enemy.guard = enemy.maxGuard;
         }
     }
+
+    public void InflictStatus(Enemy enemy, StatusEffect.StatusType status, int statusValue)
+    {
+        List<StatusEffect> effects = enemy.statusEffects;
+        if (effects.Contains(new StatusEffect(status)))
+        {
+            StatusEffect enemyStatus = effects.Find(x => x.statusType == status);
+            enemyStatus.statusValue += statusValue;
+
+        }
+        else
+        {
+            StatusEffect statusEffect = new StatusEffect(status, statusValue);
+            effects.Add(statusEffect);
+        }
+    }
+
+    public void InflictStatus(Character character, StatusEffect.StatusType status, int statusValue)
+    {
+        List<StatusEffect> effects = character.statuses;
+        if (effects.Contains(new StatusEffect(status)))
+        {
+            StatusEffect characterStatus = effects.Find(x => x.statusType == status);
+            characterStatus.statusValue += statusValue;
+
+        }
+        else
+        {
+            StatusEffect statusEffect = new StatusEffect(status, statusValue);
+            effects.Add(statusEffect);
+        }
+    }
 }

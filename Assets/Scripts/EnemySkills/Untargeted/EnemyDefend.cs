@@ -10,6 +10,7 @@ public class EnemyDefend : EnemyUntargetedSkill
         {
             base.Activate();
             GuardGain();
+            InflictStatus(enemy, StatusEffect.StatusType.Steadfast, 1);
             EndSkill();
         }
     }
