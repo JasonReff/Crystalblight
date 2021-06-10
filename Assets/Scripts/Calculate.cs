@@ -21,8 +21,8 @@ public class Calculate : MonoBehaviour
                 case 32:
                     // ' '
                     break;
-                case 83:
-                    // S
+                case 88:
+                    // X
                     //this method only gets called if no stage number is given so a 0 is returned as an error
                     return 0;
                     break;
@@ -185,7 +185,7 @@ public class Calculate : MonoBehaviour
         return 0;
     }
 
-    public static int Calc(string equation, int S)
+    public static int Calc(string equation, int X)
     {
         //I do not know how fast or slow this code will preform
         Queue<int> operand1 = new Queue<int>();
@@ -202,19 +202,19 @@ public class Calculate : MonoBehaviour
                 case 32:
                     // ' '
                     break;
-                case 83:
-                    // S
+                case 88:
+                    // X
                     if (operator1 == "null")
                     {
-                        operand1.Enqueue(S);
+                        operand1.Enqueue(X);
                     }
                     else if (operator2 == "null")
                     {
-                        operand2.Enqueue(S);
+                        operand2.Enqueue(X);
                     }
                     else
                     {
-                        operand3.Enqueue(S);
+                        operand3.Enqueue(X);
                     }
                     break;
                 case 43:
