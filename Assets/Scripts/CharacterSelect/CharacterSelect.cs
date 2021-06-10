@@ -47,8 +47,8 @@ public class CharacterSelect : MonoBehaviour
 
     public string CharacterSkillName()
     {
-        string characterSkill = "Skill" + selectedDiscipline;
-        string skillName = ReadPref.FindFromCSV("CharacterSkillData.csv", selectedCharacter, characterSkill);
+        string characterSkill = "Discipline" + selectedDiscipline + "Skill" ;
+        string skillName = ReadPref.FindFromCSV("CharacterData.csv", selectedCharacter, characterSkill);
         return skillName;
     }
 
