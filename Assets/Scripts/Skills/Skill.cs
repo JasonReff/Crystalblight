@@ -7,7 +7,7 @@ public class Skill : MonoBehaviour
 {
     public string skillName;
     public int SPCost;
-    public int baseDamage;
+    public int effectValue;
     public DamageType damageType;
     public TargetingType targetingType;
     public string skillDescription;
@@ -26,7 +26,7 @@ public class Skill : MonoBehaviour
     {
         skillName = name;
         SPCost = SP;
-        baseDamage = damage;
+        effectValue = damage;
         damageType = type;
         targetingType = targeting;
         skillDescription = description;
@@ -88,7 +88,7 @@ public class Skill : MonoBehaviour
         Skill skill = (Skill)Activator.CreateInstance(t);
         skill.skillName = name;
         skill.SPCost = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", name, "SPCost"));
-        skill.baseDamage = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", name, "BaseDamage"));
+        skill.effectValue = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", name, "Effect"));
         skill.damageType = (DamageType)Enum.Parse(typeof(DamageType), ReadPref.FindFromCSV("CharacterSkillData.csv", name, "DamageType"));
         skill.targetingType = (TargetingType)Enum.Parse(typeof(TargetingType), ReadPref.FindFromCSV("CharacterSkillData.csv", name, "TargetingType"));
         skill.skillDescription = ReadPref.FindFromCSV("CharacterSkillData.csv", name, "Description");
@@ -112,7 +112,7 @@ public class Skill : MonoBehaviour
 
     public void Damage(Character player, Enemy enemy)
     {
-        int damage = baseDamage;
+        int damage = effectValue;
         if (DoesSkillTarget(player, enemy) == true)
         {
             damage = CriticalDamage(player, damage);
