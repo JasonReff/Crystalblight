@@ -47,16 +47,19 @@ public class Enemy : MonoBehaviour
     {
         name = enemyName;
         string fileName = "EnemyData.csv";
-        maxHealth = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "MaxHealth"));
+        //variable names have been changed to match the csv and 1 has been used in place of the stage
+        maxHealth = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Health"), 1);
         health = maxHealth;
-        maxGuard = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "MaxGuard"));
+        maxGuard = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Guard"), 1);
         guard = maxGuard;
-        guardGain = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "GuardGain"));
-        attackDamage = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "AttackDamage"));
-        accuracy = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Accuracy"));
-        dodge = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "Dodge"));
-        critrate = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "CritRate"));
-        XP = Int32.Parse(ReadPref.FindFromCSV(fileName, name + "XP"));
+        //guard gain is not on the csv yet
+        guardGain = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Guard"), 1);
+        attackDamage = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Attack"), 1);
+        accuracy = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Accuracy"), 1);
+        dodge = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Dodge"), 1);
+        critrate = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Crit Rate"), 1);
+        //XP is not on the csv yet
+        XP = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Attack"));
         EnemySkill attack = new EnemyAttack();
         attack.enemy = this;
         enemySkills.Add(attack);
