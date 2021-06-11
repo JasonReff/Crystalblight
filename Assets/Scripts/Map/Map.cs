@@ -1,21 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
+[Serializable]
 public class Map : MonoBehaviour
 {
     public List<MapTile> mapTiles;
-    public Tilemap tilemap;
-    public Tile emptyTile;
-    public Tile homeTile;
-    public Tile characterTile;
-    public Tile combatTile;
-    public Tile shopTile;
-    public Tile gamblerTile;
-    public Tile essenceTile;
-    public Tile bossTile;
-    public Tile minibossTile;
 
     public int leftmostTile = 1;
     public int rightmostTile = 10;
@@ -31,12 +22,6 @@ public class Map : MonoBehaviour
         {
             LeftMapTilesEmpty(this, mapTile);
         }
-    }
-
-    public void FillTilemap(Map map)
-    {
-        FillFixedEncounters(map);
-        FillVariableEncounters(map);
     }
 
     public void CreateFixedEncounters(Map map)
@@ -75,75 +60,48 @@ public class Map : MonoBehaviour
         }
     }
 
-    public void FillFixedEncounters(Map map)
-    {
-        foreach (MapTile mapTile in map.mapTiles)
-        {
-            Vector3Int tileMapCoordinates = new Vector3Int(mapTile.mapCoordinates[0], mapTile.mapCoordinates[1], 0);
-            switch (mapTile.encounter.encounterType)
-            {
-                case Encounter.EncounterType.Home:
-                    tilemap.SetTile(tileMapCoordinates, homeTile);
-                    break;
-                case Encounter.EncounterType.Character:
-                    tilemap.SetTile(tileMapCoordinates, characterTile);
-                    break;
-                case Encounter.EncounterType.Boss:
-                    tilemap.SetTile(tileMapCoordinates, bossTile);
-                    break;
-                case Encounter.EncounterType.Miniboss:
-                    tilemap.SetTile(tileMapCoordinates, minibossTile);
-                    break;
-            }
-        }
-    }
+
 
     public void CreateHomeTile(Map map)
     {
         int[] homeCoordinates = new int[] { -10, 0 };
         MapTile home = map.mapTiles.Find(x => x.mapCoordinates == homeCoordinates);
-        home.encounter.encounterType = Encounter.EncounterType.Home;
+        Encounter homeEncounter = new Encounter();
+        homeEncounter.encounterType = Encounter.EncounterType.Home;
+        home.encounter = homeEncounter;
     }
 
     public void CreateCharacterTiles(Map map)
     {
         int[] characterACoordinates = new int[] { -10, 1 };
         MapTile characterATile = map.mapTiles.Find(x => x.mapCoordinates == characterACoordinates);
-        characterATile.encounter.encounterType = Encounter.EncounterType.Character;
+        Encounter characterAEncounter = new Encounter();
+        characterAEncounter.encounterType = Encounter.EncounterType.Character;
+        characterATile.encounter = characterAEncounter;
         int[] characterBCoordinates = new int[] { -10, -1 };
         MapTile characterBTile = map.mapTiles.Find(x => x.mapCoordinates == characterBCoordinates);
-        characterBTile.encounter.encounterType = Encounter.EncounterType.Character;
+        Encounter characterBEncounter = new Encounter();
+        characterBEncounter.encounterType = Encounter.EncounterType.Character;
+        characterBTile.encounter = characterBEncounter;
     }
 
     public void CreateMinibossTile(Map map)
     {
         int[] minibossCoordinates = new int[] { 0, 0 };
         MapTile miniboss = map.mapTiles.Find(x => x.mapCoordinates == minibossCoordinates);
-        miniboss.encounter.encounterType = Encounter.EncounterType.Miniboss;
+        Encounter minibossEncounter = new MinibossEncounter();
+        miniboss.encounter = minibossEncounter;
     }
 
     public void CreateBossTile(Map map)
     {
         int[] bossCoordinates = new int[] { 10, 0 };
         MapTile boss = map.mapTiles.Find(x => x.mapCoordinates == bossCoordinates);
-        boss.encounter.encounterType = Encounter.EncounterType.Boss;
+        Encounter bossEncounter = new BossEncounter();
+        boss.encounter = bossEncounter;
     }
 
-    public void FillVariableEncounters(Map map)
-    {
-        foreach (MapTile mapTile in map.mapTiles)
-        {
-            Vector3Int tileMapCoordinates = new Vector3Int(mapTile.mapCoordinates[0], mapTile.mapCoordinates[1], 0);
-            switch (mapTile.encounter.encounterType)
-            {
 
-                case Encounter.EncounterType.Combat:
-                    tilemap.SetTile(tileMapCoordinates, combatTile);
-                    break;
-
-            }
-        }
-    }
 
     public void CreateEmptySpaceInPath()
     {
@@ -173,6 +131,14 @@ public class Map : MonoBehaviour
 
     public void CreateEmptySpaceAdjacentToEmptySpace(MapTile mapTile)
     {
+        switch (mapTile.encounter.encounterType)
+        {
+            case Encounter.EncounterType.Home:
+            case Encounter.EncounterType.Character:
+            case Encounter.EncounterType.Boss:
+            case Encounter.EncounterType.Miniboss:
+                return;
+        }
         if (mapTile.DoesAdjacentLeftTileExist(this) == false || mapTile.DoesAdjacentRightTileExist(this) == false)
         {
             mapTile.encounter = null;

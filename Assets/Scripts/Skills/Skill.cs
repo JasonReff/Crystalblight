@@ -7,7 +7,7 @@ public class Skill : MonoBehaviour
 {
     public string skillName;
     public int SPCost;
-    public int baseDamage;
+    public int effectValue;
     public DamageType damageType;
     public TargetingType targetingType;
     public string skillDescription;
@@ -17,7 +17,7 @@ public class Skill : MonoBehaviour
 
     public Skill()
     {
-        skillName = name;
+
     }
     
     
@@ -26,7 +26,7 @@ public class Skill : MonoBehaviour
     {
         skillName = name;
         SPCost = SP;
-        baseDamage = damage;
+        effectValue = damage;
         damageType = type;
         targetingType = targeting;
         skillDescription = description;
@@ -53,6 +53,7 @@ public class Skill : MonoBehaviour
         Frost,
         Light,
         Magic,
+        None,
         Physical,
         Toxic
     }
@@ -87,14 +88,44 @@ public class Skill : MonoBehaviour
         Type t = Type.GetType(name);
         Skill skill = (Skill)Activator.CreateInstance(t);
         skill.skillName = name;
-        skill.SPCost = Calculate.Calc(ReadPref.FindFromCSV("CharacterSkillData.csv", name + "SPCost"));
-        skill.baseDamage = Calculate.Calc(ReadPref.FindFromCSV("CharacterSkillData.csv", name + "BaseDamage"));
-        skill.damageType = (DamageType)Enum.Parse(typeof(DamageType), ReadPref.FindFromCSV("CharacterSkillData.csv", name + "DamageType"));
-        skill.targetingType = (TargetingType)Enum.Parse(typeof(TargetingType), ReadPref.FindFromCSV("CharacterSkillData.csv", name + "TargetingType"));
-        skill.skillDescription = ReadPref.FindFromCSV("CharacterSkillData.csv", name + "Description");
+        skill.SPCost = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", name, "SPCost"));
+        skill.effectValue = Int32.Parse(ReadPref.FindFromCSV("CharacterSkillData.csv", name, "Effect"));
+        skill.damageType = (DamageType)Enum.Parse(typeof(DamageType), ReadPref.FindFromCSV("CharacterSkillData.csv", name, "DamageType"));
+        skill.targetingType = (TargetingType)Enum.Parse(typeof(TargetingType), ReadPref.FindFromCSV("CharacterSkillData.csv", name, "TargetingType"));
+        skill.skillDescription = ReadPref.FindFromCSV("CharacterSkillData.csv", name, "Description");
         return skill;
     }
 
+    public virtual void CalculateEffect(string skillName)
+    {
+        
+        /*
+        string equation = ReadPref.FindFromCSV("CharacterSkillData.csv", skillName, "Effect");
+        string skillModifier = ReadPref.FindFromCSV("CharacterSkillData.csv", skillName, "EffectModifier");
+        int modifierValue = 0;
+        switch (skillModifier) 
+        {
+            case "":
+                break;
+            case "VIT":
+                modifierValue = character.vitality;
+                break;
+            case "STR":
+                modifierValue = character.strength;
+                break;
+            case "INT":
+                modifierValue = character.intelligence;
+                break;
+            case "DEX":
+                modifierValue = character.dexterity;
+                break;
+            case "END":
+                modifierValue = character.endurance;
+                break;
+        }
+        effectValue = Calculate.Calc(equation, modifierValue);
+         */
+    }
 
     void SPSpend()
     {
@@ -112,7 +143,7 @@ public class Skill : MonoBehaviour
 
     public void Damage(Character player, Enemy enemy)
     {
-        int damage = baseDamage;
+        int damage = effectValue;
         if (DoesSkillTarget(player, enemy) == true)
         {
             damage = CriticalDamage(player, damage);
@@ -211,5 +242,37 @@ public class Skill : MonoBehaviour
     IEnumerator MissWait()
     {
         yield return new WaitForSeconds(1.0f);
+    }
+
+    public void InflictStatus(Enemy enemy, StatusEffect.StatusType status, int statusValue)
+    {
+        List<StatusEffect> effects = enemy.statusEffects;
+        if (effects.Contains(new StatusEffect(status)))
+        {
+            StatusEffect enemyStatus = effects.Find(x => x.statusType == status);
+            enemyStatus.statusValue += statusValue;
+
+        }
+        else
+        {
+            StatusEffect statusEffect = new StatusEffect(status, statusValue);
+            effects.Add(statusEffect);
+        }
+    }
+
+    public void InflictStatus(Character character, StatusEffect.StatusType status, int statusValue)
+    {
+        List<StatusEffect> effects = character.statuses;
+        if (effects.Contains(new StatusEffect(status)))
+        {
+            StatusEffect characterStatus = effects.Find(x => x.statusType == status);
+            characterStatus.statusValue += statusValue;
+
+        }
+        else
+        {
+            StatusEffect statusEffect = new StatusEffect(status, statusValue);
+            effects.Add(statusEffect);
+        }
     }
 }

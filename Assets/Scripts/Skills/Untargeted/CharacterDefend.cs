@@ -16,6 +16,7 @@ public class CharacterDefend : CharacterUntargetedSkill
         {
             base.Activate();
             GainGuard(character, defendingGuard);
+            InflictStatus(character, StatusEffect.StatusType.Steadfast, 1);
             EndSkill();
         }
     }

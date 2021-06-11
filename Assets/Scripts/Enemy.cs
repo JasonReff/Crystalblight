@@ -61,8 +61,10 @@ public class Enemy : MonoBehaviour
         //XP is not on the csv yet
         XP = Calculate.Calc(ReadPref.FindFromCSV(fileName, name, "Attack"));
         EnemySkill attack = new EnemyAttack();
+        attack.enemy = this;
         enemySkills.Add(attack);
         EnemySkill defend = new EnemyDefend();
+        defend.enemy = this;
         enemySkills.Add(defend);
 
     }

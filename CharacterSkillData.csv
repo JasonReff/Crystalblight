@@ -1,0 +1,5 @@
+Skill,SPCost,Effect,EffectModifier,DamageType,TargetingType,Description
+AetherCloak,7,5 + 2*X,END,None,Untargeted,Gain (5 + 2*END) Guard. Gain Ethereal: 2.
+Bolster,3,12,END,None,Untargeted,Gain (3 + 3*END) Guard.
+Decoy,3,2,,None,Untargeted,Gain Decoy: 2.
+Riposte,3,1,,None,Untargeted,Fast. Gain Counter: 1.

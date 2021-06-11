@@ -35,7 +35,7 @@ public class SkillCard : MonoBehaviour
         activePlayer = combatSystem.activePlayer;
         skill = activePlayer.skills[skillNumber];
         nameText.text = skill.ToString();
-        damage.text = skill.baseDamage.ToString();
+        damage.text = skill.effectValue.ToString();
         SPCost.text = skill.SPCost.ToString();
         description.text = skill.skillDescription;
     }
