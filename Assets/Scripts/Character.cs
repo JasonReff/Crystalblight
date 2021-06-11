@@ -64,7 +64,6 @@ public class Character : MonoBehaviour
     {
         pNumber = characterNumber;
         name = characterName;
-        skills.Add(startingSkill);
         vitality = startingVitality;
         strength = startingStrength;
         intelligence = startingIntelligence;
@@ -79,6 +78,7 @@ public class Character : MonoBehaviour
         accuracy = 85 + 2 * dexterity;
         critrate = 5 + 2 * dexterity;
         dodge = 5 + dexterity;
+        skills = new List<Skill> { };
         Skill attack = new CharacterAttack(attackDamage);
         attack.character = this;
         skills.Add(attack);

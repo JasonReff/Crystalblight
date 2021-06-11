@@ -53,6 +53,7 @@ public class Skill : MonoBehaviour
         Frost,
         Light,
         Magic,
+        None,
         Physical,
         Toxic
     }
@@ -95,6 +96,36 @@ public class Skill : MonoBehaviour
         return skill;
     }
 
+    public virtual void CalculateEffect(string skillName)
+    {
+        
+        /*
+        string equation = ReadPref.FindFromCSV("CharacterSkillData.csv", skillName, "Effect");
+        string skillModifier = ReadPref.FindFromCSV("CharacterSkillData.csv", skillName, "EffectModifier");
+        int modifierValue = 0;
+        switch (skillModifier) 
+        {
+            case "":
+                break;
+            case "VIT":
+                modifierValue = character.vitality;
+                break;
+            case "STR":
+                modifierValue = character.strength;
+                break;
+            case "INT":
+                modifierValue = character.intelligence;
+                break;
+            case "DEX":
+                modifierValue = character.dexterity;
+                break;
+            case "END":
+                modifierValue = character.endurance;
+                break;
+        }
+        effectValue = Calculate.Calc(equation, modifierValue);
+         */
+    }
 
     void SPSpend()
     {
